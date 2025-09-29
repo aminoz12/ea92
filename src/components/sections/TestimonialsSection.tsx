@@ -1,0 +1,312 @@
+import React, { useState, useEffect } from 'react'
+import { Card, CardContent } from '../ui/Card'
+
+export function TestimonialsSection() {
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0)
+  const [visibleComments, setVisibleComments] = useState<number[]>([])
+  const [showAll, setShowAll] = useState(false)
+
+  const testimonials = [
+    {
+      id: 1,
+      name: "Marie Dubois",
+      role: "Propriétaire de véhicule",
+      content: "Service exceptionnel ! J'ai eu ma carte grise en 10 minutes exactement. L'équipe est très professionnelle et les prix sont compétitifs. Je recommande vivement EspaceAuto92.",
+      rating: 5,
+      date: "15 Janvier 2024"
+    },
+    {
+      id: 2,
+      name: "Jean-Pierre Martin",
+      role: "Gérant d'entreprise",
+      content: "Depuis 3 ans, EspaceAuto92 s'occupe de tous nos véhicules. Réparation rapide, pièces de qualité et toujours à l'heure. Un partenaire de confiance !",
+      rating: 5,
+      date: "8 Janvier 2024"
+    },
+    {
+      id: 3,
+      name: "Sophie Laurent",
+      role: "Particulier",
+      content: "J'ai eu un problème avec ma direction assistée. L'équipe a diagnostiqué le problème rapidement et l'a réparé le même jour. Très satisfaite du service !",
+      rating: 5,
+      date: "22 Décembre 2023"
+    },
+    {
+      id: 4,
+      name: "Michel Roux",
+      role: "Retraité",
+      content: "Service client impeccable ! L'équipe prend le temps d'expliquer les réparations et les prix sont transparents. Je reviendrai sans hésitation.",
+      rating: 5,
+      date: "5 Décembre 2023"
+    }
+  ]
+
+  // Notification-style animation cycle
+  useEffect(() => {
+    const cycle = () => {
+      // Phase 1: Show comments one by one (faster)
+      setVisibleComments([])
+      setShowAll(false)
+      
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          setVisibleComments(prev => [...prev, i])
+        }, i * 800) // 800ms between each pop
+      }
+      
+      // Phase 2: Show all comments for 3 seconds
+      setTimeout(() => {
+        setShowAll(true)
+      }, 5 * 800)
+      
+      // Phase 3: Hide all comments
+      setTimeout(() => {
+        setVisibleComments([])
+        setShowAll(false)
+      }, 5 * 800 + 3000)
+    }
+
+    // Start the cycle
+    cycle()
+    
+    // Repeat the cycle every 8 seconds
+    const interval = setInterval(cycle, 8000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const currentTestimonial = testimonials[currentTestimonialIndex]
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 -right-20 w-40 h-40 bg-gradient-to-br from-secondary-500/10 to-secondary-600/10 dark:from-secondary-500/20 dark:to-secondary-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 -left-20 w-40 h-40 bg-gradient-to-br from-primary-500/10 to-primary-600/10 dark:from-primary-500/20 dark:to-primary-600/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center px-4 py-2 bg-secondary-100 dark:bg-secondary-900/30 text-secondary-700 dark:text-secondary-300 rounded-full text-sm font-display font-semibold mb-6">
+            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Témoignages Clients
+          </div>
+          
+          <h2 className="text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white mb-6">
+            <div className="leading-tight">
+              <div>Ce que disent nos</div>
+              <div className="bg-gradient-to-r from-secondary-600 to-secondary-700 bg-clip-text text-transparent">
+                clients satisfaits
+              </div>
+            </div>
+          </h2>
+          
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Découvrez pourquoi nos clients nous font confiance pour tous leurs besoins automobiles
+          </p>
+        </div>
+
+        {/* Image Left + Floating Messages Right */}
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Big Image on Left */}
+          <div className="relative">
+            <div className="relative bg-white dark:bg-gray-800 rounded-3xl shadow-modern p-6 group">
+              <div className="aspect-[4/3] rounded-2xl overflow-hidden relative">
+                <img
+                  src="/comments.png"
+                  alt="Commentaires clients EspaceAuto92"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                  loading="eager"
+                  quality="high"
+                />
+                {/* Animated overlay effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+              </div>
+              
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-gradient-to-br from-secondary-500/20 to-secondary-600/20 dark:from-secondary-500/30 dark:to-secondary-600/30 rounded-full blur-2xl"></div>
+            <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-primary-500/20 to-primary-600/20 dark:from-primary-500/30 dark:to-primary-600/30 rounded-full blur-2xl"></div>
+          </div>
+
+          {/* Notification-Style Comments - Left and Right */}
+          <div className="relative h-[600px] space-y-8">
+            {/* Comment 1 - Marie (Right) */}
+            <div className={`absolute top-0 right-0 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(0) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <img
+                    src="/client-marie.jpg"
+                    alt="Marie Dubois"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary-200 dark:ring-secondary-800"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Marie D.</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Excellent service !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Comment 2 - Jean-Pierre (Left) */}
+            <div className={`absolute top-24 left-0 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(1) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <img
+                    src="/client-jean.jpg"
+                    alt="Jean-Pierre Martin"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-green-200 dark:ring-green-800"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Jean-Pierre M.</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"L'équipe Espace Auto 92 sont trop sympa & serviable"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Comment 3 - Sophie (Left) */}
+            <div className={`absolute top-64 left-8 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(2) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <img
+                    src="/client-sophie.jpg"
+                    alt="Sophie Laurent"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-blue-200 dark:ring-blue-800"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Sophie L.</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Répération rapide et efficace !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Comment 4 - Michel (Right) */}
+            <div className={`absolute top-72 right-12 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(3) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <img
+                    src="/client-michel.jpg"
+                    alt="Michel Roux"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-200 dark:ring-purple-800"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Michel R.</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Service client impeccable !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Comment 5 - New Comment (Right) */}
+            <div className={`absolute top-96 right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(4) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <img
+                    src="/client-alex.jpg"
+                    alt="Alexandre Moreau"
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-orange-200 dark:ring-orange-800"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Alexandre M.</h4>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Très satisfait du service !"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trusted By Section */}
+        <div className="mt-20 text-center">
+          <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mb-12">
+            Faites-nous confiance
+          </h3>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-12">
+            {/* Trustpilot */}
+            <div className="flex items-center space-x-4 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-6 group hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
+              <img
+                src="/trustpilot.png"
+                alt="Trustpilot"
+                className="h-32 md:h-40 w-auto object-contain"
+              />
+              <div className="text-left">
+                <div className="flex items-center space-x-1 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-5 h-5 ${i < 4 ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">4.5/5</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">sur Trustpilot</p>
+              </div>
+            </div>
+
+            {/* Google */}
+            <div className="flex items-center space-x-4 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-6 group hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
+              <img
+                src="/googlereview.png"
+                alt="Google Reviews"
+                className="h-32 md:h-40 w-auto object-contain"
+              />
+              <div className="text-left">
+                <div className="flex items-center space-x-1 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-5 h-5 ${i < 5 ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-2xl font-display font-bold text-gray-900 dark:text-white">4.9/5</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">sur Google</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  )
+}

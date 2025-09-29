@@ -1,0 +1,115 @@
+export const en = {
+  common: {
+    loading: 'Loading...',
+    error: 'An error occurred',
+    retry: 'Retry',
+    close: 'Close',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    save: 'Save',
+    edit: 'Edit',
+    delete: 'Delete',
+    search: 'Search',
+    filter: 'Filter',
+    sort: 'Sort',
+    view: 'View',
+    more: 'More',
+    less: 'Less',
+  },
+  navigation: {
+    home: 'Home',
+    services: 'Services',
+    products: 'Products',
+    about: 'About',
+    contact: 'Contact',
+    cart: 'Cart',
+    account: 'My Account',
+  },
+  hero: {
+    title: 'EspaceAuto92',
+    subtitle: 'Your trusted automotive partner in Nanterre',
+    description: 'Specialists in auto parts, vehicle registration, repair and maintenance. Professional service and expert advice.',
+    cta: 'Discover our services',
+    ctaSecondary: 'View our products',
+  },
+  services: {
+    title: 'Our Services',
+    subtitle: 'Complete solutions for your vehicle',
+    carteGrise: {
+      title: 'Vehicle Registration',
+      description: 'Online processing and renewal of your vehicle registration',
+    },
+    piecesAuto: {
+      title: 'Auto Parts',
+      description: 'Wide range of quality spare parts',
+    },
+    reparation: {
+      title: 'Repair',
+      description: 'Professional automotive repair service',
+    },
+    diagnostic: {
+      title: 'Diagnostic',
+      description: 'Complete electronic and mechanical diagnostic',
+    },
+    entretien: {
+      title: 'Maintenance',
+      description: 'Preventive and curative maintenance of your vehicle',
+    },
+  },
+  products: {
+    title: 'Products',
+    subtitle: 'Auto parts and accessories',
+    featured: 'Featured products',
+    categories: 'Categories',
+    inStock: 'In stock',
+    outOfStock: 'Out of stock',
+    addToCart: 'Add to cart',
+    viewDetails: 'View details',
+    price: 'Price',
+    brand: 'Brand',
+    partNumber: 'Part number',
+  },
+  search: {
+    placeholder: 'Search for parts...',
+    noResults: 'No results found',
+    resultsCount: '{count} result(s) found',
+    filters: 'Filters',
+    sortBy: 'Sort by',
+    sortOptions: {
+      relevance: 'Relevance',
+      priceAsc: 'Price ascending',
+      priceDesc: 'Price descending',
+      name: 'Name',
+      brand: 'Brand',
+    },
+  },
+  contact: {
+    title: 'Contact us',
+    subtitle: 'We are here to help you',
+    address: 'Address',
+    phone: 'Phone',
+    email: 'Email',
+    hours: 'Hours',
+    form: {
+      name: 'Name',
+      email: 'Email',
+      phone: 'Phone',
+      subject: 'Subject',
+      message: 'Message',
+      send: 'Send message',
+    },
+  },
+  footer: {
+    description: 'EspaceAuto92 - Your trusted automotive partner in Nanterre since 2010.',
+    quickLinks: 'Quick links',
+    services: 'Services',
+    contact: 'Contact',
+    followUs: 'Follow us',
+    copyright: '© 2024 EspaceAuto92. All rights reserved.',
+  },
+}
+
+
+
+
+
