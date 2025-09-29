@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js'
+import type { FuseResult } from 'fuse.js'
 
 export interface Product {
   id: string
@@ -79,7 +80,7 @@ const fuse = new Fuse(products, {
   minMatchCharLength: 2,
 })
 
-export function searchProducts(query: string): Fuse.FuseResult<Product>[] {
+export function searchProducts(query: string): FuseResult<Product>[] {
   if (!query.trim()) {
     return []
   }

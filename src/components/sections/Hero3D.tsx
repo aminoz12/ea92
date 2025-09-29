@@ -1,4 +1,4 @@
-import React, { Suspense, useRef } from 'react'
+import { Suspense, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
@@ -40,20 +40,20 @@ function CarModel() {
       </mesh>
       
       {/* Wheels */}
-      <mesh position={[1.2, -0.8, 0.8]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} rotation={[0, 0, Math.PI / 2]} />
+      <mesh position={[1.2, -0.8, 0.8]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#1f2937" />
       </mesh>
-      <mesh position={[1.2, -0.8, -0.8]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} rotation={[0, 0, Math.PI / 2]} />
+      <mesh position={[1.2, -0.8, -0.8]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#1f2937" />
       </mesh>
-      <mesh position={[-1.2, -0.8, 0.8]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} rotation={[0, 0, Math.PI / 2]} />
+      <mesh position={[-1.2, -0.8, 0.8]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#1f2937" />
       </mesh>
-      <mesh position={[-1.2, -0.8, -0.8]}>
-        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} rotation={[0, 0, Math.PI / 2]} />
+      <mesh position={[-1.2, -0.8, -0.8]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.2, 16]} />
         <meshStandardMaterial color="#1f2937" />
       </mesh>
       

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useLocale } from '../../hooks/useLocale'
 import { Button } from '../ui/Button'
 import { scrollToElement } from '../../lib/utils'

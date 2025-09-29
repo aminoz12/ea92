@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { getLocaleFromPath, getPathWithLocale } from '../lib/i18n'
 import type { Locale } from '../lib/i18n'

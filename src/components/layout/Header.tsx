@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLocale } from '../../hooks/useLocale'
 import { useTheme } from '../../hooks/useTheme'
@@ -6,8 +6,8 @@ import { Button } from '../ui/Button'
 import { cn } from '../../lib/utils'
 
 export function Header() {
-  const { locale, setLocale, t } = useLocale()
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { locale, setLocale } = useLocale()
+  const { setTheme, resolvedTheme } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navigation = [

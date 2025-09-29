@@ -1,9 +1,6 @@
-import React from 'react'
-import { useLocale } from '../../hooks/useLocale'
 import { SlidingServices } from './SlidingServices'
 
 export function ServicesSection() {
-  const { t } = useLocale()
 
   return (
     <section id="services" className="py-16 bg-gradient-to-br from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">

@@ -1,4 +1,3 @@
-import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LocaleProvider } from './providers/LocaleProvider'
 import { ThemeProvider } from './providers/ThemeProvider'

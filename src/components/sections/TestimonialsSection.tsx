@@ -1,45 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent } from '../ui/Card'
+import { useState, useEffect } from 'react'
 
 export function TestimonialsSection() {
-  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0)
   const [visibleComments, setVisibleComments] = useState<number[]>([])
   const [showAll, setShowAll] = useState(false)
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Marie Dubois",
-      role: "Propriétaire de véhicule",
-      content: "Service exceptionnel ! J'ai eu ma carte grise en 10 minutes exactement. L'équipe est très professionnelle et les prix sont compétitifs. Je recommande vivement EspaceAuto92.",
-      rating: 5,
-      date: "15 Janvier 2024"
-    },
-    {
-      id: 2,
-      name: "Jean-Pierre Martin",
-      role: "Gérant d'entreprise",
-      content: "Depuis 3 ans, EspaceAuto92 s'occupe de tous nos véhicules. Réparation rapide, pièces de qualité et toujours à l'heure. Un partenaire de confiance !",
-      rating: 5,
-      date: "8 Janvier 2024"
-    },
-    {
-      id: 3,
-      name: "Sophie Laurent",
-      role: "Particulier",
-      content: "J'ai eu un problème avec ma direction assistée. L'équipe a diagnostiqué le problème rapidement et l'a réparé le même jour. Très satisfaite du service !",
-      rating: 5,
-      date: "22 Décembre 2023"
-    },
-    {
-      id: 4,
-      name: "Michel Roux",
-      role: "Retraité",
-      content: "Service client impeccable ! L'équipe prend le temps d'expliquer les réparations et les prix sont transparents. Je reviendrai sans hésitation.",
-      rating: 5,
-      date: "5 Décembre 2023"
-    }
-  ]
 
   // Notification-style animation cycle
   useEffect(() => {
@@ -75,7 +39,6 @@ export function TestimonialsSection() {
     return () => clearInterval(interval)
   }, [])
 
-  const currentTestimonial = testimonials[currentTestimonialIndex]
 
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
@@ -120,7 +83,6 @@ export function TestimonialsSection() {
                   alt="Commentaires clients EspaceAuto92"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                   loading="eager"
-                  quality="high"
                 />
                 {/* Animated overlay effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
