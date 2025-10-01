@@ -33,7 +33,10 @@ export function Footer() {
                 onError={(e) => {
                   // Fallback to text if logo doesn't exist
                   e.currentTarget.style.display = 'none'
-                  e.currentTarget.nextElementSibling.style.display = 'flex'
+                  const nextElement = e.currentTarget.nextElementSibling as HTMLElement
+                  if (nextElement) {
+                    nextElement.style.display = 'flex'
+                  }
                 }}
               />
               <div className="w-20 h-20 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg hidden">

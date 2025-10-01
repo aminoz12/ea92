@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useLocale } from '../../hooks/useLocale'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { getFeaturedProducts, searchProducts } from '../../lib/search'

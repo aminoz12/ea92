@@ -23,13 +23,13 @@ export function BrandsSection() {
           <div className="inline-block">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 relative">
               <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
-                {t('brands.title', 'Que Des Produis Originaux')}
+                {t('brands.title')}
               </span>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
             </h2>
           </div>
           <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-medium">
-            {t('brands.subtitle', 'Nous travaillons exclusivement avec des marques reconnues pour garantir la qualité et l\'origine de nos pièces.')}
+            {t('brands.subtitle')}
           </p>
         </div>
 
@@ -73,7 +73,7 @@ export function BrandsSection() {
             <div className="flex items-center space-x-3">
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               <p className="text-base font-medium text-red-800 dark:text-red-300">
-                {t('brands.note', 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.')}
+                {t('brands.note')}
               </p>
               <div className="w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
