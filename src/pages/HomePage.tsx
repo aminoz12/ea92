@@ -7,6 +7,7 @@ import { CarteGriseSection } from '../components/sections/CarteGriseSection'
 import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
 import { ModernHero } from '../components/sections/ModernHero'
+import { BrandsSection } from '../components/sections/BrandsSection'
 
 export function HomePage() {
   const [showHero, setShowHero] = useState(false)
@@ -70,6 +71,9 @@ export function HomePage() {
 
         {/* Services Section */}
         <ServicesSection />
+
+        {/* Brands Section */}
+        <BrandsSection />
 
         {/* Carte Grise Section */}
         <CarteGriseSection />

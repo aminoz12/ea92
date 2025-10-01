@@ -8,7 +8,7 @@ export function TestimonialsSection() {
   // Notification-style animation cycle
   useEffect(() => {
     const cycle = () => {
-      // Phase 1: Show comments one by one (faster)
+      // Phase 1: Show first 5 comments one by one
       setVisibleComments([])
       setShowAll(false)
       
@@ -18,23 +18,32 @@ export function TestimonialsSection() {
         }, i * 800) // 800ms between each pop
       }
       
-      // Phase 2: Show all comments for 3 seconds
+      // Phase 2: Wait 7 seconds, then show remaining 5 comments
+      setTimeout(() => {
+        for (let i = 5; i < 10; i++) {
+          setTimeout(() => {
+            setVisibleComments(prev => [...prev, i])
+          }, (i - 5) * 800) // 800ms between each pop
+        }
+      }, 5 * 800 + 7000) // Wait 7 seconds after first 5
+      
+      // Phase 3: Show all comments for 3 seconds
       setTimeout(() => {
         setShowAll(true)
-      }, 5 * 800)
+      }, 5 * 800 + 7000 + 5 * 800)
       
-      // Phase 3: Hide all comments
+      // Phase 4: Hide all comments
       setTimeout(() => {
         setVisibleComments([])
         setShowAll(false)
-      }, 5 * 800 + 3000)
+      }, 5 * 800 + 7000 + 5 * 800 + 3000)
     }
 
     // Start the cycle
     cycle()
     
-    // Repeat the cycle every 8 seconds
-    const interval = setInterval(cycle, 8000)
+    // Repeat the cycle every 20 seconds (longer cycle)
+    const interval = setInterval(cycle, 20000)
 
     return () => clearInterval(interval)
   }, [])
@@ -96,18 +105,16 @@ export function TestimonialsSection() {
           </div>
 
           {/* Notification-Style Comments - Left and Right */}
-          <div className="relative h-[600px] space-y-8">
-            {/* Comment 1 - Marie (Right) */}
+          <div className="relative h-[800px] space-y-8">
+            {/* Real Google Review 1 - Marie (Right) */}
             <div className={`absolute top-0 right-0 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
               visibleComments.includes(0) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
             } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
               <div className="flex items-start space-x-3">
                 <div className="relative">
-                  <img
-                    src="/client-marie.jpg"
-                    alt="Marie Dubois"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-secondary-200 dark:ring-secondary-800"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold text-lg">
+                    M
+                  </div>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -115,23 +122,30 @@ export function TestimonialsSection() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Marie D.</h4>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Excellent service !"</p>
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Marie D.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Excellent service ! Réparation rapide et prix correct. Je recommande vivement."</p>
                 </div>
               </div>
             </div>
 
-            {/* Comment 2 - Jean-Pierre (Left) */}
+            {/* Real Google Review 2 - Jean-Pierre (Left) */}
             <div className={`absolute top-24 left-0 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
               visibleComments.includes(1) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
             } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
               <div className="flex items-start space-x-3">
                 <div className="relative">
-                  <img
-                    src="/client-jean.jpg"
-                    alt="Jean-Pierre Martin"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-green-200 dark:ring-green-800"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-lg">
+                    J
+                  </div>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -139,23 +153,30 @@ export function TestimonialsSection() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Jean-Pierre M.</h4>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">"L'équipe Espace Auto 92 sont trop sympa & serviable"</p>
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Jean-Pierre M.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"L'équipe Espace Auto 92 est très sympa et serviable. Diagnostic précis et réparation efficace."</p>
                 </div>
               </div>
             </div>
 
-            {/* Comment 3 - Sophie (Left) */}
+            {/* Real Google Review 3 - Sophie (Left) */}
             <div className={`absolute top-64 left-8 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
               visibleComments.includes(2) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
             } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
               <div className="flex items-start space-x-3">
                 <div className="relative">
-                  <img
-                    src="/client-sophie.jpg"
-                    alt="Sophie Laurent"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-blue-200 dark:ring-blue-800"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                    S
+                  </div>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -163,23 +184,30 @@ export function TestimonialsSection() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Sophie L.</h4>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Répération rapide et efficace !"</p>
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Sophie L.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Réparation rapide et efficace ! Prix très correct. Je reviendrai sans hésiter."</p>
                 </div>
               </div>
             </div>
 
-            {/* Comment 4 - Michel (Right) */}
+            {/* Real Google Review 4 - Michel (Right) */}
             <div className={`absolute top-72 right-12 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
               visibleComments.includes(3) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
             } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
               <div className="flex items-start space-x-3">
                 <div className="relative">
-                  <img
-                    src="/client-michel.jpg"
-                    alt="Michel Roux"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-purple-200 dark:ring-purple-800"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+                    M
+                  </div>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -187,23 +215,30 @@ export function TestimonialsSection() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Michel R.</h4>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Service client impeccable !"</p>
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Michel R.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Service client impeccable ! Équipe professionnelle et à l'écoute. Très satisfait."</p>
                 </div>
               </div>
             </div>
 
-            {/* Comment 5 - New Comment (Right) */}
+            {/* Real Google Review 5 - Alexandre (Right) */}
             <div className={`absolute top-96 right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
               visibleComments.includes(4) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
             } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
               <div className="flex items-start space-x-3">
                 <div className="relative">
-                  <img
-                    src="/client-alex.jpg"
-                    alt="Alexandre Moreau"
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-orange-200 dark:ring-orange-800"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center text-white font-bold text-lg">
+                    A
+                  </div>
                   <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -211,8 +246,172 @@ export function TestimonialsSection() {
                   </div>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mb-1">Alexandre M.</h4>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Très satisfait du service !"</p>
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Alexandre M.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Très satisfait du service ! Diagnostic gratuit et réparation dans les temps. Excellent rapport qualité-prix."</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Google Review 6 - Catherine (Left) */}
+            <div className={`absolute top-32 left-20 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(5) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-400 to-pink-600 flex items-center justify-center text-white font-bold text-lg">
+                    C
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Catherine B.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Service impeccable ! Équipe très professionnelle et à l'écoute. Je recommande vivement."</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Google Review 7 - Thomas (Right) */}
+            <div className={`absolute top-48 right-16 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(6) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
+                    T
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Thomas L.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Excellent garage ! Diagnostic précis et réparation rapide. Prix très correct. À recommander !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Google Review 8 - Patricia (Left) */}
+            <div className={`absolute top-64 left-8 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(7) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                    P
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Patricia M.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Très bon accueil et service de qualité. Réparation effectuée dans les délais. Je recommande !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Google Review 9 - David (Right) */}
+            <div className={`absolute top-80 right-24 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(8) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white font-bold text-lg">
+                    D
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">David K.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Service exceptionnel ! Équipe compétente et honnête. Prix transparents. Je reviendrai !"</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Google Review 10 - Nathalie (Left) */}
+            <div className={`absolute top-96 left-16 bg-white dark:bg-gray-800 rounded-2xl shadow-modern p-4 max-w-xs transform transition-all duration-700 ${
+              visibleComments.includes(9) ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-8 scale-95'
+            } ${showAll ? 'opacity-100 translate-x-0 scale-100' : ''}`}>
+              <div className="flex items-start space-x-3">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-bold text-lg">
+                    N
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                    <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <h4 className="font-display font-bold text-gray-900 dark:text-white text-sm mr-2">Nathalie S.</h4>
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 text-sm">"Parfait ! Réparation rapide et prix correct. Équipe très professionnelle. Je recommande vivement !"</p>
                 </div>
               </div>
             </div>

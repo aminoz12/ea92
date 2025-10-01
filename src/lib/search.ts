@@ -8,6 +8,9 @@ export interface Product {
   description: string
   price: number
   image?: string
+  image1?: string
+  image2?: string
+  image3?: string
   inStock: boolean
   brand?: string
   partNumber?: string
@@ -21,6 +24,8 @@ export const products: Product[] = [
     category: 'Filtres',
     description: 'Filtre à air haute performance pour moteurs essence et diesel',
     price: 25.99,
+    image1: '/images/products/filtre1.png',
+    image2: '/images/products/filtre2.png',
     inStock: true,
     brand: 'MANN-FILTER',
     partNumber: 'C 30 011'
@@ -31,6 +36,8 @@ export const products: Product[] = [
     category: 'Freinage',
     description: 'Plaquettes de frein céramique pour freinage optimal',
     price: 89.50,
+    image1: '/images/products/freinage1.png',
+    image2: '/images/products/freinage2.png',
     inStock: true,
     brand: 'BREMBO',
     partNumber: 'P 85 001'
@@ -41,6 +48,8 @@ export const products: Product[] = [
     category: 'Lubrifiants',
     description: 'Huile moteur synthétique 5W-30 pour tous types de moteurs',
     price: 45.00,
+    image1: '/images/products/huile1.png',
+    image2: '/images/products/huile2.png',
     inStock: true,
     brand: 'TOTAL',
     partNumber: 'H 5W30'
@@ -61,6 +70,9 @@ export const products: Product[] = [
     category: 'Distribution',
     description: 'Courroie de distribution renforcée pour moteurs diesel',
     price: 125.00,
+    image1: '/images/products/cour1.png',
+    image2: '/images/products/cour2.png',
+    image3: '/images/products/cour3.png',
     inStock: true,
     brand: 'GATES',
     partNumber: 'C 5678'

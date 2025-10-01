@@ -99,6 +99,11 @@ export const fr = {
       send: 'Envoyer le message',
     },
   },
+  brands: {
+    title: 'Que Des Produis Originaux',
+    subtitle: 'Nous travaillons exclusivement avec des marques reconnues pour garantir la qualité et l\'origine de nos pièces.',
+    note: 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.',
+  },
   footer: {
     description: 'EspaceAuto92 - Votre partenaire automobile de confiance à Nanterre depuis 2010.',
     quickLinks: 'Liens rapides',
@@ -108,6 +113,8 @@ export const fr = {
     copyright: '© 2024 EspaceAuto92. Tous droits réservés.',
   },
 }
+
+
 
 
 

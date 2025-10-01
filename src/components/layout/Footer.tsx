@@ -25,11 +25,20 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">E</span>
+            <div className="flex items-center">
+              <img 
+                src="/logo.png" 
+                alt="EspaceAuto92 Logo" 
+                className="w-20 h-20 object-contain"
+                onError={(e) => {
+                  // Fallback to text if logo doesn't exist
+                  e.currentTarget.style.display = 'none'
+                  e.currentTarget.nextElementSibling.style.display = 'flex'
+                }}
+              />
+              <div className="w-20 h-20 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg hidden">
+                <span className="text-white font-bold text-2xl">A</span>
               </div>
-              <span className="text-xl font-bold">EspaceAuto92</span>
             </div>
             <p className="text-gray-300 text-sm">
               {t('footer.description')}
