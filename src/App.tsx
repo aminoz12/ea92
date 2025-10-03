@@ -4,6 +4,7 @@ import { ThemeProvider } from './providers/ThemeProvider'
 import { HomePage } from './pages/HomePage'
 import { ProPage } from './pages/ProPage'
 import { AboutPage } from './pages/AboutPage'
+import { TawkTo } from './components/TawkTo'
 import './styles/globals.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
               <Route path="/pro" element={<ProPage />} />
               <Route path="/about" element={<AboutPage />} />
             </Routes>
+            <TawkTo />
           </div>
         </ThemeProvider>
       </LocaleProvider>
