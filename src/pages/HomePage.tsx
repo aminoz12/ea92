@@ -7,7 +7,6 @@ import { CarteGriseSection } from '../components/sections/CarteGriseSection'
 import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
 import { FAQSection } from '../components/sections/FAQSection'
-import { ModernHero } from '../components/sections/ModernHero'
 import { BrandsSection } from '../components/sections/BrandsSection'
 
 export function HomePage() {

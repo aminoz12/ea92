@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import { useLocale } from '../../hooks/useLocale'
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/Card'
 
 export function ContactSection() {
-  const { t } = useLocale()
   const [showDirectionsModal, setShowDirectionsModal] = useState(false)
 
   const openDirections = (app: 'google' | 'waze' | 'apple') => {

@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
-import { useLocale } from '../../hooks/useLocale'
 
 export function AboutSection() {
-  const { t } = useLocale()
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -53,29 +51,6 @@ export function AboutSection() {
     }
   ]
 
-  const team = [
-    {
-      name: 'Jean-Pierre Martin',
-      role: 'Fondateur & Directeur',
-      experience: '20 ans d\'expérience',
-      specialty: 'Diagnostic & Réparation',
-      image: '👨‍🔧'
-    },
-    {
-      name: 'Marie Dubois',
-      role: 'Responsable Pièces',
-      experience: '12 ans d\'expérience',
-      specialty: 'Gestion Stock & Commandes',
-      image: '👩‍💼'
-    },
-    {
-      name: 'Ahmed Benali',
-      role: 'Technicien Senior',
-      experience: '15 ans d\'expérience',
-      specialty: 'Mécanique & Électronique',
-      image: '👨‍🔬'
-    }
-  ]
 
   return (
     <section id="about" className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">

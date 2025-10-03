@@ -10,8 +10,7 @@ interface GoogleReview {
 }
 
 export function TestimonialsSection() {
-  const [currentReviewIndex, setCurrentReviewIndex] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const [currentReviewIndex] = useState(0)
 
   // 21 Google reviews data
   const googleReviews: GoogleReview[] = [
