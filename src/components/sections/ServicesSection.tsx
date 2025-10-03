@@ -29,37 +29,31 @@ export function ServicesSection() {
         {/* Additional Info */}
         <div className="mt-16 text-center">
           <div className="p-8">
-            <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
-              Pourquoi choisir 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700"> EspaceAuto92</span> ?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-              <div className="text-center group">
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-6">
+                Pourquoi choisir 
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700"> EspaceAuto92</span> ?
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                <div className="text-center group">
+                <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <img src="/mechanic.gif" alt="Expertise" className="w-24 h-24 object-contain" />
                 </div>
-                <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Expertise</h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Plus de 10 ans d'expérience dans l'automobile avec des techniciens certifiés</p>
-              </div>
-              <div className="text-center group">
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Expertise</h4>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Plus de 10 ans d'expérience dans l'automobile avec des techniciens certifiés</p>
                 </div>
-                <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Rapidité</h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Service rapide et efficace avec des délais respectés</p>
-              </div>
-              <div className="text-center group">
-                <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
+                <div className="text-center group">
+                <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <img src="/delivery-truck.gif" alt="Rapidité" className="w-24 h-24 object-contain" />
                 </div>
-                <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Confiance</h4>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Partenaires de confiance depuis 2010 avec garantie sur tous nos services</p>
+                  <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Rapidité</h4>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Service rapide et efficace avec des délais respectés</p>
+                </div>
+                <div className="text-center group">
+                <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <img src="/friendship.gif" alt="Confiance" className="w-24 h-24 object-contain" />
+                </div>
+                  <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Confiance</h4>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Partenaires de confiance depuis 2010 avec garantie sur tous nos services</p>
               </div>
             </div>
           </div>
