@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { useLocale } from '../../hooks/useLocale'
 import { useTheme } from '../../hooks/useTheme'
 import { Button } from '../ui/Button'
@@ -9,16 +9,45 @@ export function Header() {
   const { locale, setLocale } = useLocale()
   const { setTheme, resolvedTheme } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
 
   const navigation = [
     { name: 'Accueil', href: '/' },
     { name: 'Services', href: '#services' },
-    { name: 'Compte PRO', href: '#pro' },
-    { name: 'À propos', href: '#about' },
+    { name: 'Compte PRO', href: '/pro' },
+    { name: 'À propos', href: '/about' },
     { name: 'FAQ', href: '#faq' },
   ]
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+
+  const handleSectionNavigation = (href: string) => {
+    if (href.startsWith('#')) {
+      if (location.pathname !== '/') {
+        // If not on home page, navigate to home with hash
+        window.location.href = `/${href}`
+      } else {
+        // If on home page, scroll to section
+        const element = document.querySelector(href)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+    }
+  }
+
+  // Handle hash navigation when page loads
+  useEffect(() => {
+    if (location.pathname === '/' && location.hash) {
+      // Small delay to ensure page is fully loaded
+      setTimeout(() => {
+        const element = document.querySelector(location.hash)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 100)
+    }
+  }, [location.pathname, location.hash])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -35,16 +64,31 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8 flex-1 justify-center">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-800 hover:text-secondary-600 font-display font-semibold text-base transition-all duration-300 relative group py-2"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-1 bg-secondary-600 transition-all duration-300 group-hover:w-full rounded-full"></span>
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              // Use custom handler for section links, Link for page routes
+              if (item.href.startsWith('#')) {
+                return (
+                  <button
+                    key={item.name}
+                    onClick={() => handleSectionNavigation(item.href)}
+                    className="text-gray-800 hover:text-secondary-600 font-display font-semibold text-base transition-all duration-300 relative group py-2"
+                  >
+                    {item.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-1 bg-secondary-600 transition-all duration-300 group-hover:w-full rounded-full"></span>
+                  </button>
+                )
+              }
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-gray-800 hover:text-secondary-600 font-display font-semibold text-base transition-all duration-300 relative group py-2"
+                >
+                  {item.name}
+                  <span className="absolute -bottom-1 left-0 w-0 h-1 bg-secondary-600 transition-all duration-300 group-hover:w-full rounded-full"></span>
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Desktop Actions */}
@@ -124,16 +168,33 @@ export function Header() {
         {isMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-4 pt-4 pb-6 space-y-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block px-4 py-3 text-lg font-display font-semibold text-gray-800 hover:text-secondary-600 hover:bg-gray-50 rounded-xl transition-all duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                // Use custom handler for section links, Link for page routes
+                if (item.href.startsWith('#')) {
+                  return (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        handleSectionNavigation(item.href)
+                        setIsMenuOpen(false)
+                      }}
+                      className="block w-full text-left px-4 py-3 text-lg font-display font-semibold text-gray-800 hover:text-secondary-600 hover:bg-gray-50 rounded-xl transition-all duration-300"
+                    >
+                      {item.name}
+                    </button>
+                  )
+                }
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="block px-4 py-3 text-lg font-display font-semibold text-gray-800 hover:text-secondary-600 hover:bg-gray-50 rounded-xl transition-all duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              })}
               
               <div className="pt-6 border-t border-gray-200">
                 <div className="flex items-center justify-between px-4 py-3">

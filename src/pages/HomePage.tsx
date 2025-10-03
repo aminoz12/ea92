@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { ServicesSection } from '../components/sections/ServicesSection'
@@ -6,16 +6,12 @@ import { ProductsSection } from '../components/sections/ProductsSection'
 import { CarteGriseSection } from '../components/sections/CarteGriseSection'
 import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
+import { FAQSection } from '../components/sections/FAQSection'
 import { ModernHero } from '../components/sections/ModernHero'
 import { BrandsSection } from '../components/sections/BrandsSection'
 
 export function HomePage() {
-  const [showHero, setShowHero] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
-
-  const handleVideoEnd = () => {
-    setShowHero(true)
-  }
 
   return (
     <div className="min-h-screen">
@@ -30,43 +26,69 @@ export function HomePage() {
             autoPlay
             muted
             playsInline
-            onEnded={handleVideoEnd}
+            loop
           >
             <source src="/vid2.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           
-          {/* Modern Hero - Shows when video ends */}
-          {showHero && (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-              {/* Modern Background Elements */}
-              <div className="absolute inset-0 overflow-hidden">
-                {/* Animated geometric shapes */}
-                <div className="absolute top-20 left-10 w-32 h-32 bg-secondary-500/10 rounded-full animate-pulse"></div>
-                <div className="absolute top-40 right-20 w-24 h-24 bg-red-500/10 rounded-full animate-pulse delay-1000"></div>
-                <div className="absolute bottom-32 left-1/4 w-16 h-16 bg-blue-500/10 rounded-full animate-pulse delay-500"></div>
-                <div className="absolute bottom-20 right-1/3 w-20 h-20 bg-yellow-500/10 rounded-full animate-pulse delay-700"></div>
+          {/* Video Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
+          
+          {/* Hero Content */}
+          <div className="relative z-10 h-full flex items-center justify-center mt-[150px]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              {/* Main Title */}
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight">
+                <span className="block">
+                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+                    Espace Auto 92
+                  </span>
+                </span>
+                <span className="block text-3xl md:text-4xl lg:text-5xl font-medium opacity-90 mt-4">
+                  Votre partenaire automobile
+                </span>
+              </h1>
+              
+              {/* Subtitle */}
+              <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed">
+                Pièces détachées, réparations et services professionnels
+                <br />
+                <span className="text-lg md:text-xl text-white/70">
+                  à Nanterre depuis 2010
+                </span>
+              </p>
+              
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button 
+                  onClick={() => {
+                    const servicesSection = document.getElementById('services')
+                    if (servicesSection) {
+                      servicesSection.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  }}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="relative z-10">Découvrir nos services</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
                 
-                {/* Floating automotive elements */}
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/20 rounded-full animate-bounce"></div>
-                <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-secondary-400/30 rounded-full animate-bounce delay-300"></div>
-                <div className="absolute bottom-1/3 left-1/3 w-1.5 h-1.5 bg-red-400/30 rounded-full animate-bounce delay-700"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-blue-400/30 rounded-full animate-bounce delay-1000"></div>
-                
-                {/* Grid pattern overlay */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-                
-                {/* Radial gradient overlay */}
-                <div className="absolute inset-0 bg-radial-gradient from-transparent via-secondary-500/5 to-transparent"></div>
-                
-                {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-secondary-500/5 to-transparent rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-red-500/5 to-transparent rounded-full blur-3xl"></div>
+                <a 
+                  href="tel:0147851000"
+                  className="group px-8 py-4 border-2 border-white/30 hover:border-white text-white font-bold text-lg rounded-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
+                >
+                  <span className="flex items-center">
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                    01 47 85 10 00
+                  </span>
+                </a>
               </div>
               
-              <ModernHero />
             </div>
-          )}
+          </div>
         </section>
 
         {/* Services Section */}
@@ -83,6 +105,9 @@ export function HomePage() {
 
         {/* Products Section */}
         <ProductsSection />
+
+        {/* FAQ Section */}
+        <FAQSection />
 
         {/* Contact Section */}
         <ContactSection />

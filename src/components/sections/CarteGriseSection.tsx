@@ -6,7 +6,7 @@ export function CarteGriseSection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+    <section className="py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-secondary-500/10 to-secondary-600/10 dark:from-secondary-500/20 dark:to-secondary-600/20 rounded-full blur-2xl"></div>
@@ -40,11 +40,7 @@ export function CarteGriseSection() {
             {/* Features */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
+                <img src="/delivery-courier.gif" alt="Livraison Express" className="w-12 h-12 object-cover" />
                 <div>
                   <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-1">Livraison Express</h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">Réception en 10 minutes par email</p>
@@ -52,11 +48,7 @@ export function CarteGriseSection() {
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
+                <img src="/data-safety.gif" alt="100% Sécurisé" className="w-12 h-12 object-cover" />
                 <div>
                   <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-1">100% Sécurisé</h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">Données protégées et cryptées</p>
@@ -64,11 +56,7 @@ export function CarteGriseSection() {
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
+                <img src="/customs-clearance.gif" alt="Processus Simple" className="w-12 h-12 object-cover" />
                 <div>
                   <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-1">Processus Simple</h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">3 étapes seulement</p>
@@ -76,11 +64,7 @@ export function CarteGriseSection() {
               </div>
 
               <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
-                </div>
+                <img src="/virtual-assistant.gif" alt="Support 24/7" className="w-12 h-12 object-cover" />
                 <div>
                   <h3 className="font-display font-semibold text-gray-900 dark:text-white mb-1">Support 24/7</h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">Assistance disponible à tout moment</p>
@@ -121,11 +105,9 @@ export function CarteGriseSection() {
 
               {/* Floating secondary element with animation */}
               <div className="absolute -bottom-4 -right-4 bg-white dark:bg-gray-800 rounded-xl shadow-modern p-4 animate-float">
-                <div className="w-24 h-24 bg-gradient-to-br from-secondary-100 to-secondary-200 dark:from-secondary-800 dark:to-secondary-700 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-2xl mb-1 animate-pulse">⚡</div>
-                    <p className="text-xs text-gray-500 dark:text-gray-300 font-display font-semibold">10 min</p>
-                  </div>
+                <div className="text-center">
+                  <img src="/session.gif" alt="10 min" className="w-8 h-8 mb-1" />
+                  <p className="text-xs text-gray-500 dark:text-gray-300 font-display font-semibold">10 min</p>
                 </div>
               </div>
 

@@ -28,11 +28,11 @@ export function ProductsSection() {
   const displayProducts = searchQuery ? searchResults : featuredProducts
 
   return (
-    <section id="products" className="py-24 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <section id="products" className="py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <div className="inline-block mb-8">
+        <div className="text-center mb-8">
+          <div className="inline-block mb-4">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 relative">
               <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
             {t('products.title')}
@@ -41,7 +41,7 @@ export function ProductsSection() {
           </h2>
           </div>
           
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium mb-12">
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium mb-6">
             {t('products.subtitle')}
           </p>
 

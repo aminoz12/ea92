@@ -4,6 +4,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom scroll animations */
+@keyframes scroll-right-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-left-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-scroll-right-left {
+  animation: scroll-right-left 20s linear infinite;
+}
+
+.animate-scroll-left-right {
+  animation: scroll-left-right 20s linear infinite;
+}
+
+
 :root {
   --primary-50: #eff6ff;
   --primary-500: #3b82f6;

@@ -104,6 +104,54 @@ export const fr = {
     subtitle: 'Nous travaillons exclusivement avec des marques reconnues pour garantir la qualité et l\'origine de nos pièces.',
     note: 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.',
   },
+  about: {
+    title: 'À propos d\'EspaceAuto92',
+    subtitle: 'Votre partenaire automobile de confiance à Nanterre depuis 2010. Expertise, qualité et service personnalisé.',
+    story: {
+      title: 'Notre Histoire',
+      content: {
+        paragraph1: 'Fondée en 2010 par Jean-Pierre Martin, EspaceAuto92 est née d\'une passion pour l\'automobile et d\'un désir de servir la communauté de Nanterre avec excellence.',
+        paragraph2: 'Depuis plus de 14 ans, nous avons construit notre réputation sur la qualité, la transparence et l\'expertise technique. Notre équipe de techniciens certifiés vous accompagne dans tous vos projets automobiles.',
+        paragraph3: 'Aujourd\'hui, nous sommes fiers d\'être le partenaire de référence pour les particuliers et professionnels de la région parisienne.'
+      }
+    },
+    stats: {
+      experience: 'Années d\'expérience',
+      clients: 'Clients satisfaits',
+      parts: 'Pièces en stock',
+      service: 'Service client'
+    },
+    values: {
+      title: 'Nos Valeurs',
+      subtitle: 'Les principes qui guident notre travail au quotidien',
+      expertise: {
+        title: 'Expertise Technique',
+        description: 'Plus de 14 ans d\'expérience dans l\'automobile avec une équipe de techniciens certifiés.'
+      },
+      speed: {
+        title: 'Rapidité',
+        description: 'Service express et livraison rapide pour minimiser l\'immobilisation de votre véhicule.'
+      },
+      quality: {
+        title: 'Qualité Garantie',
+        description: 'Pièces d\'origine et de qualité équivalente avec garantie constructeur.'
+      },
+      trust: {
+        title: 'Confiance',
+        description: 'Relation de confiance avec nos clients depuis 2010, transparence et conseils honnêtes.'
+      }
+    },
+    team: {
+      title: 'Notre Équipe',
+      subtitle: 'Des professionnels passionnés à votre service'
+    },
+    cta: {
+      title: 'Prêt à nous faire confiance ?',
+      subtitle: 'Rejoignez les milliers de clients qui nous font confiance pour leurs besoins automobiles.',
+      contact: 'Nous Contacter',
+      services: 'Nos Services'
+    }
+  },
   footer: {
     description: 'EspaceAuto92 - Votre partenaire automobile de confiance à Nanterre depuis 2010.',
     quickLinks: 'Liens rapides',

@@ -97,9 +97,7 @@ const services = [
 
 export function SlidingServices() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [isDragging, setIsDragging] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
   const [startX, setStartX] = useState(0)
   const [scrollLeft, setScrollLeft] = useState(0)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -107,21 +105,21 @@ export function SlidingServices() {
   const cardWidth = 450 // width of each card including gap - increased for bigger images
   const totalWidth = cardWidth * services.length
 
-  // Auto-play animation
+  // Auto-play animation - continuous scrolling
   useEffect(() => {
-    if (!isAutoPlaying || isDragging || isHovered) return
+    if (isDragging) return // Only pause when actively dragging
 
     const container = containerRef.current
     if (!container) return
 
     let animationId: number
     let scrollPosition = scrollLeft
-    const scrollSpeed = 2.5 // pixels per frame - much faster
+    const scrollSpeed = 1.5 // pixels per frame - smooth continuous speed
 
     const animate = () => {
       scrollPosition += scrollSpeed
       
-      // Reset position when we've scrolled through all cards
+      // Reset position when we've scrolled through all cards for seamless loop
       if (scrollPosition >= totalWidth) {
         scrollPosition = 0
         setCurrentIndex(0)
@@ -137,12 +135,11 @@ export function SlidingServices() {
     return () => {
       cancelAnimationFrame(animationId)
     }
-  }, [isAutoPlaying, isDragging, isHovered, scrollLeft, totalWidth])
+  }, [isDragging, scrollLeft, totalWidth])
 
   // Touch/Mouse drag handlers
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDragging(true)
-    setIsAutoPlaying(false)
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
     setStartX(clientX)
     if (containerRef.current) {
@@ -167,34 +164,12 @@ export function SlidingServices() {
     if (!isDragging) return
     
     setIsDragging(false)
-    
-    // Snap to nearest card
-    const newIndex = Math.round(scrollLeft / cardWidth)
-    const snappedScrollLeft = newIndex * cardWidth
-    
-    if (containerRef.current) {
-      containerRef.current.style.transition = 'transform 0.3s ease-out'
-      containerRef.current.style.transform = `translateX(-${snappedScrollLeft}px)`
-      setScrollLeft(snappedScrollLeft)
-      setCurrentIndex(newIndex % services.length)
-      
-      // Reset transition after animation
-      setTimeout(() => {
-        if (containerRef.current) {
-          containerRef.current.style.transition = ''
-        }
-      }, 300)
-    }
-    
-    // Resume auto-play after 2 seconds (shorter delay for faster scrolling)
-    setTimeout(() => {
-      setIsAutoPlaying(true)
-    }, 2000)
+    // Scrolling will automatically resume when isDragging becomes false
   }
 
-  // Navigation functions
+  // Navigation functions - temporarily pause scrolling
   const goToPrevious = () => {
-    setIsAutoPlaying(false)
+    setIsDragging(true) // Temporarily pause scrolling
     const newIndex = currentIndex === 0 ? services.length - 1 : currentIndex - 1
     const newScrollLeft = newIndex * cardWidth
     
@@ -208,17 +183,13 @@ export function SlidingServices() {
         if (containerRef.current) {
           containerRef.current.style.transition = ''
         }
+        setIsDragging(false) // Resume scrolling
       }, 300)
     }
-    
-    // Resume auto-play after 2 seconds (shorter delay for faster scrolling)
-    setTimeout(() => {
-      setIsAutoPlaying(true)
-    }, 2000)
   }
 
   const goToNext = () => {
-    setIsAutoPlaying(false)
+    setIsDragging(true) // Temporarily pause scrolling
     const newIndex = (currentIndex + 1) % services.length
     const newScrollLeft = newIndex * cardWidth
     
@@ -232,13 +203,9 @@ export function SlidingServices() {
         if (containerRef.current) {
           containerRef.current.style.transition = ''
         }
+        setIsDragging(false) // Resume scrolling
       }, 300)
     }
-    
-    // Resume auto-play after 2 seconds (shorter delay for faster scrolling)
-    setTimeout(() => {
-      setIsAutoPlaying(true)
-    }, 2000)
   }
 
   // removed toggleAutoPlay (unused)
@@ -249,11 +216,9 @@ export function SlidingServices() {
   return (
     <div 
       className="relative py-8 overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Navigation Controls */}
-      <div className="flex items-center justify-center mb-6">
+      <div className="flex items-center justify-center mb-4">
         <div className="flex items-center space-x-4">
           <button
             onClick={goToPrevious}
@@ -290,11 +255,7 @@ export function SlidingServices() {
           onMouseDown={handleStart}
           onMouseMove={handleMove}
           onMouseUp={handleEnd}
-          onMouseLeave={() => {
-            handleEnd()
-            setIsHovered(false)
-          }}
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={handleEnd}
           onTouchStart={handleStart}
           onTouchMove={handleMove}
           onTouchEnd={handleEnd}
@@ -311,12 +272,12 @@ export function SlidingServices() {
       </div>
 
       {/* Dots indicator */}
-      <div className="flex justify-center mt-6 space-x-2">
+      <div className="flex justify-center mt-4 space-x-2">
         {services.map((_, index) => (
           <button
             key={index}
             onClick={() => {
-              setIsAutoPlaying(false)
+              setIsDragging(true) // Temporarily pause scrolling
               const newScrollLeft = index * cardWidth
               
               if (containerRef.current) {
@@ -329,13 +290,9 @@ export function SlidingServices() {
                   if (containerRef.current) {
                     containerRef.current.style.transition = ''
                   }
+                  setIsDragging(false) // Resume scrolling
                 }, 300)
               }
-              
-              // Resume auto-play after 3 seconds
-              setTimeout(() => {
-                setIsAutoPlaying(true)
-              }, 3000)
             }}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === currentIndex 

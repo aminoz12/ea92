@@ -16,10 +16,10 @@ export function BrandsSection() {
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800">
+    <section className="py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <div className="inline-block">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 relative">
               <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
@@ -33,38 +33,63 @@ export function BrandsSection() {
           </p>
         </div>
 
-        {/* Brands Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-8 items-center">
-          {brands.map((brand, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-center p-6 bg-white dark:bg-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 group"
-            >
-              <div className="relative w-full h-20 flex items-center justify-center">
-                {/* Brand logo */}
-                <img
-                  src={brand.logo}
-                  alt={brand.alt}
-                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                  onError={(e) => {
-                    // Show fallback text if image fails to load
-                    const fallback = e.currentTarget.nextElementSibling as HTMLElement
-                    if (fallback) {
-                      fallback.style.display = 'flex'
-                    }
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-                
-                {/* Fallback text - hidden by default */}
-                <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-600 rounded-lg group-hover:bg-gray-200 dark:group-hover:bg-gray-500 transition-colors duration-300 hidden">
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-300 text-center">
-                    {brand.name}
-                  </span>
+        {/* Scrolling Brands */}
+        <div className="overflow-hidden">
+          {/* First row - scroll right to left */}
+          <div className="flex animate-scroll-right-left">
+            {/* Duplicate brands for seamless loop */}
+            {[...brands, ...brands].map((brand, index) => (
+              <div key={`row1-${index}`} className="flex-shrink-0 mx-8 group">
+                <div className="relative w-32 h-20 flex items-center justify-center">
+                  <img
+                    src={brand.logo}
+                    alt={brand.alt}
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                    onError={(e) => {
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                      if (fallback) {
+                        fallback.style.display = 'flex'
+                      }
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                  <div className="w-full h-full flex items-center justify-center transition-colors duration-300 hidden">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-300 text-center">
+                      {brand.name}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          
+          {/* Second row - scroll left to right */}
+          <div className="flex animate-scroll-left-right mt-8">
+            {/* Duplicate brands for seamless loop */}
+            {[...brands, ...brands].map((brand, index) => (
+              <div key={`row2-${index}`} className="flex-shrink-0 mx-8 group">
+                <div className="relative w-32 h-20 flex items-center justify-center">
+                  <img
+                    src={brand.logo}
+                    alt={brand.alt}
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                    onError={(e) => {
+                      const fallback = e.currentTarget.nextElementSibling as HTMLElement
+                      if (fallback) {
+                        fallback.style.display = 'flex'
+                      }
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                  <div className="w-full h-full flex items-center justify-center transition-colors duration-300 hidden">
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-300 text-center">
+                      {brand.name}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Additional Info */}
