@@ -58,7 +58,7 @@ export const fr = {
   },
   products: {
     title: 'Produits',
-    subtitle: 'Pièces détachées et accessoires auto',
+    subtitle: 'Pièces détachées et Accessoires Automobile',
     featured: 'Produits vedettes',
     categories: 'Catégories',
     inStock: 'En stock',
@@ -100,19 +100,20 @@ export const fr = {
     },
   },
   brands: {
-    title: 'Que Des Produis Originaux',
-    subtitle: 'Nous travaillons exclusivement avec des marques reconnues pour garantir la qualité et l\'origine de nos pièces.',
+    title: 'Les Meilleures Marques, Au Meilleur Prix',
+    subtitle: 'Parce que votre sécurité est notre priorité, nous ne proposons que le meilleur.',
     note: 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.',
   },
   about: {
     title: 'À propos d\'EspaceAuto92',
     subtitle: 'Votre partenaire automobile de confiance à Nanterre depuis 2010. Expertise, qualité et service personnalisé.',
     story: {
-      title: 'Notre Histoire',
+      title: 'À propos de nous',
       content: {
-        paragraph1: 'Fondée en 2010 par Jean-Pierre Martin, EspaceAuto92 est née d\'une passion pour l\'automobile et d\'un désir de servir la communauté de Nanterre avec excellence.',
-        paragraph2: 'Depuis plus de 14 ans, nous avons construit notre réputation sur la qualité, la transparence et l\'expertise technique. Notre équipe de techniciens certifiés vous accompagne dans tous vos projets automobiles.',
-        paragraph3: 'Aujourd\'hui, nous sommes fiers d\'être le partenaire de référence pour les particuliers et professionnels de la région parisienne.'
+        paragraph1: 'Créé en 2017, Espace Auto 92 est avant tout une entreprise de passionnés d\'automobile.',
+        paragraph2: 'Depuis nos débuts, notre objectif est simple : fournir des pièces de qualité rapidement, tout en offrant un service fiable et honnête à nos clients.',
+        paragraph3: 'Avec le temps, nous avons gagné la confiance de nombreux garages et particuliers grâce à notre réactivité, notre stock complet et notre expertise technique.',
+        paragraph4: 'Aujourd\'hui, notre équipe de techniciens certifiés continue de mettre tout son savoir-faire au service de la région parisienne — avec une priorité : vous dépanner vite, bien et au juste prix.'
       }
     },
     stats: {

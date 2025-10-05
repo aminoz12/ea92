@@ -133,12 +133,6 @@ export const AnimatedLocationMap = () => {
               </span>
             </motion.h2>
 
-            <motion.p 
-              className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"
-              variants={itemVariants}
-            >
-              Trouvez-nous facilement au cœur de Nanterre
-            </motion.p>
           </div>
 
           {/* Map and info grid */}

@@ -108,7 +108,7 @@ export function AboutSection() {
                     transition={{ duration: 0.8 }}
                   >
                     <span className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                      Notre Histoire
+                      À propos de nous
                     </span>
                   </motion.h3>
                   
@@ -118,26 +118,29 @@ export function AboutSection() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                      Fondée en 2010 par <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">Jean-Pierre Martin</strong>, 
-                      EspaceAuto92 est née d'une passion pour l'automobile et d'un désir de servir la communauté 
-                      de Nanterre avec excellence.
+                      Créé en 2017, <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">Espace Auto 92</strong> est avant tout une entreprise de passionnés d'automobile.
                     </motion.p>
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
                     >
-                      Depuis plus de 14 ans, nous avons construit notre réputation sur la <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">qualité</strong>, 
-                      la <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">transparence</strong> et l'<strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">expertise technique</strong>. 
-                      Notre équipe de techniciens certifiés vous accompagne dans tous vos projets automobiles.
+                      Depuis nos débuts, notre objectif est simple : fournir des pièces de <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">qualité</strong> rapidement, 
+                      tout en offrant un <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">service fiable</strong> et <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">honnête</strong> à nos clients.
                     </motion.p>
                     <motion.p
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
                     >
-                      Aujourd'hui, nous sommes fiers d'être le <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">partenaire de référence</strong> 
-                      pour les particuliers et professionnels de la région parisienne.
+                      Avec le temps, nous avons gagné la <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">confiance</strong> de nombreux garages et particuliers grâce à notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">réactivité</strong>, notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">stock complet</strong> et notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">expertise technique</strong>.
+                    </motion.p>
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.8 }}
+                    >
+                      Aujourd'hui, notre équipe de <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">techniciens certifiés</strong> continue de mettre tout son savoir-faire au service de la région parisienne — avec une priorité : vous <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">dépanner vite, bien et au juste prix</strong>.
                     </motion.p>
                   </div>
                 </div>

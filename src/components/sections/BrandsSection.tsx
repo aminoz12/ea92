@@ -21,11 +21,10 @@ export function BrandsSection() {
         {/* Section Header */}
         <div className="text-center mb-8">
           <div className="inline-block">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 relative">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
                 {t('brands.title')}
               </span>
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
             </h2>
           </div>
           <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed font-medium">

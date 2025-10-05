@@ -379,16 +379,10 @@ export const AnimatedOpeningHours = () => {
                 className="text-4xl md:text-5xl font-bold mb-2"
                 variants={itemVariants}
               >
-                <span className="bg-gradient-to-r from-red-600 via-gray-900 to-black bg-clip-text text-transparent">
-                  Heures d'ouverture
+                <span className="bg-gradient-to-r from-red-600 via-gray-900 to-black dark:from-white dark:via-white dark:to-white bg-clip-text text-transparent">
+                  Horaires d'ouverture
                 </span>
               </motion.h2>
-              <motion.p 
-                className="text-gray-600 dark:text-gray-400 text-lg font-medium"
-                variants={itemVariants}
-              >
-                Toujours là pour vous servir
-              </motion.p>
             </div>
           </div>
 

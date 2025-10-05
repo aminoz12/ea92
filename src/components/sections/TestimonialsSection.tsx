@@ -96,15 +96,14 @@ export function TestimonialsSection() {
           
           <h2 className="text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white mb-6">
             <div className="leading-tight">
-              <div>Ce que disent nos</div>
               <div className="bg-gradient-to-r from-secondary-600 to-secondary-700 bg-clip-text text-transparent">
-                clients sur Google
+                L'avis de nos clients compte
               </div>
             </div>
           </h2>
           
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Découvrez les avis authentiques de nos clients satisfaits
+          <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed" style={{fontSize: '1.425rem'}}>
+            La satisfaction de nos clients, notre plus grande fierté.
           </p>
         </div>
 

@@ -5,7 +5,7 @@ export function ContactSection() {
   const [showDirectionsModal, setShowDirectionsModal] = useState(false)
 
   const openDirections = (app: 'google' | 'waze' | 'apple') => {
-    const address = "123 Avenue de la République, 92000 Nanterre, France"
+    const address = "426 Avenue de la République, 92000 Nanterre, France"
     const encodedAddress = encodeURIComponent(address)
     
     switch (app) {
@@ -36,9 +36,6 @@ export function ContactSection() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-6">
             Notre Localisation
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Trouvez-nous facilement à Nanterre, au cœur des Hauts-de-Seine
-          </p>
         </div>
 
         {/* Map and Contact Information */}
@@ -74,7 +71,7 @@ export function ContactSection() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   className="rounded-b-2xl"
-                  title="Localisation EspaceAuto92 - 123 Avenue de la République, 92000 Nanterre"
+                  title="Localisation EspaceAuto92 - 426 Avenue de la République, 92000 Nanterre"
                 ></iframe>
                 
                 {/* Map overlay with address */}
@@ -88,7 +85,7 @@ export function ContactSection() {
                     </div>
                     <div>
                       <p className="font-semibold text-gray-900 dark:text-white text-sm">Espace Auto 92</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-300">123 Avenue de la République<br/>92000 Nanterre, France</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-300">426 Avenue de la République<br/>92000 Nanterre, France</p>
                     </div>
                   </div>
                 </div>

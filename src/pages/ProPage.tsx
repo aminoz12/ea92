@@ -45,19 +45,19 @@ export function ProPage() {
 
   const proAdvantages = [
     {
-      image: "/stock.png",
+      image: "/des-boites.png",
       title: "Stock réel disponible\nimmédiatement",
       description: "Plus de 10 000 pièces en stock, prêtes à être enlevées ou livrées. Pas de délai, pas de mauvaise surprise.",
-      color: "blue"
+      color: "red"
     },
     {
-      image: "/livreur.png",
+      image: "/livraison-express.png",
       title: "Livraison\nExpress",
       description: "Commandez par téléphone ou WhatsApp, on vous livre directement dans votre atelier, souvent dans l'heure.",
-      color: "green"
+      color: "red"
     },
     {
-      image: "/discount.png",
+      image: "/affordable.png",
       title: "Tarifs pros ultra\ncompétitifs",
       description: "Réservé aux professionnels de l'automobile : accédez à des prix remisés sur l'ensemble de notre catalogue.",
       color: "red"
@@ -80,7 +80,7 @@ export function ProPage() {
       red: {
         icon: 'bg-gradient-to-r from-red-500 to-red-600',
         border: 'border-red-200 dark:border-red-500/30',
-        text: 'text-red-700 dark:text-red-400'
+        text: 'text-gray-900 dark:text-gray-100'
       }
     }
     return colorMap[color as keyof typeof colorMap] || colorMap.blue

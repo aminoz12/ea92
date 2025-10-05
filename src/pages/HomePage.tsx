@@ -8,6 +8,7 @@ import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
 import { FAQSection } from '../components/sections/FAQSection'
 import { BrandsSection } from '../components/sections/BrandsSection'
+import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
 
 export function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -18,7 +19,7 @@ export function HomePage() {
       
       <main>
         {/* Hero Section with Video Background */}
-        <section className="relative h-screen overflow-hidden">
+        <section className="relative h-[calc(100vh-38px)] overflow-hidden">
           <video
             ref={videoRef}
             className="absolute inset-0 w-full h-full object-cover"
@@ -35,26 +36,27 @@ export function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
           
           {/* Hero Content */}
-          <div className="relative z-10 h-full flex items-center justify-center mt-[150px]">
+          <div className="relative z-10 h-full flex items-center justify-center mt-[90px]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               {/* Main Title */}
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight">
                 <span className="block">
-                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-                    Espace Auto 92
+                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent anton-regular">
+                    ICI TROUVEZ L'EXCELLENCE
                   </span>
-                </span>
-                <span className="block text-3xl md:text-4xl lg:text-5xl font-medium opacity-90 mt-4">
-                  Votre partenaire automobile
+                  <br />
+                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent anton-regular">
+                    LÀ OÙ LES PRIX FONT LA DIFFÉRENCE
+                  </span>
                 </span>
               </h1>
               
               {/* Subtitle */}
-              <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed">
-                Pièces détachées, réparations et services professionnels
+              <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed libre-franklin">
+                Distributeur Pièces détachées Particuliers & Professionnels 
                 <br />
                 <span className="text-lg md:text-xl text-white/70">
-                  à Nanterre depuis 2010
+                  Since 2017
                 </span>
               </p>
               
@@ -89,6 +91,9 @@ export function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Compact Opening Hours */}
+        <CompactOpeningHours />
 
         {/* Services Section */}
         <ServicesSection />

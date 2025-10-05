@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useLocale } from '../../hooks/useLocale'
+import { useTheme } from '../../hooks/useTheme'
 
 export function Footer() {
   const { t } = useLocale()
+  const { resolvedTheme } = useTheme()
 
   const quickLinks = [
     { name: t('navigation.home'), href: '/' },
@@ -27,7 +29,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center">
               <img 
-                src="/logo.png" 
+                src={resolvedTheme === 'dark' ? "/logodark.jpeg" : "/logo.png"} 
                 alt="EspaceAuto92 Logo" 
                 className="w-20 h-20 object-contain"
                 onError={(e) => {
@@ -103,7 +105,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('footer.contact')}</h3>
             <div className="space-y-2 text-sm text-gray-300">
-              <p>123 Avenue de la République</p>
+              <p>426 Avenue de la République</p>
               <p>92000 Nanterre, France</p>
               <p>+33 1 23 45 67 89</p>
               <p>contact@espaceauto92.fr</p>
