@@ -29,28 +29,28 @@ export function ServicesSection() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
                 <div className="text-center group">
                 <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <img src="/mechanic.gif" alt="Expertise" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" />
+                  <img src="/mechanic.gif" alt="Expertise" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" loading="lazy" decoding="async" />
                 </div>
                   <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Expertise</h4>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Depuis 2017, Espace Auto 92 met son expertise et ses techniciens certifiés au service de votre satisfaction.</p>
                 </div>
                 <div className="text-center group">
                 <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <img src="/delivery-truck.gif" alt="Rapidité" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" />
+                  <img src="/delivery-truck.gif" alt="Rapidité" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" loading="lazy" decoding="async" />
                 </div>
                   <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Rapidité</h4>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Rapidité, efficacité et respect des délais : notre engagement au quotidien.</p>
                 </div>
                 <div className="text-center group">
                 <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <img src="/friendship.gif" alt="Confiance" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" />
+                  <img src="/friendship.gif" alt="Confiance" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" loading="lazy" decoding="async" />
                 </div>
                   <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">Confiance</h4>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Des pièces certifiées, des marques reconnues et un service qui inspire la confiance depuis plus de 7 ans.</p>
                 </div>
                 <div className="text-center group">
                 <div className="flex justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <img src="/entrepot.gif" alt="En stock" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" />
+                  <img src="/entrepot.gif" alt="En stock" className="w-24 h-24 object-contain bg-transparent mix-blend-multiply" loading="lazy" decoding="async" />
                 </div>
                   <h4 className="text-lg font-display font-bold text-gray-900 dark:text-white mb-2">En stock</h4>
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Des milliers de références disponibles immédiatement.

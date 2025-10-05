@@ -121,6 +121,7 @@ export function Hero3D() {
         style={{ background: 'transparent' }}
         dpr={[1, 2]}
         performance={{ min: 0.5 }}
+        frameloop="demand"
       >
         <Suspense fallback={<LoadingFallback />}>
           <PerspectiveCamera makeDefault position={[0, 0, 5]} />

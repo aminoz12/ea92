@@ -27,6 +27,8 @@ export function HomePage() {
             muted
             playsInline
             loop
+            preload="metadata"
+            poster="/video-poster.jpg"
           >
             <source src="/vid2.mp4" type="video/mp4" />
             Your browser does not support the video tag.
