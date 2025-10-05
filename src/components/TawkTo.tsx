@@ -53,7 +53,13 @@ export function TawkTo() {
 // Extend Window interface for TypeScript
 declare global {
   interface Window {
-    Tawk_API: any
+    Tawk_API: {
+      showWidget: () => void;
+      hideWidget: () => void;
+      toggle: () => void;
+      customStyle?: any;
+      setAttributes?: any;
+    }
     Tawk_LoadStart: Date
   }
 }

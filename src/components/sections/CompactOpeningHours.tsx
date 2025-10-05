@@ -1,16 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
-// Declare TawkTo API for TypeScript
-declare global {
-  interface Window {
-    Tawk_API: {
-      showWidget: () => void;
-      hideWidget: () => void;
-      toggle: () => void;
-    };
-  }
-}
 
 interface HourItem {
   day: string
