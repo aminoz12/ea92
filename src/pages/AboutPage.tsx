@@ -1,9 +1,15 @@
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { AboutSection } from '../components/sections/AboutSection'
 
 export function AboutPage() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Header />

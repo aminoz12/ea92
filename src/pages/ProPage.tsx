@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { Button } from '../components/ui/Button'
@@ -10,6 +10,11 @@ import { AnimatedOpeningHours } from '../components/animations/AnimatedOpeningHo
 import { ContactSection } from '../components/sections/ContactSection'
 
 export function ProPage() {
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const [formData, setFormData] = useState({
     companyName: '',
     siret: '',

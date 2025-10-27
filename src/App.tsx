@@ -1,18 +1,21 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LocaleProvider } from './providers/LocaleProvider'
-import { ThemeProvider } from './providers/ThemeProvider'
+// import { ThemeProvider } from './providers/ThemeProvider' // DARK MODE DISABLED - Uncomment to restore
 import { HomePage } from './pages/HomePage'
 import { ProPage } from './pages/ProPage'
 import { AboutPage } from './pages/AboutPage'
 import { TawkTo } from './components/TawkTo'
+import { ScrollToTop } from './components/ScrollToTop'
 import './styles/globals.css'
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <LocaleProvider>
-        <ThemeProvider>
-          <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
+        {/* DARK MODE DISABLED - Uncomment ThemeProvider wrapper to restore */}
+        {/* <ThemeProvider> */}
+          <div className="min-h-screen bg-white transition-colors">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/fr" element={<HomePage />} />
@@ -22,7 +25,7 @@ function App() {
             </Routes>
             <TawkTo />
           </div>
-        </ThemeProvider>
+        {/* </ThemeProvider> */}
       </LocaleProvider>
     </BrowserRouter>
   )
