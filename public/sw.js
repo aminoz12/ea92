@@ -1,9 +1,9 @@
 // Service Worker for EspaceAuto92
 // Provides intelligent caching for better performance
 
-const CACHE_NAME = 'espaceauto92-v1.0.0'
-const STATIC_CACHE = 'static-v1.0.0'
-const DYNAMIC_CACHE = 'dynamic-v1.0.0'
+const CACHE_NAME = 'espaceauto92-v1.0.2'
+const STATIC_CACHE = 'static-v1.0.2'
+const DYNAMIC_CACHE = 'dynamic-v1.0.2'
 
 // Critical resources to cache immediately
 const CRITICAL_RESOURCES = [
@@ -87,9 +87,11 @@ self.addEventListener('fetch', (event) => {
                 }
                 return fetch(request)
                   .then((fetchResponse) => {
+                    // Responses for fonts may be opaque; cache without inspection.
                     cache.put(request, fetchResponse.clone())
                     return fetchResponse
                   })
+                  .catch(() => cache.match(request))
               })
           })
       )
@@ -126,12 +128,12 @@ function handleImageOrVideo(request) {
           }
           return fetch(request)
             .then((fetchResponse) => {
-              // Cache for 7 days
-              const responseToCache = fetchResponse.clone()
-              responseToCache.headers.set('Cache-Control', 'max-age=604800')
-              cache.put(request, responseToCache)
+              if (fetchResponse.ok && fetchResponse.type === 'basic') {
+                cache.put(request, fetchResponse.clone())
+              }
               return fetchResponse
             })
+            .catch(() => cache.match(request))
         })
     })
 }
@@ -146,9 +148,12 @@ function handleStaticAsset(request) {
           }
           return fetch(request)
             .then((fetchResponse) => {
-              cache.put(request, fetchResponse.clone())
+              if (fetchResponse.ok && fetchResponse.type === 'basic') {
+                cache.put(request, fetchResponse.clone())
+              }
               return fetchResponse
             })
+            .catch(() => cache.match(request))
         })
     })
 }
@@ -163,12 +168,13 @@ function handlePageRequest(request) {
           }
           return fetch(request)
             .then((fetchResponse) => {
-              // Only cache successful responses
-              if (fetchResponse.status === 200) {
+              // Only cache successful same-origin responses
+              if (fetchResponse.ok && fetchResponse.type === 'basic') {
                 cache.put(request, fetchResponse.clone())
               }
               return fetchResponse
             })
+            .catch(() => cache.match(request))
         })
     })
 }
