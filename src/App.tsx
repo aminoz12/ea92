@@ -11,10 +11,10 @@ import './styles/globals.css'
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
       <LocaleProvider>
         {/* DARK MODE DISABLED - Uncomment ThemeProvider wrapper to restore */}
         {/* <ThemeProvider> */}
+          <ScrollToTop />
           <div className="min-h-screen bg-white transition-colors">
             <Routes>
               <Route path="/" element={<HomePage />} />
