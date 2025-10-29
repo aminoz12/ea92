@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useLocale } from '../../hooks/useLocale'
-import { useTheme } from '../../hooks/useTheme'
+// import { useTheme } from '../../hooks/useTheme' // DARK MODE DISABLED - Uncomment to restore
 
 export function Footer() {
   const { t } = useLocale()
-  const { resolvedTheme } = useTheme()
+  // const { resolvedTheme } = useTheme() // DARK MODE DISABLED - Uncomment to restore
 
   const quickLinks = [
     { name: t('navigation.home'), href: '/' },
@@ -29,7 +29,7 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center">
               <img 
-                src={resolvedTheme === 'dark' ? "/logodark.jpeg" : "/logo.png"} 
+                src="/logo.png"
                 alt="EspaceAuto92 Logo" 
                 className="w-20 h-20 object-contain"
                 onError={(e) => {
