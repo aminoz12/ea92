@@ -102,46 +102,106 @@ export function AboutSection() {
                 
                 <div className="relative">
                   <motion.h3 
-                    className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-8"
+                    className="text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight tracking-tight"
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
                   >
-                    <span className="bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                    <span className="block bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 dark:from-white dark:via-gray-100 dark:to-gray-300 bg-clip-text text-transparent drop-shadow-2xl uppercase">
                       À propos de nous
                     </span>
                   </motion.h3>
                   
-                  <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    <motion.p
+                  <div className="space-y-8">
+                    <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                      Créé en 2017, <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">Espace Auto 92</strong> est avant tout une entreprise de passionnés d'automobile.
-                    </motion.p>
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
-                    >
-                      Depuis nos débuts, notre objectif est simple : fournir des pièces de <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">qualité</strong> rapidement, 
-                      tout en offrant un <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">service fiable</strong> et <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">honnête</strong> à nos clients.
-                    </motion.p>
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.6 }}
-                    >
-                      Avec le temps, nous avons gagné la <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">confiance</strong> de nombreux garages et particuliers grâce à notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">réactivité</strong>, notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">stock complet</strong> et notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">expertise technique</strong>.
-                    </motion.p>
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: 0.8 }}
-                    >
-                      Aujourd'hui, notre équipe de <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent">techniciens certifiés</strong> continue de mettre tout son savoir-faire au service de la région parisienne — avec une priorité : vous <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent">dépanner vite, bien et au juste prix</strong>.
-                    </motion.p>
+                      <div className="relative">
+                        {/* Background glow effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-red-600/20 to-red-500/20 blur-xl rounded-3xl animate-pulse"></div>
+                        
+                        <div className="relative bg-gradient-to-r from-gray-900/90 via-gray-800/90 to-gray-900/90 dark:from-white/90 dark:via-gray-100/90 dark:to-white/90 backdrop-blur-xl rounded-3xl p-8 border border-red-500/30 dark:border-red-400/30 shadow-2xl">
+                          <h4 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6 leading-tight tracking-tight">
+                            <span className="block bg-gradient-to-r from-red-600 via-red-500 to-red-400 dark:from-red-400 dark:via-red-500 dark:to-red-600 bg-clip-text text-transparent drop-shadow-2xl uppercase">
+                              Votre partenaire automobile de confiance
+                            </span>
+                            <span className="block mt-2 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 bg-clip-text text-transparent drop-shadow-lg uppercase">
+                              À Nanterre depuis 2010
+                            </span>
+                          </h4>
+                          
+                          <div className="relative">
+                            {/* Animated background for values */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-green-500/10 to-blue-500/10 blur-lg rounded-2xl"></div>
+                            
+                            <div className="relative flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-6">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-4 h-4 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 rounded-full animate-pulse"></div>
+                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent uppercase tracking-wider">
+                                  Expertise
+                                </span>
+                              </div>
+                              
+                              <div className="hidden sm:block text-2xl text-gray-500 dark:text-gray-400">•</div>
+                              
+                              <div className="flex items-center space-x-3">
+                                <div className="w-4 h-4 bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500 rounded-full animate-pulse"></div>
+                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500 bg-clip-text text-transparent uppercase tracking-wider">
+                                  Qualité
+                                </span>
+                              </div>
+                              
+                              <div className="hidden sm:block text-2xl text-gray-500 dark:text-gray-400">•</div>
+                              
+                              <div className="flex items-center space-x-3">
+                                <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 rounded-full animate-pulse"></div>
+                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent uppercase tracking-wider">
+                                  Service personnalisé
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Decorative elements */}
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-bounce"></div>
+                          <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                    </motion.div>
+                    
+                    <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                      >
+                        Créé en 2017, <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent font-bold">Espace Auto 92</strong> est avant tout une entreprise de passionnés d'automobile.
+                      </motion.p>
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
+                      >
+                        Depuis nos débuts, notre objectif est simple : fournir des pièces de <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">qualité</strong> rapidement, 
+                        tout en offrant un <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">service fiable</strong> et <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">honnête</strong> à nos clients.
+                      </motion.p>
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.8 }}
+                      >
+                        Avec le temps, nous avons gagné la <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent font-bold">confiance</strong> de nombreux garages et particuliers grâce à notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">réactivité</strong>, notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">stock complet</strong> et notre <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">expertise technique</strong>.
+                      </motion.p>
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 1.0 }}
+                      >
+                        Aujourd'hui, notre équipe de <strong className="text-gray-800 dark:text-gray-200 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent font-bold">techniciens certifiés</strong> continue de mettre tout son savoir-faire au service de la région parisienne — avec une priorité : vous <strong className="text-red-600 bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent font-bold">dépanner vite, bien et au juste prix</strong>.
+                      </motion.p>
+                    </div>
                   </div>
                 </div>
               </div>

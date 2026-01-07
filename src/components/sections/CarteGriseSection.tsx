@@ -5,6 +5,11 @@ export function CarteGriseSection() {
     window.open('https://example.com', '_blank')
   }
 
+  const handleOrderInStore = () => {
+    // This will handle in-store ordering (could open contact page or show modal)
+    window.open('#contact', '_self')
+  }
+
   return (
     <section className="py-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -72,17 +77,34 @@ export function CarteGriseSection() {
               </div>
             </div>
 
-            {/* CTA Button */}
+            {/* CTA Buttons */}
             <div className="pt-2">
-              <button
-                onClick={handleOrderNow}
-                className="btn-modern text-base px-8 py-3"
-              >
-                Commandez Maintenant
-                <svg className="w-4 h-4 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleOrderNow}
+                  className="btn-modern text-sm px-8 py-3 flex-1 min-w-[200px]"
+                >
+                  Commandez Online
+                  <svg className="w-4 h-4 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+                <button
+                  onClick={handleOrderInStore}
+                  className="group relative bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold text-sm px-8 py-3 flex-1 min-w-[200px] rounded-xl shadow-lg hover:shadow-green-500/25 transition-all duration-300 transform hover:scale-105 border-2 border-green-500/20"
+                >
+                  <span className="flex items-center justify-center whitespace-nowrap">
+                    <svg className="w-5 h-5 mr-2 group-hover:animate-bounce flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="bg-gradient-to-r from-green-100 to-green-200 bg-clip-text text-transparent font-bold">
+                      Commander Sur Magasin
+                    </span>
+                  </span>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+              </div>
             </div>
           </div>
 
