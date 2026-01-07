@@ -129,38 +129,48 @@ export function ProPage() {
           
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="text-center mb-16 mt-[600px]">
-              <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+            <div className="text-center mb-8 mt-[600px]">
+              <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
                 <span className="block">
-                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-                    Distributeur
+                  <span className="text-red-500 drop-shadow-2xl uppercase">
+                    DISTRIBUTEUR
                   </span>{" "}
-                  <span className="text-white">
-                    Pièces Détachées
+                  <span className="text-white uppercase font-black">
+                    PIÈCES DÉTACHÉES
                   </span>
                 </span>
-                <span className="block text-3xl md:text-4xl font-medium opacity-90 mt-4">
-                  <span className="text-yellow-300 font-bold">Particuliers</span>{" "}
-                  <span className="text-white">&</span>{" "}
-                  <span className="text-yellow-300 font-bold">Professionnels</span>
+                <span className="block text-3xl md:text-4xl font-bold mt-4 tracking-wider">
+                  <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent drop-shadow-xl uppercase">
+                    PARTICULIERS
+                  </span>{" "}
+                  <span className="text-white mx-4 text-2xl md:text-3xl font-bold">&</span>{" "}
+                  <span className="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent drop-shadow-xl uppercase">
+                    PROFESSIONNELS
+                  </span>
                 </span>
               </h1>
-              <p className="text-2xl md:text-3xl font-light opacity-90 max-w-4xl mx-auto">
-                Vous <span className="text-yellow-400 font-bold">
-                  <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">réparez</span>
-                </span>, on vous <span className="text-yellow-400 font-bold">
-                  <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">équipe</span>
-                </span>.
+              <p className="text-2xl md:text-3xl font-light text-white/95 max-w-5xl mx-auto leading-relaxed tracking-wide">
+                <span className="block mb-2">
+                  VOUS <span className="font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent uppercase">RÉPAREZ</span>
+                </span>
+                <span className="block">
+                  ON VOUS <span className="font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent uppercase">ÉQUIPE</span>
+                </span>
               </p>
-              <p className="text-xl opacity-80 mt-4">
-                <span className="text-red-400 font-bold">
-                  <span className="bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">Prix pro</span>
-                </span>, <span className="text-green-400 font-bold">
-                  <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">dispo immédiate</span>
-                </span>, <span className="text-blue-400 font-bold">
-                  <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">service réactif</span>
-                </span>.
-              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-8">
+                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
+                  <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold uppercase tracking-wider">Prix pro</span>
+                </div>
+                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
+                  <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold uppercase tracking-wider">Dispo immédiate</span>
+                </div>
+                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
+                  <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-pulse"></div>
+                  <span className="text-white font-bold uppercase tracking-wider">Service réactif</span>
+                </div>
+              </div>
             </div>
 
             {/* Contact Info */}

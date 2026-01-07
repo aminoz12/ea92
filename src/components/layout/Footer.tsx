@@ -14,11 +14,19 @@ export function Footer() {
   ]
 
   const services = [
-    { name: t('services.carteGrise.title'), href: '#services' },
-    { name: t('services.piecesAuto.title'), href: '#services' },
-    { name: t('services.reparation.title'), href: '#services' },
-    { name: t('services.diagnostic.title'), href: '#services' },
-    { name: t('services.entretien.title'), href: '#services' },
+    { name: 'Freinage', href: '#services' },
+    { name: 'Filtration', href: '#services' },
+    { name: 'Embrayage', href: '#services' },
+    { name: 'Distribution', href: '#services' },
+    { name: 'Suspension', href: '#services' },
+    { name: 'Démarrage', href: '#services' },
+    { name: 'Direction', href: '#services' },
+    { name: 'Éclairage', href: '#services' },
+    { name: 'Échappement', href: '#services' },
+    { name: 'Outillage', href: '#services' },
+    { name: 'Carrosserie', href: '#services' },
+    { name: 'Vitrage', href: '#services' },
+    { name: 'Service Carte Grise', href: '#services' },
   ]
 
   return (
@@ -85,20 +93,40 @@ export function Footer() {
           </div>
 
           {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{t('footer.services')}</h3>
-            <ul className="space-y-2">
-              {services.map((service) => (
-                <li key={service.name}>
-                  <Link
-                    to={service.href}
-                    className="text-gray-300 hover:text-white transition-colors text-sm"
-                  >
-                    {service.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <div className="lg:col-span-2">
+            <h3 className="text-lg font-semibold mb-4">Nos services</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* First Row */}
+              <div className="space-y-2">
+                <ul className="space-y-2">
+                  {services.slice(0, 7).map((service) => (
+                    <li key={service.name}>
+                      <Link
+                        to={service.href}
+                        className="text-gray-300 hover:text-white transition-colors text-sm"
+                      >
+                        {service.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Second Row */}
+              <div className="space-y-2">
+                <ul className="space-y-2">
+                  {services.slice(7).map((service) => (
+                    <li key={service.name}>
+                      <Link
+                        to={service.href}
+                        className="text-gray-300 hover:text-white transition-colors text-sm"
+                      >
+                        {service.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
           {/* Contact Info */}
@@ -108,11 +136,11 @@ export function Footer() {
               <p>426 Avenue de la République</p>
               <p>92000 Nanterre, France</p>
               <p>+33 1 23 45 67 89</p>
-              <p>contact@espaceauto92.fr</p>
+              <p>espaceauto92.info@gmail.com</p>
               <div className="pt-2">
                 <p className="font-medium">Horaires d'ouverture:</p>
-                <p>Lun - Ven: 8h00 - 18h00</p>
-                <p>Samedi: 8h00 - 12h00</p>
+                <p>Lun.-Sam. : 9h - 18h 30</p>
+                <p>Vendredi : 9h - 12h30 - 15h - 18h30</p>
               </div>
             </div>
           </div>

@@ -92,6 +92,13 @@ const services = [
     image: '/carte.png',
     color: 'from-emerald-500 to-emerald-600',
     description: 'Démarches administratives, immatriculation et transfert de propriété'
+  },
+  {
+    id: 'production-cle',
+    name: 'Production de Clé',
+    image: '/cle.png',
+    color: 'from-rose-500 to-rose-600',
+    description: 'Fabrication de clés de véhicule, duplication et programmation de télécommandes'
   }
 ]
 

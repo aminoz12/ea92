@@ -22,45 +22,38 @@ export function FAQSection() {
   const faqItems: FAQItem[] = [
     {
       id: 1,
-      question: "Quels sont vos horaires d'ouverture ?",
-      answer: "Nous sommes ouverts du lundi au vendredi de 8h00 à 18h00, le samedi de 8h00 à 12h00. Nous sommes fermés le dimanche pour vous permettre de passer du temps en famille.",
-      icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z",
+      question: "Comment puis-je retourner un article ?",
+      answer: "Sauf erreur de notre part, les articles ne sont ni repris ni échangés. Pour tous articles retournés, ils doivent être dans leur emballage et état d'origine, sans aucune trace de montage ou d'usure.",
+      icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
       color: "red"
     },
     {
       id: 2,
-      question: "Proposez-vous une garantie sur vos pièces ?",
-      answer: "Oui, toutes nos pièces sont garanties et proviennent exclusivement de fabricants agréés. Nous vous offrons une garantie complète sur la qualité et l'origine de chaque pièce.",
-      icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+      question: "Après avoir passé commande, quel est le délai de réception ?",
+      answer: "Notre boutique dispose d'un vaste stock. Si l'article est épuisé et nécessite une commande, celle-ci arrive en boutique dans un délai allant de 4h à 24h (sous réserve de disponibilité).",
+      icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
       color: "blue"
     },
     {
       id: 3,
-      question: "Acceptez-vous les paiements par carte ?",
-      answer: "Absolument ! Nous acceptons tous les moyens de paiement : espèces, cartes bancaires, chèques et virements. Nous nous adaptons à vos préférences de paiement.",
-      icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1",
+      question: "Les pièces sont-elles garanties ?",
+      answer: "Oui, l'ensemble de nos pièces est garanti 1 an, dans le respect des conditions fournisseurs.",
+      icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
       color: "green"
     },
     {
       id: 4,
-      question: "Combien de temps prend une réparation ?",
-      answer: "Le délai dépend du type de réparation. Une réparation simple peut être effectuée en quelques heures, tandis qu'une réparation plus complexe peut nécessiter 1 à 3 jours. Nous vous informons toujours du délai estimé.",
-      icon: "M13 10V3L4 14h7v7l9-11h-7z",
+      question: "Je souhaiterais avoir plus d'informations sur vos services, comment faire ?",
+      answer: "Consultez notre page \"Nos Services\" et découvrez tous les bénéfices que vous pourrez tirer avec Espace Auto 92 ! Vous pouvez également nous contacter directement afin de poser vos questions, nous serons ravis de vous renseigner : 01 47 85 10 00.",
+      icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
       color: "purple"
     },
     {
       id: 5,
-      question: "Faut-il prendre rendez-vous ?",
-      answer: "Pour un service optimal, nous recommandons de prendre rendez-vous, surtout pour les réparations importantes. Cependant, nous acceptons aussi les clients en urgence selon nos disponibilités.",
-      icon: "M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
+      question: "Quelles sont les documents nécessaires pour la création d'une carte grise ?",
+      answer: "Vos cartes grises et plaques d'immatriculation sont réalisés en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles ci-dessous :",
+      icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
       color: "orange"
-    },
-    {
-      id: 6,
-      question: "Comment vous contacter ?",
-      answer: "Vous pouvez nous contacter par téléphone au +33 1 23 45 67 89, par email à contact@espaceauto92.fr, ou simplement vous rendre directement dans nos locaux au 426 Avenue de la République à Nanterre.",
-      icon: "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z",
-      color: "teal"
     }
   ]
 
@@ -207,137 +200,99 @@ export function FAQSection() {
                           
                           {/* Additional Info Section */}
                           <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
-                            {/* Tips or Additional Info based on question type */}
+                            {/* Return policy info */}
                             {item.id === 1 && (
                               <div className="flex items-center text-sm">
-                                <svg className="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.856-.833-2.598 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                 </svg>
-                                <span className="font-bold text-green-700 dark:text-green-400">Conseil:</span> 
-                                <span className="ml-2 font-semibold text-gray-700 dark:text-gray-300">Appelez avant de venir pour éviter l'attente</span>
+                                <span className="font-bold text-red-700 dark:text-red-400">Important:</span> 
+                                <span className="ml-2 font-semibold text-gray-700 dark:text-gray-300">Vérifiez la compatibilité avant montage</span>
                               </div>
                             )}
                             
+                            {/* Delivery time info */}
                             {item.id === 2 && (
                               <div className="flex items-center space-x-4">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
-                                  <span className="font-medium">Garantie:</span> 
-                                  <span className="ml-1">12 mois minimum</span>
+                                  <span className="font-medium">Express:</span> 
+                                  <span className="ml-1">4h disponible</span>
                                 </div>
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
-                                  <span className="font-medium">Origine:</span> 
-                                  <span className="ml-1">100% certifiée</span>
+                                  <span className="font-medium">Stock:</span> 
+                                  <span className="ml-1">Vaste disponible</span>
                                 </div>
                               </div>
                             )}
                             
+                            {/* Warranty info */}
                             {item.id === 3 && (
-                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">CB</span>
-                                  </div>
-                                  <span>Carte bancaire</span>
+                              <div className="flex items-center space-x-4">
+                                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <span className="font-medium">Garantie:</span> 
+                                  <span className="ml-1">1 an minimum</span>
                                 </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-4 bg-gradient-to-r from-green-600 to-green-700 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">€</span>
-                                  </div>
-                                  <span>Espèces</span>
-                                </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-4 bg-gradient-to-r from-purple-600 to-purple-700 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">CH</span>
-                                  </div>
-                                  <span>Chèque</span>
-                                </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-4 bg-gradient-to-r from-orange-600 to-orange-700 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">V</span>
-                                  </div>
-                                  <span>Virement</span>
-                                </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-7 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">PP</span>
-                                  </div>
-                                  <span>PayPal</span>
-                                </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-4 bg-gradient-to-r from-teal-600 to-teal-700 rounded-sm mr-2 flex items-center justify-center">
-                                    <span className="text-white text-xs font-bold">📱</span>
-                                  </div>
-                                  <span>Mobile</span>
+                                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <span className="font-medium">Conditions:</span> 
+                                  <span className="ml-1">Respect fournisseurs</span>
                                 </div>
                               </div>
                             )}
                             
+                            {/* Services info */}
                             {item.id === 4 && (
                               <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
-                                  <span className="font-medium">Urgent:</span> 
-                                  <span className="ml-1">Même jour possible</span>
+                                  <span className="font-medium">Services:</span> 
+                                  <span className="ml-1">Page dédiée</span>
                                 </div>
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  <span className="font-medium">Devis:</span> 
-                                  <span className="ml-1">Gratuit</span>
-                                </div>
-                              </div>
-                            )}
-                            
-                            {item.id === 5 && (
-                              <div className="flex flex-col space-y-2">
-                                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  <span className="font-medium">Réservation en ligne:</span> 
-                                  <span className="ml-1">Disponible 24h/24</span>
-                                </div>
-                                <div className="flex items-center text-sm text-red-500 dark:text-red-400">
-                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.856-.833-2.598 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                  </svg>
-                                  <span className="font-medium">Sans RDV:</span> 
-                                  <span className="ml-1">Attente possible aux heures de pointe</span>
-                                </div>
-                              </div>
-                            )}
-                            
-                            {item.id === 6 && (
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                   </svg>
-                                  <span>Appel direct</span>
+                                  <span className="font-medium">Contact:</span> 
+                                  <span className="ml-1">01 47 85 10 00</span>
                                 </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </div>
+                            )}
+                            
+                            {/* Carte grise documents */}
+                            {item.id === 5 && (
+                              <div className="flex flex-col space-y-3">
+                                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
-                                  <span>Email 24h</span>
+                                  <span className="font-medium">Rapidité:</span> 
+                                  <span className="ml-1">10 minutes en magasin</span>
                                 </div>
-                                <div className="flex items-center text-gray-500 dark:text-gray-400">
-                                  <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-2 shadow-lg">
-                                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                  </div>
-                                  <span>Visite libre</span>
+                                <div className="flex items-center text-sm text-blue-500 dark:text-blue-400">
+                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                  <a 
+                                    href="/documents.pdf" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="font-medium hover:underline transition-colors"
+                                  >
+                                    Télécharger la liste des documents nécessaires
+                                  </a>
                                 </div>
                               </div>
                             )}
