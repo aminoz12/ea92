@@ -2,7 +2,7 @@
 export function CarteGriseSection() {
   const handleOrderNow = () => {
     // This will open the external website in a new tab
-    window.open('https://example.com', '_blank')
+    window.open('https://ematricule.fr', '_blank')
   }
 
   const handleOrderInStore = () => {
