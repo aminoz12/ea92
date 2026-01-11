@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 
 export function AboutSection() {
 
@@ -138,8 +139,8 @@ export function AboutSection() {
                             
                             <div className="relative flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 py-6">
                               <div className="flex items-center space-x-3">
-                                <div className="w-4 h-4 bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 rounded-full animate-pulse"></div>
-                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 dark:from-gray-200 dark:to-gray-100 bg-clip-text text-transparent uppercase tracking-wider">
+                                <div className="w-4 h-4 bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-500 rounded-full animate-pulse"></div>
+                                <span className="text-xs md:text-sm font-bold bg-gradient-to-r from-green-600 to-green-700 dark:from-green-400 dark:to-green-500 bg-clip-text text-transparent uppercase tracking-wider">
                                   Expertise
                                 </span>
                               </div>
@@ -148,7 +149,7 @@ export function AboutSection() {
                               
                               <div className="flex items-center space-x-3">
                                 <div className="w-4 h-4 bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500 rounded-full animate-pulse"></div>
-                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500 bg-clip-text text-transparent uppercase tracking-wider">
+                                <span className="text-xs md:text-sm font-bold bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500 bg-clip-text text-transparent uppercase tracking-wider">
                                   Qualité
                                 </span>
                               </div>
@@ -157,7 +158,7 @@ export function AboutSection() {
                               
                               <div className="flex items-center space-x-3">
                                 <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 rounded-full animate-pulse"></div>
-                                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent uppercase tracking-wider">
+                                <span className="text-xs md:text-sm font-bold bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-400 dark:to-blue-500 bg-clip-text text-transparent uppercase tracking-wider">
                                   Service personnalisé
                                 </span>
                               </div>
@@ -474,31 +475,27 @@ export function AboutSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                   >
-                    <motion.button
-                      className="group relative px-10 py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
-                      whileHover={{ scale: 1.05, y: -3 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        const contactSection = document.getElementById('contact')
-                        if (contactSection) {
-                          contactSection.scrollIntoView({ behavior: 'smooth' })
-                        }
-                      }}
-                    >
-                      {/* Button background animation */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
-                        animate={{ x: ['-100%', '100%'] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      />
-                      
-                      <span className="relative flex items-center justify-center">
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        Nous Contacter
-                      </span>
-                    </motion.button>
+                    <Link to="/contact">
+                      <motion.button
+                        className="group relative px-10 py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                        whileHover={{ scale: 1.05, y: -3 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {/* Button background animation */}
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
+                          animate={{ x: ['-100%', '100%'] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        />
+                        
+                        <span className="relative flex items-center justify-center">
+                          <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          Nous Contacter
+                        </span>
+                      </motion.button>
+                    </Link>
                     
                     <motion.button
                       className="group relative px-10 py-4 border-2 border-red-600 text-red-600 font-bold text-lg rounded-2xl hover:bg-red-600 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"

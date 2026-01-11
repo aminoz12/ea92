@@ -10,7 +10,7 @@ export function Footer() {
     { name: t('navigation.home'), href: '/' },
     { name: t('navigation.services'), href: '#services' },
     { name: t('navigation.products'), href: '#products' },
-    { name: t('navigation.contact'), href: '#contact' },
+    { name: t('navigation.contact'), href: '/contact' },
   ]
 
   const services = [

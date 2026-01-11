@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useLocale } from '../../hooks/useLocale'
 // import { useTheme } from '../../hooks/useTheme' // DARK MODE DISABLED - Uncomment to restore
 import { Button } from '../ui/Button'
-import { cn } from '../../lib/utils'
 
 export function Header() {
-  const { locale, setLocale } = useLocale()
   // const { setTheme, resolvedTheme } = useTheme() // DARK MODE DISABLED - Uncomment to restore
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
@@ -106,31 +103,6 @@ export function Header() {
               </a>
             </div>
 
-            {/* Language Switcher */}
-            <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
-              <button
-                onClick={() => setLocale('fr')}
-                className={cn(
-                  'px-3 py-1.5 text-xs rounded-md transition-all duration-300 font-display font-semibold',
-                  locale === 'fr' 
-                    ? 'bg-white text-secondary-600 shadow-sm' 
-                    : 'text-gray-600 hover:text-secondary-600 hover:bg-gray-50'
-                )}
-              >
-                FR
-              </button>
-              <button
-                onClick={() => setLocale('en')}
-                className={cn(
-                  'px-3 py-1.5 text-xs rounded-md transition-all duration-300 font-display font-semibold',
-                  locale === 'en' 
-                    ? 'bg-white text-secondary-600 shadow-sm' 
-                    : 'text-gray-600 hover:text-secondary-600 hover:bg-gray-50'
-                )}
-              >
-                EN
-              </button>
-            </div>
 
             {/* Theme Toggle - DARK MODE DISABLED - Uncomment to restore */}
             {/* <button
@@ -148,9 +120,11 @@ export function Header() {
               )}
             </button> */}
 
-            <Button size="sm" className="bg-secondary-600 hover:bg-secondary-700 text-white font-display font-bold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
-              Contact
-            </Button>
+            <Link to="/contact">
+              <Button size="sm" className="bg-secondary-600 hover:bg-secondary-700 text-white font-display font-bold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+                Contact
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -196,35 +170,6 @@ export function Header() {
                 )
               })}
               
-              <div className="pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between px-4 py-3">
-                  <span className="text-base font-display font-semibold text-gray-700">Language</span>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => setLocale('fr')}
-                      className={cn(
-                        'px-4 py-2 text-sm rounded-lg transition-all duration-300 font-display font-semibold',
-                        locale === 'fr' 
-                          ? 'bg-secondary-600 text-white shadow-md' 
-                          : 'text-gray-600 hover:text-secondary-600 hover:bg-gray-100'
-                      )}
-                    >
-                      FR
-                    </button>
-                    <button
-                      onClick={() => setLocale('en')}
-                      className={cn(
-                        'px-4 py-2 text-sm rounded-lg transition-all duration-300 font-display font-semibold',
-                        locale === 'en' 
-                          ? 'bg-secondary-600 text-white shadow-md' 
-                          : 'text-gray-600 hover:text-secondary-600 hover:bg-gray-100'
-                      )}
-                    >
-                      EN
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}

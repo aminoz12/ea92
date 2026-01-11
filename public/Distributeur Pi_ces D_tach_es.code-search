@@ -1,0 +1,9 @@
+# Query: Distributeur Pièces Détachées
+# ContextLines: 1
+
+1 result - 1 file
+
+src\pages\HomePage.tsx:
+  139                <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed libre-franklin up">
+  140:                 Distributeur Pièces détachées Particuliers & Professionnels 
+  141                  <br />

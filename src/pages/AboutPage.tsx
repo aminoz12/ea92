@@ -55,26 +55,6 @@ export function AboutPage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
              <div className="text-center pt-20">
-               <motion.h1 
-                 className="text-5xl md:text-6xl lg:text-7xl font-display font-black mb-8 leading-tight mt-20"
-                 initial={{ opacity: 0, y: 30 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.8, delay: 0.2 }}
-               >
-                 <span className="block">À propos <span style={{ color: '#991b1b' }}>De Nous</span></span>
-               </motion.h1>
-               
-               <motion.p 
-                 className="text-2xl md:text-3xl lg:text-4xl text-white max-w-5xl mx-auto leading-relaxed mb-12 font-semibold"
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.8, delay: 0.4 }}
-               >
-                 <span className="font-bold text-white drop-shadow-lg">Votre partenaire automobile de confiance à Nanterre depuis 2010.</span>
-                 <br />
-                 <span className="font-black text-3xl md:text-4xl lg:text-5xl" style={{ color: '#991b1b' }}> Expertise, qualité et service personnalisé.</span>
-               </motion.p>
-              
             </div>
 
             {/* Floating Automotive Parts - Left and Right Only */}
