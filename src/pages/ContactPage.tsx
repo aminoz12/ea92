@@ -101,7 +101,7 @@ export function ContactPage() {
         </svg>
       ),
       title: 'Email',
-      content: 'Espaceauto92.contact@gmail.com',
+      content: <span className="text-sm">Espaceauto92.contact@gmail.com</span>,
       gradient: 'from-blue-500 to-blue-600',
       href: 'mailto:Espaceauto92.contact@gmail.com'
     },
@@ -111,12 +111,11 @@ export function ContactPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      title: 'Horaires',
+      title: "Horaires d'ouverture",
       content: (
         <>
-          Lun-Ven: 8h-19h<br />
-          Sam: 9h-17h<br />
-          Dim: Fermé
+          Lun.-Sam. : 9h - 18h30<br />
+          Vendredi : 9h - 12h30 / 15h - 18h30
         </>
       ),
       gradient: 'from-purple-500 to-purple-600',
