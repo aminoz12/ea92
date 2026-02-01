@@ -84,7 +84,7 @@ export function CarteGriseSection() {
                   onClick={handleOrderNow}
                   className="btn-modern text-sm px-8 py-3 flex-1 min-w-[200px]"
                 >
-                  Commandez Online
+                  Commander Online
                   <svg className="w-4 h-4 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -99,7 +99,7 @@ export function CarteGriseSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span className="bg-gradient-to-r from-green-100 to-green-200 bg-clip-text text-transparent font-bold">
-                      Commander Sur Magasin
+                      Commander en magasin
                     </span>
                   </span>
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

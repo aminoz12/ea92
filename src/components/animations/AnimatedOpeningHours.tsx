@@ -625,7 +625,7 @@ export const AnimatedOpeningHours = () => {
                 </motion.a>
                 
                 <motion.a
-                  href="mailto:espaceauto92.info@gmail.com"
+                  href="mailto:Espaceauto92.contact@gmail.com"
                   className="inline-flex items-center px-4 py-3 bg-white/80 dark:bg-black/80 backdrop-blur-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm"
                   whileHover={{ 
                     scale: 1.05, 

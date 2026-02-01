@@ -75,7 +75,7 @@ export function ContactPage() {
       title: 'Adresse',
       content: (
         <>
-          EspaceAuto92<br />
+          Espace Auto 92<br />
           426 Avenue de la République<br />
           92000 Nanterre, France
         </>
@@ -101,9 +101,9 @@ export function ContactPage() {
         </svg>
       ),
       title: 'Email',
-      content: 'espaceauto92.info@gmail.com',
+      content: 'Espaceauto92.contact@gmail.com',
       gradient: 'from-blue-500 to-blue-600',
-      href: 'mailto:espaceauto92.info@gmail.com'
+      href: 'mailto:Espaceauto92.contact@gmail.com'
     },
     {
       icon: (
@@ -164,7 +164,7 @@ export function ContactPage() {
                   Contactez
                 </span>
                 <span className="block bg-gradient-to-r from-red-600 via-red-600 to-red-700 bg-clip-text text-transparent">
-                  EspaceAuto92
+                  Espace Auto 92
                 </span>
               </motion.h1>
               <motion.p variants={itemVariants} className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -437,7 +437,7 @@ export function ContactPage() {
                     <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 md:p-8 text-white">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                          <h3 className="text-2xl font-bold mb-2">EspaceAuto92</h3>
+                          <h3 className="text-2xl font-bold mb-2">Espace Auto 92</h3>
                           <p className="text-red-100 text-sm md:text-base">426 Avenue de la République, 92000 Nanterre, France</p>
                         </div>
                       </div>
@@ -453,7 +453,7 @@ export function ContactPage() {
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
                         className="w-full h-full"
-                        title="Carte de Nanterre - EspaceAuto92"
+                        title="Carte de Nanterre - Espace Auto 92"
                       />
                     </div>
 

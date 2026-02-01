@@ -54,7 +54,7 @@ export function Header() {
           <Link to="/" className="flex items-center group h-20">
             <img 
               src="/logo.png" 
-              alt="EspaceAuto92 Logo" 
+              alt="Espace Auto 92 Logo" 
               className="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
             />
           </Link>

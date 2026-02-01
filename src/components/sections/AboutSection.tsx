@@ -23,7 +23,7 @@ export function AboutSection() {
   }
 
   const stats = [
-    { number: '14+', label: 'Années d\'expérience', icon: '📅' },
+    { number: '9+', label: 'Années d\'expérience', icon: '📅' },
     { number: '5000+', label: 'Clients satisfaits', icon: '😊' },
     { number: '50K+', label: 'Pièces en stock', icon: '🔧' },
     { number: '24/7', label: 'Service client', icon: '📞' }
@@ -48,7 +48,7 @@ export function AboutSection() {
     {
       icon: '🤝',
       title: 'Confiance',
-      description: 'Relation de confiance avec nos clients depuis 2010, transparence et conseils honnêtes.'
+      description: 'Relation de confiance avec nos clients depuis 2017, transparence et conseils honnêtes.'
     }
   ]
 
@@ -129,7 +129,7 @@ export function AboutSection() {
                               Votre partenaire automobile de confiance
                             </span>
                             <span className="block mt-2 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 bg-clip-text text-transparent drop-shadow-lg uppercase">
-                              À Nanterre depuis 2010
+                              À Nanterre depuis 2017
                             </span>
                           </h4>
                           

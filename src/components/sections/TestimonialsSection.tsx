@@ -115,7 +115,7 @@ export function TestimonialsSection() {
               <div className="aspect-[4/3] rounded-2xl overflow-hidden relative">
                 <img
                   src="/comments.png"
-                  alt="Commentaires clients EspaceAuto92"
+                  alt="Commentaires clients Espace Auto 92"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                   loading="lazy"
                   decoding="async"

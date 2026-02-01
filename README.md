@@ -1,4 +1,4 @@
-# 🚗 EspaceAuto92 - Vite + React Project
+# 🚗 Espace Auto 92 - Vite + React Project
 
 A modern, high-performance automotive website built with **Vite + React + TypeScript**, featuring 3D animations, multi-language support, and comprehensive automotive services.
 
@@ -180,7 +180,7 @@ This project is licensed under the MIT License.
 
 ---
 
-**EspaceAuto92** - Your trusted automotive partner in Nanterre since 2010.
+**Espace Auto 92** - Your trusted automotive partner in Nanterre since 2017.
 
 
 

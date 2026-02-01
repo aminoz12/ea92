@@ -71,7 +71,7 @@ export function ContactSection() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   className="rounded-b-2xl"
-                  title="Localisation EspaceAuto92 - 426 Avenue de la République, 92000 Nanterre"
+                  title="Localisation Espace Auto 92 - 426 Avenue de la République, 92000 Nanterre"
                 ></iframe>
                 
                 {/* Map overlay with address */}

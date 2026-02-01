@@ -153,7 +153,7 @@ export const AnimatedLocationMap = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-bold mb-2">EspaceAuto92</h3>
+                      <h3 className="text-xl font-bold mb-2">Espace Auto 92</h3>
                       <p className="text-red-100">{address}</p>
                     </div>
                     <motion.div
@@ -259,7 +259,7 @@ export const AnimatedLocationMap = () => {
                     {
                       icon: "M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
                       title: "Email",
-                      content: "espaceauto92.info@gmail.com",
+                      content: "Espaceauto92.contact@gmail.com",
                       color: "blue"
                     }
                   ].map((item, index) => (

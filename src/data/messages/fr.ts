@@ -26,7 +26,7 @@ export const fr = {
     account: 'Mon compte',
   },
   hero: {
-    title: 'EspaceAuto92',
+    title: 'Espace Auto 92',
     subtitle: 'Votre partenaire automobile de confiance à Nanterre',
     description: 'Spécialistes en pièces auto, carte grise, réparation et entretien. Service professionnel et conseils experts.',
     cta: 'Découvrir nos services',
@@ -105,8 +105,8 @@ export const fr = {
     note: 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.',
   },
   about: {
-    title: 'À propos d\'EspaceAuto92',
-    subtitle: 'Votre partenaire automobile de confiance à Nanterre depuis 2010. Expertise, qualité et service personnalisé.',
+    title: 'À propos d\'Espace Auto 92',
+    subtitle: 'Votre partenaire automobile de confiance à Nanterre depuis 2017. Expertise, qualité et service personnalisé.',
     story: {
       title: 'À propos de nous',
       content: {
@@ -139,7 +139,7 @@ export const fr = {
       },
       trust: {
         title: 'Confiance',
-        description: 'Relation de confiance avec nos clients depuis 2010, transparence et conseils honnêtes.'
+        description: 'Relation de confiance avec nos clients depuis 2017, transparence et conseils honnêtes.'
       }
     },
     team: {
@@ -154,12 +154,12 @@ export const fr = {
     }
   },
   footer: {
-    description: 'EspaceAuto92 - Votre partenaire automobile de confiance à Nanterre depuis 2010.',
+    description: 'Espace Auto 92 - Votre partenaire automobile de confiance à Nanterre depuis 2017.',
     quickLinks: 'Liens rapides',
     services: 'Services',
     contact: 'Contact',
     followUs: 'Suivez-nous',
-    copyright: '© 2024 EspaceAuto92. Tous droits réservés.',
+    copyright: '© 2024 Espace Auto 92. Tous droits réservés.',
   },
 }
 

@@ -1,4 +1,4 @@
-# Tawk.to Setup Guide for EspaceAuto92
+# Tawk.to Setup Guide for Espace Auto 92
 
 ## 🚀 Quick Setup Steps:
 
@@ -27,7 +27,7 @@
 
 #### Auto-Responses to Set Up:
 ```
-Bonjour! 👋 Bienvenue chez EspaceAuto92. Comment puis-je vous aider aujourd'hui?
+Bonjour! 👋 Bienvenue chez Espace Auto 92. Comment puis-je vous aider aujourd'hui?
 
 🕒 Horaires: Lun-Ven 8h-18h, Sam 8h-12h
 📍 Adresse: 426 Avenue de la République, 92000 Nanterre

@@ -26,7 +26,7 @@ export const en = {
     account: 'My Account',
   },
   hero: {
-    title: 'EspaceAuto92',
+    title: 'Espace Auto 92',
     subtitle: 'Your trusted automotive partner in Nanterre',
     description: 'Specialists in auto parts, vehicle registration, repair and maintenance. Professional service and expert advice.',
     cta: 'Discover our services',
@@ -105,12 +105,12 @@ export const en = {
     note: 'All our parts are guaranteed and come from approved manufacturers.',
   },
   about: {
-    title: 'About EspaceAuto92',
-    subtitle: 'Your trusted automotive partner in Nanterre since 2010. Expertise, quality and personalized service.',
+    title: 'About Espace Auto 92',
+    subtitle: 'Your trusted automotive partner in Nanterre since 2017. Expertise, quality and personalized service.',
     story: {
       title: 'Our Story',
       content: {
-        paragraph1: 'Founded in 2010 by Jean-Pierre Martin, EspaceAuto92 was born from a passion for automobiles and a desire to serve the Nanterre community with excellence.',
+        paragraph1: 'Founded in 2017 by Jean-Pierre Martin, Espace Auto 92 was born from a passion for automobiles and a desire to serve the Nanterre community with excellence.',
         paragraph2: 'For more than 14 years, we have built our reputation on quality, transparency and technical expertise. Our team of certified technicians accompanies you in all your automotive projects.',
         paragraph3: 'Today, we are proud to be the reference partner for individuals and professionals in the Paris region.'
       }
@@ -138,7 +138,7 @@ export const en = {
       },
       trust: {
         title: 'Trust',
-        description: 'Trust relationship with our customers since 2010, transparency and honest advice.'
+        description: 'Trust relationship with our customers since 2017, transparency and honest advice.'
       }
     },
     team: {
@@ -153,12 +153,12 @@ export const en = {
     }
   },
   footer: {
-    description: 'EspaceAuto92 - Your trusted automotive partner in Nanterre since 2010.',
+    description: 'Espace Auto 92 - Your trusted automotive partner in Nanterre since 2017.',
     quickLinks: 'Quick links',
     services: 'Services',
     contact: 'Contact',
     followUs: 'Follow us',
-    copyright: '© 2024 EspaceAuto92. All rights reserved.',
+    copyright: '© 2024 Espace Auto 92. All rights reserved.',
   },
 }
 

@@ -1,7 +1,7 @@
-// Service Worker for EspaceAuto92
+// Service Worker for Espace Auto 92
 // Provides intelligent caching for better performance
 
-const CACHE_NAME = 'espaceauto92-v1.0.2'
+const CACHE_NAME = 'Espace Auto 92-v1.0.2'
 const STATIC_CACHE = 'static-v1.0.2'
 const DYNAMIC_CACHE = 'dynamic-v1.0.2'
 
@@ -208,4 +208,4 @@ self.addEventListener('push', (event) => {
   }
 })
 
-console.log('🎯 EspaceAuto92 Service Worker loaded')
+console.log('🎯 Espace Auto 92 Service Worker loaded')

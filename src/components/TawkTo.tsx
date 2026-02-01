@@ -33,8 +33,8 @@ export function TawkTo() {
 
     // Set up custom attributes
     window.Tawk_API.setAttributes = {
-      name: 'EspaceAuto92',
-      email: 'espaceauto92.info@gmail.com',
+      name: 'Espace Auto 92',
+      email: 'Espaceauto92.contact@gmail.com',
       hash: '68df44c928fea3194d8c3dd7'
     }
 
