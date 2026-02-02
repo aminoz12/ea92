@@ -6,8 +6,14 @@ export function CarteGriseSection() {
   }
 
   const handleOrderInStore = () => {
-    // This will handle in-store ordering (could open contact page or show modal)
-    window.open('#contact', '_self')
+    // Scroll to the location/contact section
+    const contactSection = document.getElementById('contact')
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      // Fallback: navigate to contact page
+      window.location.href = '/contact'
+    }
   }
 
   return (
