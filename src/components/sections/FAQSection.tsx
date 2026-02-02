@@ -181,15 +181,15 @@ export function FAQSection() {
                 <div className={`transition-all duration-500 ease-in-out ${
                   isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
                 } overflow-hidden`}>
-                  <div className="px-6 pb-6">
-                    <div className="ml-16">
+                  <div className="px-4 sm:px-6 pb-6">
+                    <div className="ml-0 sm:ml-16">
                       {/* Enhanced Answer Container */}
                       <div className="relative">
                         {/* Gradient Border Line */}
                         <div className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${colors.icon.replace('bg-gradient-to-r', 'bg-gradient-to-b')} rounded-full`}></div>
                         
                         {/* Answer Content Box */}
-                        <div className={`ml-6 p-6 rounded-2xl border transition-all duration-300 ${
+                        <div className={`ml-3 sm:ml-6 p-4 sm:p-6 rounded-2xl border transition-all duration-300 ${
                           isOpen 
                             ? `bg-gradient-to-br from-gray-50 to-white dark:from-gray-700/50 dark:to-gray-800/50 border-gray-200 dark:border-gray-600 shadow-lg`
                             : 'bg-transparent border-transparent'
@@ -214,16 +214,16 @@ export function FAQSection() {
                             
                             {/* Delivery time info */}
                             {item.id === 2 && (
-                              <div className="flex items-center space-x-4">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-4 h-4 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                   </svg>
                                   <span className="font-medium">Express:</span> 
                                   <span className="ml-1">4h disponible</span>
                                 </div>
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-4 h-4 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <span className="font-medium">Stock:</span> 
@@ -234,16 +234,16 @@ export function FAQSection() {
                             
                             {/* Warranty info */}
                             {item.id === 3 && (
-                              <div className="flex items-center space-x-4">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-4 h-4 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <span className="font-medium">Garantie:</span> 
                                   <span className="ml-1">1 an minimum</span>
                                 </div>
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                  <svg className="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-4 h-4 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <span className="font-medium">Conditions:</span> 
