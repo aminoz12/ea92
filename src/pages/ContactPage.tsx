@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
+import { sendEmail } from '../lib/emailService'
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -27,22 +28,25 @@ export function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Here you would normally send data to your backend
-    console.log('Form submitted:', formData)
-    
-    setIsSubmitting(false)
-    // Reset form or show success message
-    alert('Merci pour votre message! Nous vous contacterons rapidement.')
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    })
+    try {
+      // Send email via API
+      await sendEmail(formData.subject || 'Nouveau message de contact', formData)
+      
+      // Reset form and show success message
+      alert('Merci pour votre message! Nous vous contacterons rapidement.')
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      })
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Une erreur est survenue. Veuillez réessayer ou nous contacter par téléphone.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const containerVariants = {
