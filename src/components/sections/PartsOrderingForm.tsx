@@ -310,13 +310,10 @@ export function PartsOrderingForm() {
                   disabled={!formData.partGroup}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="">Choisissez d'abord un groupe</option>
-                  {formData.partGroup && 
-                    Object.keys(partSubGroups).includes(formData.partGroup) &&
-                    partSubGroups[formData.partGroup].map((subGroup, index) => (
-                      <option key={`${formData.partGroup}-${index}`} value={subGroup}>{subGroup}</option>
-                    ))
-                  }
+                  <option value="">{formData.partGroup ? 'Sélectionnez un sous-groupe' : 'Choisissez d\'abord un groupe'}</option>
+                  {partSubGroups[formData.partGroup]?.map((subGroup) => (
+                    <option key={subGroup} value={subGroup}>{subGroup}</option>
+                  ))}
                 </select>
               </div>
             </div>
