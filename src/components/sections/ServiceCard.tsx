@@ -6,6 +6,7 @@ interface ServiceCardProps {
     image: string
     color: string
     description: string
+    isNew?: boolean
   }
   className?: string
 }
@@ -13,6 +14,15 @@ interface ServiceCardProps {
 export function ServiceCard({ service, className = '' }: ServiceCardProps) {
   return (
     <div className={`group relative overflow-hidden ${className}`}>
+      
+      {/* New Badge */}
+      {service.isNew && (
+        <div className="absolute top-4 right-4 z-20">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg animate-pulse">
+            NEW
+          </span>
+        </div>
+      )}
       
       {/* Content */}
       <div className="relative z-10 text-center pb-4 pt-4">

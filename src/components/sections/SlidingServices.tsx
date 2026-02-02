@@ -98,7 +98,8 @@ const services = [
     name: 'Production de Clé',
     image: '/cle.png',
     color: 'from-rose-500 to-rose-600',
-    description: 'Fabrication de clés de véhicule, duplication et programmation de télécommandes'
+    description: 'Fabrication de clés de véhicule, duplication et programmation de télécommandes',
+    isNew: true
   }
 ]
 
