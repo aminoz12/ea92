@@ -6,7 +6,7 @@ Ce document explique en détail comment l'intégration SMTP email a été implé
 
 ## 📋 Vue d'Ensemble
 
-L'intégration SMTP permet d'envoyer automatiquement des emails à `Espaceauto92.contact@gmail.com` lorsque les utilisateurs remplissent les formulaires de contact, de commande de pièces, ou de demande de compte professionnel sur le site web.
+L'intégration SMTP permet d'envoyer automatiquement des emails à `espaceauto92.info@gmail.com` lorsque les utilisateurs remplissent les formulaires de contact, de commande de pièces, ou de demande de compte professionnel sur le site web.
 
 **Architecture :**
 
@@ -54,9 +54,9 @@ Un fichier `.env.local` doit être créé à la racine du projet pour stocker le
 SMTP_HOST=smtp.gmail.com          # Adresse du serveur SMTP
 SMTP_PORT=587                     # Port SMTP (587 pour TLS, 465 pour SSL)
 SMTP_SECURE=false                 # true pour SSL (port 465), false pour TLS (port 587)
-SMTP_USER=Espaceauto92.contact@gmail.com   # Email utilisé pour l'authentification SMTP
+SMTP_USER=espaceauto92.info@gmail.com   # Email utilisé pour l'authentification SMTP
 SMTP_PASSWORD=cuwm avyu hmml alit  # Mot de passe d'application Gmail
-SMTP_FROM=Espaceauto92.contact@gmail.com     # Adresse email de l'expéditeur
+SMTP_FROM=espaceauto92.info@gmail.com     # Adresse email de l'expéditeur
 ```
 
 **Important :**
@@ -155,7 +155,7 @@ export const handler: Handler = async (event, context) => {
 3. **Envoi de l'email** (lignes 140-146)
    - Utilise `transporter.sendMail()` pour envoyer
    - Définit l'expéditeur comme "Espace Auto 92"
-   - Destinataire : `Espaceauto92.contact@gmail.com`
+   - Destinataire : `espaceauto92.info@gmail.com`
    - Sujet dynamique selon le type de formulaire
 
 4. **Gestion des erreurs** (try/catch)
@@ -338,7 +338,7 @@ const serviceNames: { [key: string]: string } = {
    ```
    Nodemailer se connecte au serveur SMTP (smtp.gmail.com)
    → Authentifie avec SMTP_USER et SMTP_PASSWORD
-   → Envoie l'email à Espaceauto92.contact@gmail.com
+   → Envoie l'email à espaceauto92.info@gmail.com
    ```
 
 4. **Réponse**
@@ -471,7 +471,7 @@ try {
 2. **Installer les dépendances** : `npm install`
 3. **Démarrer Netlify Dev** : `netlify dev` (ou `npm run dev` pour le frontend seulement)
 4. **Remplir un formulaire** sur `/contact`, `/pro`, ou la page d'accueil
-5. **Vérifier** que l'email arrive à `Espaceauto92.contact@gmail.com`
+5. **Vérifier** que l'email arrive à `espaceauto92.info@gmail.com`
 
 ### Pour tester en production :
 

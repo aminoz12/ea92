@@ -126,7 +126,7 @@ export function Footer() {
               <p>426 Avenue de la République</p>
               <p>92000 Nanterre, France</p>
               <p>01 47 85 10 00</p>
-              <p>Espaceauto92.contact@gmail.com</p>
+              <p>espaceauto92.info@gmail.com</p>
               <div className="pt-2">
                 <p className="font-medium">Horaires d'ouverture:</p>
                 <p>Lun.-Sam. : 9h - 18h 30</p>

@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import nodemailer from 'nodemailer'
 
-const RECIPIENT_EMAIL = 'Espaceauto92.contact@gmail.com'
+const RECIPIENT_EMAIL = 'espaceauto92.info@gmail.com'
 
 const fieldLabels: Record<string, string> = {
   name: 'Nom',

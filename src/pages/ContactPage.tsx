@@ -101,9 +101,9 @@ export function ContactPage() {
         </svg>
       ),
       title: 'Email',
-      content: <span className="text-sm">Espaceauto92.contact@gmail.com</span>,
+      content: <span className="text-sm">espaceauto92.info@gmail.com</span>,
       gradient: 'from-blue-500 to-blue-600',
-      href: 'mailto:Espaceauto92.contact@gmail.com'
+      href: 'mailto:espaceauto92.info@gmail.com'
     },
     {
       icon: (
