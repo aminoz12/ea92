@@ -11,62 +11,11 @@ const MAKES = [
   'Suzuki', 'Mitsubishi', 'Subaru', 'Land Rover', 'Jaguar', 'Volvo', 'Saab'
 ]
 
-const MODELS: Record<string, string[]> = {
-  'Renault': ['Clio', 'Mégane', 'Laguna', 'Scenic', 'Kadjar', 'Captur', 'Twingo', 'Zoe'],
-  'Peugeot': ['208', '308', '508', '2008', '3008', '5008', 'Partner', 'Boxer'],
-  'Citroën': ['C1', 'C2', 'C3', 'C4', 'C5', 'Berlingo', 'Jumpy', 'Jumper'],
-  'Volkswagen': ['Golf', 'Polo', 'Passat', 'Tiguan', 'Touareg', 'Transporter', 'Caddy'],
-  'Audi': ['A1', 'A3', 'A4', 'A6', 'Q3', 'Q5', 'Q7', 'TT'],
-  'BMW': ['Série 1', 'Série 3', 'Série 5', 'X1', 'X3', 'X5', 'Z4'],
-  'Mercedes-Benz': ['Classe A', 'Classe C', 'Classe E', 'GLA', 'GLC', 'GLE', 'Vito'],
-  'Ford': ['Fiesta', 'Focus', 'Mondeo', 'Kuga', 'Transit', 'Connect'],
-  'Opel': ['Corsa', 'Astra', 'Insignia', 'Mokka', 'Vivaro', 'Movano'],
-  'Toyota': ['Yaris', 'Corolla', 'Auris', 'RAV4', 'Hilux', 'Proace'],
-  'Nissan': ['Micra', 'Qashqai', 'X-Trail', 'Juke', 'Navara', 'NV200'],
-  'Honda': ['Jazz', 'Civic', 'CR-V', 'HR-V', 'Accord'],
-  'Mazda': ['Mazda2', 'Mazda3', 'Mazda6', 'CX-3', 'CX-5', 'CX-30'],
-  'Hyundai': ['i10', 'i20', 'i30', 'Tucson', 'Santa Fe', 'iLoad'],
-  'Kia': ['Picanto', 'Rio', 'Ceed', 'Sportage', 'Sorento', 'Carnival'],
-  'Fiat': ['500', 'Panda', 'Tipo', 'Doblo', 'Scudo', 'Ducato'],
-  'Dacia': ['Sandero', 'Logan', 'Duster', 'Jogger'],
-  'Seat': ['Ibiza', 'Leon', 'Ateca', 'Arona', 'Alhambra'],
-  'Skoda': ['Fabia', 'Octavia', 'Superb', 'Kodiaq', 'Karoq'],
-  'Mini': ['Mini', 'Clubman', 'Countryman', 'Paceman'],
-  'Smart': ['Fortwo', 'Forfour'],
-  'Suzuki': ['Swift', 'Vitara', 'Jimny', 'Ignis', 'Baleno'],
-  'Mitsubishi': ['ASX', 'Outlander', 'Eclipse Cross', 'L200'],
-  'Subaru': ['Impreza', 'Legacy', 'Forester', 'XV', 'BRZ'],
-  'Land Rover': ['Evoque', 'Discovery Sport', 'Discovery', 'Range Rover'],
-  'Jaguar': ['XE', 'XF', 'XJ', 'F-Pace', 'E-Pace'],
-  'Volvo': ['V40', 'S60', 'V60', 'XC60', 'XC90'],
-  'Saab': ['9-3', '9-5'],
-  'Alfa Romeo': ['MiTo', 'Giulietta', 'Giulia', 'Stelvio'],
-  'Lancia': ['Ypsilon', 'Delta', 'Thema']
-}
-
 const PART_GROUPS = [
   'Moteur', 'Transmission', 'Freinage', 'Suspension', 'Direction',
   'Échappement', 'Éclairage', 'Électricité', 'Carrosserie', 'Climatisation',
   'Filtration', 'Embrayage', 'Distribution', 'Démarrage', 'Outillage'
 ]
-
-const PART_SUB_GROUPS: Record<string, string[]> = {
-  'Moteur': ['Bloc moteur', 'Culasse', 'Pistons', 'Segments', 'Vilebrequin', 'Arbre à cames', 'Joint de culasse'],
-  'Transmission': ['Boîte de vitesse', 'Embrayage', 'Cardan', 'Différentiel', 'Transmission automatique'],
-  'Freinage': ['Disques de frein', 'Plaquettes', 'Étriers', 'Maître-cylindre', 'Flexible de frein'],
-  'Suspension': ['Amortisseurs', 'Ressorts', 'Pivot de suspension', 'Barre stabilisatrice', 'Rotule'],
-  'Direction': ['Direction assistée', 'Crémaillère', 'Vérin de direction', 'Colonne de direction'],
-  'Échappement': ['Pot d\'échappement', 'Silencieux', 'Catalyseur', 'Collecteur', 'Flexibles'],
-  'Éclairage': ['Phares avant', 'Feux arrière', 'Clignotants', 'Ampoules', 'Optiques'],
-  'Électricité': ['Batterie', 'Alternateur', 'Démarreur', 'Bougies', 'Fusibles', 'Faisceau'],
-  'Carrosserie': ['Ailes', 'Portes', 'Capot', 'Coffre', 'Pare-chocs', 'Rétroviseurs'],
-  'Climatisation': ['Compresseur', 'Condenseur', 'Évaporateur', 'Filtre d\'habitacle'],
-  'Filtration': ['Filtre à huile', 'Filtre à air', 'Filtre à carburant', 'Filtre d\'habitacle'],
-  'Embrayage': ['Disque d\'embrayage', 'Volant moteur', 'Butée', 'Câble d\'embrayage'],
-  'Distribution': ['Courroie', 'Chaîne', 'Poulies', 'Tendeurs', 'Joint spi'],
-  'Démarrage': ['Démarreur', 'Batterie', 'Alternateur', 'Bougies de préchauffage'],
-  'Outillage': ['Outils de diagnostic', 'Clés', 'Jacks', 'Supports moteur']
-}
 
 export function PartsOrderingForm() {
   const [formData, setFormData] = useState({
@@ -84,24 +33,9 @@ export function PartsOrderingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Get available models for selected make
-  const availableModels = formData.make ? MODELS[formData.make] || [] : []
-  
-  // Get available sub-groups for selected part group
-  const availableSubGroups = formData.partGroup ? PART_SUB_GROUPS[formData.partGroup] || [] : []
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    
-    if (name === 'make') {
-      // Reset model when make changes
-      setFormData(prev => ({ ...prev, make: value, model: '' }))
-    } else if (name === 'partGroup') {
-      // Reset subgroup when group changes
-      setFormData(prev => ({ ...prev, partGroup: value, partSubGroup: '' }))
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -253,19 +187,15 @@ export function PartsOrderingForm() {
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Modèle *
                 </label>
-                <select
+                <input
+                  type="text"
                   name="model"
                   value={formData.model}
                   onChange={handleInputChange}
                   required
-                  disabled={!formData.make}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">{formData.make ? 'Sélectionnez un modèle' : 'Choisissez d\'abord une marque'}</option>
-                  {availableModels.map(model => (
-                    <option key={model} value={model}>{model}</option>
-                  ))}
-                </select>
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                  placeholder="Ex: Clio, Golf, 308..."
+                />
               </div>
             </div>
 
@@ -311,19 +241,15 @@ export function PartsOrderingForm() {
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                   Sous-groupe de Pièce *
                 </label>
-                <select
+                <input
+                  type="text"
                   name="partSubGroup"
                   value={formData.partSubGroup}
                   onChange={handleInputChange}
                   required
-                  disabled={!formData.partGroup}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">{formData.partGroup ? 'Sélectionnez un sous-groupe' : 'Choisissez d\'abord un groupe'}</option>
-                  {availableSubGroups.map(subGroup => (
-                    <option key={subGroup} value={subGroup}>{subGroup}</option>
-                  ))}
-                </select>
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                  placeholder="Ex: Plaquettes, Disques, Amortisseurs..."
+                />
               </div>
             </div>
 
