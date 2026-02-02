@@ -8,6 +8,7 @@ import { SpeedLines, EnginePulse } from '../components/animations/SpeedLines'
 import { AutomotiveGears } from '../components/animations/AutomotiveGears'
 import { AnimatedOpeningHours } from '../components/animations/AnimatedOpeningHours'
 import { ContactSection } from '../components/sections/ContactSection'
+import { sendEmail } from '../lib/emailService'
 
 export function ProPage() {
   // Scroll to top when component mounts
@@ -40,12 +41,16 @@ export function ProPage() {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    console.log('Pro account request:', formData)
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      // Send email via API
+      await sendEmail("Demande d'ouverture de compte professionnel", formData)
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Une erreur est survenue. Veuillez réessayer ou nous contacter par téléphone.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const proAdvantages = [

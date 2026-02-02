@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { sendEmail } from '../../lib/emailService'
 
 export function PartsOrderingForm() {
   const [formData, setFormData] = useState({
@@ -63,12 +64,16 @@ export function PartsOrderingForm() {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    console.log('Parts order request:', formData)
-    setIsSubmitting(false)
-    setIsSubmitted(true)
+    try {
+      // Send email via API
+      await sendEmail('Commandez Votre Pièce', formData)
+      setIsSubmitted(true)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Une erreur est survenue. Veuillez réessayer ou nous contacter par téléphone.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const getModelsForMake = (make: string) => {
