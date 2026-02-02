@@ -245,6 +245,7 @@ export function PartsOrderingForm() {
                   Modèle *
                 </label>
                 <select
+                  key={`model-${formData.make}`}
                   name="model"
                   value={formData.model}
                   onChange={handleInputChange}
@@ -252,7 +253,7 @@ export function PartsOrderingForm() {
                   disabled={!formData.make}
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="">Choisissez d'abord une marque</option>
+                  <option value="">{formData.make ? 'Sélectionnez un modèle' : 'Choisissez d\'abord une marque'}</option>
                   {formData.make && getModelsForMake(formData.make).map(model => (
                     <option key={model} value={model}>{model}</option>
                   ))}
