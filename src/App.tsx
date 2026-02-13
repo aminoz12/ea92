@@ -5,7 +5,7 @@ import { HomePage } from './pages/HomePage'
 import { ProPage } from './pages/ProPage'
 import { AboutPage } from './pages/AboutPage'
 import { ContactPage } from './pages/ContactPage'
-import { TawkTo } from './components/TawkTo'
+import { WhatsAppChat } from './components/WhatsAppChat'
 import { ScrollToTop } from './components/ScrollToTop'
 import './styles/globals.css'
 
@@ -25,7 +25,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
             </Routes>
-            <TawkTo />
+            <WhatsAppChat />
           </div>
         {/* </ThemeProvider> */}
       </LocaleProvider>
