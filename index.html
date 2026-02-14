@@ -19,6 +19,23 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Prevent Tawk.to widget from loading (removed in favor of WhatsApp) -->
+    <script>
+      (function() {
+        function removeTawk() {
+          document.querySelectorAll('script[src*="tawk"], script[src*="Tawk"], iframe[id*="tawk"], iframe[src*="tawk"], [class*="tawk"], [id*="tawk"]').forEach(function(el) { el.remove(); });
+          if (window.Tawk_API) delete window.Tawk_API;
+          if (window.Tawk_LoadStart) delete window.Tawk_LoadStart;
+        }
+        removeTawk();
+        if (document.body) {
+          var obs = new MutationObserver(removeTawk);
+          obs.observe(document.body, { childList: true, subtree: true });
+        }
+        document.addEventListener('DOMContentLoaded', removeTawk);
+        window.addEventListener('load', removeTawk);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Chaty chat widget -->
     <script id="pixel-chaty" async="true" src="https://cdn.chaty.app/pixel.js?id=ha2CS6P6"></script>
