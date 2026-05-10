@@ -9,7 +9,6 @@ const DYNAMIC_CACHE = 'dynamic-v1.0.3'
 const CRITICAL_RESOURCES = [
   '/',
   '/logo.png',
-  '/vid2.mp4',
   '/index.html',
   '/manifest.json'
 ]
