@@ -178,9 +178,6 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Compact Opening Hours */}
-        <CompactOpeningHours />
-
         {/* Services Section */}
         <ServicesSection />
 
@@ -204,6 +201,9 @@ export function HomePage() {
 
         {/* Contact Section */}
         <ContactSection />
+
+        {/* Compact Opening Hours */}
+        <CompactOpeningHours />
       </main>
 
       <Footer />
