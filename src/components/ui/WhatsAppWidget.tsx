@@ -1,4 +1,3 @@
-import React from 'react'
 
 export function WhatsAppWidget() {
   const whatsappUrl = "https://wa.me/33756997939"
