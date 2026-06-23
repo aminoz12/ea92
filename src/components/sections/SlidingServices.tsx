@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useRef, useState } from 'react'
 import { ServiceCard } from './ServiceCard'
 
@@ -105,118 +107,87 @@ const services = [
 
 export function SlidingServices() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
+  // Scroll position and drag state live in refs so the rAF loop never triggers
+  // a React re-render (the old code called setState every frame -> 60 re-renders
+  // per second of all 42 cards, which caused the lag/jank).
+  const scrollPosRef = useRef(0)
+  const isPausedRef = useRef(false)
+  const startXRef = useRef(0)
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const cardWidth = 450 // width of each card including gap - increased for bigger images
+  const cardWidth = 444 // 420px card + 24px (space-x-6) gap
   const totalWidth = cardWidth * services.length
 
-  // Auto-play animation - continuous scrolling
+  // Continuous auto-scroll — runs a single rAF loop for the component's lifetime
+  // and drives the DOM transform directly (no per-frame setState).
   useEffect(() => {
-    if (isDragging) return // Only pause when actively dragging
-
     const container = containerRef.current
     if (!container) return
 
     let animationId: number
-    let scrollPosition = scrollLeft
-    const scrollSpeed = 1.5 // pixels per frame - smooth continuous speed
+    const scrollSpeed = 1 // pixels per frame
 
     const animate = () => {
-      scrollPosition += scrollSpeed
-      
-      // Reset position when we've scrolled through all cards for seamless loop
-      if (scrollPosition >= totalWidth) {
-        scrollPosition = 0
-        setCurrentIndex(0)
+      if (!isPausedRef.current) {
+        let pos = scrollPosRef.current + scrollSpeed
+        // Subtract one full set (content repeats every totalWidth) for a
+        // seamless loop with no visible jump.
+        if (pos >= totalWidth) pos -= totalWidth
+        scrollPosRef.current = pos
+        container.style.transform = `translateX(-${pos}px)`
       }
-      
-      container.style.transform = `translateX(-${scrollPosition}px)`
-      setScrollLeft(scrollPosition)
       animationId = requestAnimationFrame(animate)
     }
 
     animationId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationId)
+  }, [totalWidth])
 
-    return () => {
-      cancelAnimationFrame(animationId)
-    }
-  }, [isDragging, scrollLeft, totalWidth])
-
-  // Touch/Mouse drag handlers
+  // Touch/Mouse drag handlers (ref-based, no re-render while dragging)
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    setIsDragging(true)
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    setStartX(clientX)
-    if (containerRef.current) {
-      setScrollLeft(parseInt(containerRef.current.style.transform.replace('translateX(-', '').replace('px)', '')) || 0)
-    }
+    isPausedRef.current = true
+    startXRef.current = 'touches' in e ? e.touches[0].clientX : e.clientX
   }
 
   const handleMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDragging || !containerRef.current) return
-    
-    e.preventDefault()
+    if (!isPausedRef.current || !containerRef.current) return
+
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
-    const x = clientX - startX
-    const newScrollLeft = scrollLeft - x
-    
-    containerRef.current.style.transform = `translateX(-${newScrollLeft}px)`
-    setScrollLeft(newScrollLeft)
-    setStartX(clientX)
+    let pos = scrollPosRef.current - (clientX - startXRef.current)
+    if (pos < 0) pos += totalWidth
+    if (pos >= totalWidth) pos -= totalWidth
+
+    scrollPosRef.current = pos
+    containerRef.current.style.transform = `translateX(-${pos}px)`
+    startXRef.current = clientX
   }
 
   const handleEnd = () => {
-    if (!isDragging) return
-    
-    setIsDragging(false)
-    // Scrolling will automatically resume when isDragging becomes false
+    isPausedRef.current = false
   }
 
-  // Navigation functions - temporarily pause scrolling
-  const goToPrevious = () => {
-    setIsDragging(true) // Temporarily pause scrolling
-    const newIndex = currentIndex === 0 ? services.length - 1 : currentIndex - 1
-    const newScrollLeft = newIndex * cardWidth
-    
-    if (containerRef.current) {
-      containerRef.current.style.transition = 'transform 0.3s ease-out'
-      containerRef.current.style.transform = `translateX(-${newScrollLeft}px)`
-      setScrollLeft(newScrollLeft)
-      setCurrentIndex(newIndex)
-      
-      setTimeout(() => {
-        if (containerRef.current) {
-          containerRef.current.style.transition = ''
-        }
-        setIsDragging(false) // Resume scrolling
-      }, 300)
-    }
+  // Animate to a given card index, pausing the auto-scroll during the transition
+  const scrollToIndex = (index: number) => {
+    const container = containerRef.current
+    if (!container) return
+
+    isPausedRef.current = true
+    const target = index * cardWidth
+    scrollPosRef.current = target
+    setCurrentIndex(index)
+
+    container.style.transition = 'transform 0.4s ease-out'
+    container.style.transform = `translateX(-${target}px)`
+
+    window.setTimeout(() => {
+      if (containerRef.current) containerRef.current.style.transition = ''
+      isPausedRef.current = false
+    }, 400)
   }
 
-  const goToNext = () => {
-    setIsDragging(true) // Temporarily pause scrolling
-    const newIndex = (currentIndex + 1) % services.length
-    const newScrollLeft = newIndex * cardWidth
-    
-    if (containerRef.current) {
-      containerRef.current.style.transition = 'transform 0.3s ease-out'
-      containerRef.current.style.transform = `translateX(-${newScrollLeft}px)`
-      setScrollLeft(newScrollLeft)
-      setCurrentIndex(newIndex)
-      
-      setTimeout(() => {
-        if (containerRef.current) {
-          containerRef.current.style.transition = ''
-        }
-        setIsDragging(false) // Resume scrolling
-      }, 300)
-    }
-  }
-
-  // removed toggleAutoPlay (unused)
+  const goToPrevious = () =>
+    scrollToIndex(currentIndex === 0 ? services.length - 1 : currentIndex - 1)
+  const goToNext = () => scrollToIndex((currentIndex + 1) % services.length)
 
   // Duplicate services for seamless loop
   const duplicatedServices = [...services, ...services, ...services]
@@ -256,9 +227,9 @@ export function SlidingServices() {
       
       {/* Sliding container with proper width constraints */}
       <div className="relative w-full">
-        <div 
+        <div
           ref={containerRef}
-          className="flex space-x-6 will-change-transform cursor-grab active:cursor-grabbing"
+          className="flex space-x-6 will-change-transform cursor-grab active:cursor-grabbing select-none"
           style={{ width: 'max-content' }}
           onMouseDown={handleStart}
           onMouseMove={handleMove}
@@ -284,24 +255,7 @@ export function SlidingServices() {
         {services.map((_, index) => (
           <button
             key={index}
-            onClick={() => {
-              setIsDragging(true) // Temporarily pause scrolling
-              const newScrollLeft = index * cardWidth
-              
-              if (containerRef.current) {
-                containerRef.current.style.transition = 'transform 0.3s ease-out'
-                containerRef.current.style.transform = `translateX(-${newScrollLeft}px)`
-                setScrollLeft(newScrollLeft)
-                setCurrentIndex(index)
-                
-                setTimeout(() => {
-                  if (containerRef.current) {
-                    containerRef.current.style.transition = ''
-                  }
-                  setIsDragging(false) // Resume scrolling
-                }, 300)
-              }
-            }}
+            onClick={() => scrollToIndex(index)}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === currentIndex 
                 ? 'bg-secondary-600 scale-125' 

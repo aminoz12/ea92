@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom'
+'use client'
+
+import Link from 'next/link'
 import { useLocale } from '../../hooks/useLocale'
 // import { useTheme } from '../../hooks/useTheme' // DARK MODE DISABLED - Uncomment to restore
 
@@ -72,7 +74,7 @@ export function Footer() {
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-white/80 hover:text-white transition-colors text-sm"
                   >
                     {link.name}
@@ -92,7 +94,7 @@ export function Footer() {
                   {services.slice(0, 7).map((service) => (
                     <li key={service.name}>
                       <Link
-                        to={service.href}
+                        href={service.href}
                         className="text-white/80 hover:text-white transition-colors text-sm"
                       >
                         {service.name}
@@ -107,7 +109,7 @@ export function Footer() {
                   {services.slice(7).map((service) => (
                     <li key={service.name}>
                       <Link
-                        to={service.href}
+                        href={service.href}
                         className="text-white/80 hover:text-white transition-colors text-sm"
                       >
                         {service.name}

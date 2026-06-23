@@ -1,5 +1,11 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
+
+// SSR-safe viewport width (window is undefined during server prerender)
+const viewportWidth = () =>
+  typeof window !== 'undefined' ? window.innerWidth : 1200
 
 interface HourItem {
   day: string
@@ -9,9 +15,14 @@ interface HourItem {
 }
 
 export const AnimatedOpeningHours = () => {
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState(() => new Date())
+  // Time-dependent values must only render after mount, otherwise the static
+  // server-prerendered HTML won't match the client and React throws a
+  // hydration error. `mounted` stays false on the server + first client render.
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
@@ -20,11 +31,13 @@ export const AnimatedOpeningHours = () => {
   }, [])
 
   const getCurrentDay = () => {
+    if (!mounted) return ''
     const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
     return days[currentTime.getDay()]
   }
 
   const isCurrentlyOpen = () => {
+    if (!mounted) return false
     const now = currentTime
     const currentHour = now.getHours()
     const currentMinutes = now.getMinutes()
@@ -89,6 +102,8 @@ export const AnimatedOpeningHours = () => {
   ]
 
   const formatCurrentTime = () => {
+    // Stable placeholder before mount keeps server and client HTML identical
+    if (!mounted) return '--:--:--'
     return currentTime.toLocaleTimeString('fr-FR', {
       hour: '2-digit',
       minute: '2-digit',
@@ -252,7 +267,7 @@ export const AnimatedOpeningHours = () => {
         <motion.div
           className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500/5 to-transparent"
           animate={{
-            x: [-100, window.innerWidth || 1200],
+            x: [-100, viewportWidth()],
             opacity: [0, 0.1, 0]
           }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
@@ -260,7 +275,7 @@ export const AnimatedOpeningHours = () => {
         <motion.div
           className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-l from-transparent via-gray-400/5 to-transparent"
           animate={{
-            x: [100, -(window.innerWidth || 1200)],
+            x: [100, -viewportWidth()],
             opacity: [0, 0.08, 0]
           }}
           transition={{ duration: 30, repeat: Infinity, delay: 5, ease: "linear" }}

@@ -1,4 +1,6 @@
-import { useRef, useState, useEffect } from 'react'
+'use client'
+
+import { useRef, useEffect } from 'react'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { ServicesSection } from '../components/sections/ServicesSection'
@@ -12,78 +14,14 @@ import { PartsOrderingForm } from '../components/sections/PartsOrderingForm'
 
 export function HomePage() {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false)
 
-  // Load video only when user interacts or after delay
+  // `autoPlay muted playsInline` covers autoplay in all modern browsers; this
+  // is just a fallback play() for the few that need an explicit call. The video
+  // itself renders immediately (in the SSR HTML) so the browser starts fetching
+  // it right away instead of waiting on JS.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShouldLoadVideo(true)
-    }, 1500) // Start loading after 1.5 seconds
-
-    // Also load video on any user interaction
-    const handleUserInteraction = () => {
-      if (!shouldLoadVideo) {
-        setShouldLoadVideo(true)
-      }
-    }
-
-    document.addEventListener('click', handleUserInteraction, { once: true })
-    document.addEventListener('scroll', handleUserInteraction, { once: true })
-    document.addEventListener('mousemove', handleUserInteraction, { once: true })
-
-    return () => {
-      clearTimeout(timer)
-      document.removeEventListener('click', handleUserInteraction)
-      document.removeEventListener('scroll', handleUserInteraction)
-      document.removeEventListener('mousemove', handleUserInteraction)
-    }
-  }, [shouldLoadVideo])
-
-  // Handle video load events
-  const handleVideoLoad = () => {
-    setIsVideoLoaded(true)
-  }
-
-  const handleVideoError = () => {
-    console.error('Video failed to load')
-    setIsVideoLoaded(false)
-  }
-
-  // Optimize video playback when loaded
-  useEffect(() => {
-    if (videoRef.current && isVideoLoaded) {
-      const video = videoRef.current
-      
-      // Optimize for performance
-      video.style.willChange = 'transform'
-      
-      // Set buffer size for smoother playback
-      if ('buffered' in video) {
-        video.play().catch((e: Error) => console.log('Auto-play prevented:', e))
-      }
-      
-      // Reduce quality if needed for performance
-      video.setAttribute('data-optimized', 'true')
-    }
-  }, [isVideoLoaded])
-
-  // Add performance monitoring
-  useEffect(() => {
-    if (shouldLoadVideo && !isVideoLoaded) {
-      const startTime = performance.now()
-      
-      const checkVideoLoad = () => {
-        if (isVideoLoaded) {
-          const loadTime = performance.now() - startTime
-          console.log(`Video loaded in ${loadTime.toFixed(2)}ms`)
-        }
-      }
-      
-      const interval = setInterval(checkVideoLoad, 100)
-      return () => clearInterval(interval)
-    }
-  }, [shouldLoadVideo, isVideoLoaded])
+    videoRef.current?.play().catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen">
@@ -91,36 +29,33 @@ export function HomePage() {
       
       <main>
         {/* Hero Section with Video Background */}
-        <section className="relative h-[calc(100vh-38px)] overflow-hidden">
-          {/* Video placeholder background */}
+        <section className="relative h-[calc(100vh-50px)] overflow-hidden">
+          {/* Instant gradient placeholder behind the video/poster */}
           <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-black video-poster">
             <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
           </div>
-          
-          {/* Video - loads conditionally with optimizations */}
-          {shouldLoadVideo && (
-            <video
-              ref={videoRef}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
-              autoPlay
-              muted
-              playsInline
-              loop
-              preload="metadata"
-              poster="/excellence.png"
-              onLoadStart={handleVideoLoad}
-              onCanPlay={handleVideoLoad}
-              onError={handleVideoError}
-              onLoadedData={handleVideoLoad}
-              style={{ willChange: 'transform' }}
-            >
-              {/* Note: vid2.mp4 was removed from public because it exceeds Cloudflare's 25MB limit (44MB). 
-                  Host it on R2 or a CDN and update the src below. */}
-              {/* <source src="/vid2.mp4" type="video/mp4" /> */}
-              Your browser does not support the video tag.
-            </video>
-          )}
-          
+
+          {/* Video renders immediately so the browser fetches it on first paint.
+              The 40KB poster shows instantly, then the loop replaces it. */}
+          <video
+            ref={videoRef}
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            playsInline
+            loop
+            preload="auto"
+            poster="/video-poster.jpg"
+            style={{ willChange: 'transform' }}
+          >
+            {/* Compressed to 1080p/30fps H.264 */}
+            <source src="/vid2.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          {/* Dark overlay over the video for text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
+
           {/* Hero Content */}
           <div className="relative z-10 h-full flex items-center justify-center mt-[90px]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
