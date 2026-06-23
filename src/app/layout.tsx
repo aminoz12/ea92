@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { Providers } from './providers'
 import { SITE } from '@/lib/site'
 import { localBusinessSchema, webSiteSchema } from '@/lib/structuredData'
 import '@/styles/globals.css'
 
 const TITLE = 'Espace Auto 92 - Pièces détachées auto à Nanterre (92)'
+
+// Google Analytics (gtag.js) measurement ID
+const GA_MEASUREMENT_ID = 'G-L38P4LX560'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -94,6 +98,20 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
         />
         <Providers>{children}</Providers>
+
+        {/* Google Analytics (gtag.js) */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   )
