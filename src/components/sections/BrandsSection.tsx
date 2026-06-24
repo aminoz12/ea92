@@ -44,12 +44,19 @@ const BrandCard = ({ brand, small }: { brand: Brand; small?: boolean }) => {
       ? 'max-h-28 max-w-[260px]'
       : 'max-h-32 max-w-[300px]'
 
+  // Reserve horizontal space so the card never collapses to 0 width while the
+  // logo is loading. Without this the w-max marquee track shrinks and rows
+  // look empty or show only one logo (very visible on mobile).
+  const minWidthClass = small ? 'min-w-[150px]' : 'min-w-[190px]'
+
   return (
-    <div className="group/card shrink-0 mx-9 h-36 flex items-center justify-center">
+    <div className={`group/card shrink-0 mx-9 h-36 flex items-center justify-center ${minWidthClass}`}>
       <img
         src={brand.logo}
         alt={brand.name}
-        loading="lazy"
+        // Eager: the marquee scrolls via transform, so off-screen logos would
+        // never enter the viewport and lazy loading would leave them blank.
+        loading="eager"
         decoding="async"
         className={`w-auto object-contain transition-transform duration-300 group-hover/card:scale-110 ${sizeClass}`}
       />
