@@ -70,9 +70,9 @@ const MarqueeRow = ({
 }) => (
   <div className="group relative overflow-hidden marquee-mask">
     <div
-      className={`flex w-max ${
+      className={`flex w-max will-change-transform ${
         direction === 'left' ? 'animate-scroll-right-left' : 'animate-scroll-left-right'
-      } group-hover:[animation-play-state:paused]`}
+      } [@media(hover:hover)]:group-hover:[animation-play-state:paused]`}
       style={{ animationDuration: '40s' }}
     >
       {[...items, ...items].map((brand, i) => (
