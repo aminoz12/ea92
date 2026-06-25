@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
+import { VehicleHero } from '../components/sections/VehicleHero'
 import { ServicesSection } from '../components/sections/ServicesSection'
 import { CarteGriseSection } from '../components/sections/CarteGriseSection'
 import { TestimonialsSection } from '../components/sections/TestimonialsSection'
@@ -13,105 +13,13 @@ import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
 import { PartsOrderingForm } from '../components/sections/PartsOrderingForm'
 
 export function HomePage() {
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  // `autoPlay muted playsInline` covers autoplay in all modern browsers; this
-  // is just a fallback play() for the few that need an explicit call. The video
-  // itself renders immediately (in the SSR HTML) so the browser starts fetching
-  // it right away instead of waiting on JS.
-  useEffect(() => {
-    videoRef.current?.play().catch(() => {})
-  }, [])
-
   return (
     <div className="min-h-screen">
       <Header />
-      
+
       <main>
-        {/* Hero Section with Video Background */}
-        <section className="relative h-[calc(100vh-50px)] overflow-hidden">
-          {/* Instant gradient placeholder behind the video/poster */}
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-black video-poster">
-            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
-          </div>
-
-          {/* Video renders immediately so the browser fetches it on first paint.
-              The 40KB poster shows instantly, then the loop replaces it. */}
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            loop
-            preload="auto"
-            poster="/video-poster.jpg"
-            style={{ willChange: 'transform' }}
-          >
-            {/* Compressed to 1080p/30fps H.264 */}
-            <source src="/vid2.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* Dark overlay over the video for text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70"></div>
-
-          {/* Hero Content */}
-          <div className="relative z-10 h-full flex items-center justify-center mt-[90px]">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              {/* Main Title */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight">
-                <span className="block">
-                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent anton-regular">
-                    ICI TROUVEZ L'EXCELLENCE
-                  </span>
-                  <br />
-                  <span className="bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent anton-regular">
-                    LÀ OÙ LES PRIX FONT LA DIFFÉRENCE
-                  </span>
-                </span>
-              </h1>
-              
-              {/* Subtitle */}
-              <p className="text-xl md:text-2xl lg:text-3xl font-light text-white/90 max-w-4xl mx-auto mb-12 leading-relaxed libre-franklin">
-                Distributeur Pièces détachées Particuliers & Professionnels 
-                <br />
-                <span className="text-lg md:text-xl text-white/70">
-                  Since 2017
-                </span>
-              </p>
-              
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <button 
-                  onClick={() => {
-                    const servicesSection = document.getElementById('services')
-                    if (servicesSection) {
-                      servicesSection.scrollIntoView({ behavior: 'smooth' })
-                    }
-                  }}
-                  className="group relative px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105"
-                >
-                  <span className="relative z-10">Découvrir nos services</span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </button>
-                
-                <a 
-                  href="tel:0147851000"
-                  className="group px-8 py-4 border-2 border-white/30 hover:border-white text-white font-bold text-lg rounded-2xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
-                >
-                  <span className="flex items-center">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    01 47 85 10 00
-                  </span>
-                </a>
-              </div>
-              
-            </div>
-          </div>
-        </section>
+        {/* Hero — vehicle identification + promo carousel */}
+        <VehicleHero />
 
         {/* Services Section */}
         <ServicesSection />
