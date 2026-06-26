@@ -12,6 +12,95 @@ function scrollToParts() {
 /*  Left column — vehicle identification card                          */
 /* ------------------------------------------------------------------ */
 
+// Common car parts (French) offered as autocomplete hints in the
+// "Pièce recherchée" field. The input stays free-text: a customer can pick a
+// suggestion or type anything that is not in the list.
+const PART_SUGGESTIONS = [
+  // Freinage
+  'Plaquettes de freins avant',
+  'Plaquettes de freins arrière',
+  'Disques de frein avant',
+  'Disques de frein arrière',
+  'Étrier de frein',
+  'Mâchoires de frein',
+  'Tambour de frein',
+  'Liquide de frein',
+  'Flexible de frein',
+  'Câble de frein à main',
+  'Maître-cylindre de frein',
+  'Kit de freins',
+  // Filtration
+  'Filtre à huile',
+  'Filtre à air',
+  'Filtre à carburant',
+  "Filtre d'habitacle (pollen)",
+  // Distribution / moteur
+  'Kit de distribution',
+  'Courroie de distribution',
+  "Courroie d'accessoire",
+  'Galet tendeur',
+  'Pompe à eau',
+  'Joint de culasse',
+  "Bougies d'allumage",
+  'Bougies de préchauffage',
+  "Bobine d'allumage",
+  'Injecteur',
+  'Vanne EGR',
+  'Turbocompresseur',
+  'Support moteur',
+  // Embrayage
+  "Kit d'embrayage",
+  "Butée d'embrayage",
+  'Volant moteur',
+  // Suspension / direction
+  'Amortisseur avant',
+  'Amortisseur arrière',
+  'Ressort de suspension',
+  'Rotule de direction',
+  'Rotule de suspension',
+  'Biellette de barre stabilisatrice',
+  'Triangle de suspension',
+  'Silentbloc',
+  'Roulement de roue',
+  'Cardan de transmission',
+  'Crémaillère de direction',
+  // Refroidissement
+  'Radiateur de refroidissement',
+  'Thermostat',
+  'Durite de radiateur',
+  'Ventilateur de refroidissement',
+  "Vase d'expansion",
+  // Électricité / démarrage
+  'Batterie',
+  'Alternateur',
+  'Démarreur',
+  'Capteur ABS',
+  'Sonde lambda',
+  'Capteur de température',
+  'Capteur de vilebrequin (PMH)',
+  "Débitmètre d'air",
+  // Échappement
+  "Pot d'échappement",
+  'Silencieux',
+  'Catalyseur',
+  'Filtre à particules (FAP)',
+  "Collecteur d'échappement",
+  // Éclairage / visibilité
+  'Ampoule de phare',
+  'Phare avant',
+  'Feu arrière',
+  'Clignotant',
+  'Rétroviseur',
+  "Balais d'essuie-glace",
+  // Alimentation
+  'Pompe à carburant',
+  "Pompe à injection",
+  'Bouchon de vidange',
+  // Pneus / roues
+  'Pneu',
+  'Jante',
+]
+
 function VehicleFinder() {
   const [plate, setPlate] = useState('')
   const [part, setPart] = useState('')
@@ -45,15 +134,22 @@ function VehicleFinder() {
           />
         </div>
 
-        {/* Part searched */}
+        {/* Part searched — free text with autocomplete suggestions */}
         <input
           type="text"
           value={part}
           onChange={(e) => setPart(e.target.value)}
           placeholder="Pièce recherchée"
           aria-label="Pièce recherchée"
+          list="part-suggestions"
+          autoComplete="off"
           className="mt-4 w-full h-14 px-4 rounded-xl text-base text-gray-900 placeholder:text-gray-400 outline-none ring-1 ring-gray-300 focus:ring-2 focus:ring-secondary-500"
         />
+        <datalist id="part-suggestions">
+          {PART_SUGGESTIONS.map((p) => (
+            <option key={p} value={p} />
+          ))}
+        </datalist>
 
         <button
           type="submit"
