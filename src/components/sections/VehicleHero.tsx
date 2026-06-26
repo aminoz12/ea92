@@ -63,6 +63,13 @@ function VehicleFinder() {
           aria-label="Pièce recherchée"
           className="mt-4 w-full h-14 px-4 rounded-xl text-base text-gray-900 placeholder:text-gray-400 outline-none ring-1 ring-gray-300 focus:ring-2 focus:ring-secondary-500"
         />
+
+        <button
+          type="submit"
+          className="mt-4 w-full h-14 rounded-xl bg-secondary-600 hover:bg-secondary-700 text-white font-display font-bold text-base shadow-lg hover:shadow-xl transition-all"
+        >
+          Vérifier la disponibilité
+        </button>
       </form>
     </div>
   )
