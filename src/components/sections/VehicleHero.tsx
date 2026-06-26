@@ -43,15 +43,6 @@ function VehicleFinder() {
             aria-label="Plaque d'immatriculation"
             className="flex-1 min-w-0 px-4 text-center text-lg font-bold tracking-wider text-gray-900 placeholder:text-gray-400 placeholder:font-semibold outline-none"
           />
-          <button
-            type="submit"
-            aria-label="Rechercher"
-            className="px-5 bg-secondary-600 hover:bg-secondary-700 text-white transition-colors flex items-center justify-center"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
         </div>
 
         {/* Part searched */}
