@@ -343,159 +343,97 @@ function VehicleFinder() {
 /* ------------------------------------------------------------------ */
 
 interface Slide {
-  tag: string
-  title: string
-  highlight: string
-  subtitle: string
-  gradient: string
-  icon: React.ReactNode
+  image: string
+  alt: string
+  cta: string
 }
 
-const filterIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M6 4v3l5 5v7l2 1v-8l5-5V4" />
-  </svg>
-)
-const brakeIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-    <circle cx="12" cy="12" r="9" />
-    <circle cx="12" cy="12" r="3.5" />
-    <path strokeLinecap="round" d="M12 3v3M12 18v3M3 12h3M18 12h3" />
-  </svg>
-)
-const oilIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3s6 6.5 6 11a6 6 0 11-12 0c0-4.5 6-11 6-11z" />
-  </svg>
-)
-const beltIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-    <circle cx="8" cy="12" r="4" />
-    <circle cx="17" cy="12" r="2.5" />
-    <path strokeLinecap="round" d="M8 8h9M8 16h9" />
-  </svg>
-)
-
+// Promo banners — add more as images arrive, each with its own CTA label.
 const SLIDES: Slide[] = [
-  {
-    tag: 'PROMOTION',
-    title: 'Filtration',
-    highlight: "Jusqu'à -40%",
-    subtitle: "Filtrer, c'est prévenir. Entretenez l'avenir.",
-    gradient: 'from-secondary-700 to-secondary-900',
-    icon: filterIcon,
-  },
-  {
-    tag: 'FREINAGE',
-    title: 'Plaquettes & disques',
-    highlight: "Jusqu'à -35%",
-    subtitle: 'La sécurité avant tout, au meilleur prix.',
-    gradient: 'from-gray-800 to-gray-900',
-    icon: brakeIcon,
-  },
-  {
-    tag: 'ENTRETIEN',
-    title: 'Huile & vidange',
-    highlight: "Jusqu'à -30%",
-    subtitle: 'Un moteur bien huilé dure plus longtemps.',
-    gradient: 'from-secondary-600 to-secondary-800',
-    icon: oilIcon,
-  },
-  {
-    tag: 'DISTRIBUTION',
-    title: 'Kits de distribution',
-    highlight: "Jusqu'à -25%",
-    subtitle: 'Grandes marques, pièces d’origine garanties.',
-    gradient: 'from-gray-900 to-secondary-900',
-    icon: beltIcon,
-  },
+  { image: '/promo1.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
+  // { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: "JE PRENDS L'OFFRE" },
+  // { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'PROFITEZ MAINTENANT' },
 ]
 
 function PromoCarousel() {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
+  const multiple = SLIDES.length > 1
 
-  // Auto-advance every 5s unless paused.
+  // Auto-advance every 5s unless paused (only with several slides).
   useEffect(() => {
-    if (paused) return
+    if (paused || !multiple) return
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % SLIDES.length)
     }, 5000)
     return () => clearInterval(id)
-  }, [paused])
+  }, [paused, multiple])
 
   return (
     <div className="relative w-full h-full min-h-[300px] lg:min-h-0 rounded-3xl overflow-hidden shadow-xl">
       {SLIDES.map((slide, i) => (
         <div
-          key={slide.title}
+          key={slide.image}
           aria-hidden={i !== index}
-          className={`absolute inset-0 bg-gradient-to-br ${slide.gradient} transition-opacity duration-700 ${
+          className={`absolute inset-0 transition-opacity duration-700 ${
             i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
-          {/* Decorative oversized icon */}
-          <div className="absolute -right-8 -bottom-8 w-64 h-64 text-white/10">
-            {slide.icon}
-          </div>
+          <img
+            src={slide.image}
+            alt={slide.alt}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            className="h-full w-full object-cover"
+          />
 
-          <div className="relative h-full flex flex-col justify-center p-8 sm:p-10">
-            <span className="inline-block w-fit px-3 py-1 rounded-md bg-white/15 text-white text-xs font-bold tracking-widest mb-4">
-              {slide.tag}
-            </span>
-            <h3 className="text-3xl sm:text-4xl font-display font-extrabold text-white leading-tight">
-              {slide.title}
-            </h3>
-            <p className="mt-3 text-2xl sm:text-3xl font-display font-black text-white">
-              {slide.highlight}
-              <span className="align-super text-sm">*</span>
-            </p>
-            <p className="mt-3 text-white/85 text-sm sm:text-base max-w-sm">{slide.subtitle}</p>
-
-            <button
-              onClick={scrollToContact}
-              className="mt-7 inline-flex w-fit items-center gap-2 px-6 py-3 rounded-xl bg-white text-secondary-700 font-bold shadow-lg hover:bg-gray-100 transition-colors"
-            >
-              J'en profite
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-          </div>
+          {/* CTA overlaid on the banner */}
+          <button
+            onClick={scrollToContact}
+            className={`absolute left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl bg-secondary-600 hover:bg-secondary-700 px-7 py-3 text-white font-display font-extrabold tracking-wide text-sm sm:text-base shadow-xl transition-colors ${
+              multiple ? 'bottom-14' : 'bottom-6'
+            }`}
+          >
+            {slide.cta}
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
         </div>
       ))}
 
-      {/* Controls: pause/play + dots */}
-      <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-4">
-        <button
-          onClick={() => setPaused((p) => !p)}
-          aria-label={paused ? 'Reprendre le défilement' : 'Mettre en pause'}
-          className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 flex items-center justify-center shadow"
-        >
-          {paused ? (
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          ) : (
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
-            </svg>
-          )}
-        </button>
+      {/* Controls: pause/play + dots (only with several slides) */}
+      {multiple && (
+        <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-4">
+          <button
+            onClick={() => setPaused((p) => !p)}
+            aria-label={paused ? 'Reprendre le défilement' : 'Mettre en pause'}
+            className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 flex items-center justify-center shadow"
+          >
+            {paused ? (
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            ) : (
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+              </svg>
+            )}
+          </button>
 
-        <div className="flex items-center gap-2">
-          {SLIDES.map((s, i) => (
-            <button
-              key={s.title}
-              onClick={() => setIndex(i)}
-              aria-label={`Aller à la promotion ${i + 1}`}
-              className={`h-2.5 rounded-full transition-all ${
-                i === index ? 'w-6 bg-white' : 'w-2.5 bg-white/50 hover:bg-white/80'
-              }`}
-            />
-          ))}
+          <div className="flex items-center gap-2">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.image}
+                onClick={() => setIndex(i)}
+                aria-label={`Aller à la promotion ${i + 1}`}
+                className={`h-2.5 rounded-full transition-all ${
+                  i === index ? 'w-6 bg-white' : 'w-2.5 bg-white/50 hover:bg-white/80'
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
