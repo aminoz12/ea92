@@ -10,7 +10,6 @@ import { ContactSection } from '../components/sections/ContactSection'
 import { FAQSection } from '../components/sections/FAQSection'
 import { BrandsSection } from '../components/sections/BrandsSection'
 import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
-import { PartsOrderingForm } from '../components/sections/PartsOrderingForm'
 
 export function HomePage() {
   return (
@@ -35,9 +34,6 @@ export function HomePage() {
 
         {/* Products Section - TEMPORARILY HIDDEN */}
         {/* <ProductsSection /> */}
-
-        {/* Parts Ordering Form - TEMPORARY REPLACEMENT */}
-        <PartsOrderingForm />
 
         {/* FAQ Section */}
         <FAQSection />

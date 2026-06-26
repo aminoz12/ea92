@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-// Smoothly scroll to the parts-ordering form (the hero's "search" target while
+// Smoothly scroll to the contact section (the hero's "search"/CTA target while
 // the real vehicle lookup is not wired up yet).
-function scrollToParts() {
-  document.getElementById('parts-ordering')?.scrollIntoView({ behavior: 'smooth' })
+function scrollToContact() {
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
 }
 
 // Lower-case + strip accents so "etrier" matches "Étrier", "batt" matches
@@ -171,8 +171,8 @@ function VehicleFinder() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Visual-only for now: send the user to the parts-ordering form.
-    scrollToParts()
+    // Visual-only for now: send the user to the contact section.
+    scrollToContact()
   }
 
   return (
@@ -384,7 +384,7 @@ function PromoCarousel() {
             <p className="mt-3 text-white/85 text-sm sm:text-base max-w-sm">{slide.subtitle}</p>
 
             <button
-              onClick={scrollToParts}
+              onClick={scrollToContact}
               className="mt-7 inline-flex w-fit items-center gap-2 px-6 py-3 rounded-xl bg-white text-secondary-700 font-bold shadow-lg hover:bg-gray-100 transition-colors"
             >
               J'en profite
