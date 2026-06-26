@@ -12,12 +12,8 @@ function scrollToParts() {
 /*  Left column — vehicle identification card                          */
 /* ------------------------------------------------------------------ */
 
-type Tab = 'plate' | 'model'
-
 function VehicleFinder() {
-  const [tab, setTab] = useState<Tab>('plate')
   const [plate, setPlate] = useState('')
-  const [query, setQuery] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,80 +27,31 @@ function VehicleFinder() {
         Je commande ma pièce !
       </h2>
 
-      {/* Tabs */}
-      <div className="grid grid-cols-2 gap-2 p-1 bg-gray-100 rounded-xl mb-6">
-        <button
-          type="button"
-          onClick={() => setTab('plate')}
-          className={`py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-            tab === 'plate'
-              ? 'bg-secondary-600 text-white shadow'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Immatriculation
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab('model')}
-          className={`py-2.5 rounded-lg text-sm font-semibold transition-colors ${
-            tab === 'model'
-              ? 'bg-secondary-600 text-white shadow'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          Modèle ou VIN
-        </button>
-      </div>
-
       <form onSubmit={handleSubmit}>
-        {tab === 'plate' ? (
-          /* License-plate style input */
-          <div className="flex items-stretch h-14 rounded-xl overflow-hidden ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-secondary-500">
-            {/* EU "F" band */}
-            <div className="flex items-center justify-center bg-[#003399] px-2.5 select-none">
-              <span className="text-white font-bold text-base leading-none">F</span>
-            </div>
-            <input
-              type="text"
-              value={plate}
-              onChange={(e) => setPlate(e.target.value.toUpperCase())}
-              placeholder="AA-456-BB"
-              aria-label="Plaque d'immatriculation"
-              className="flex-1 min-w-0 px-4 text-center text-lg font-bold tracking-wider text-gray-900 placeholder:text-gray-400 placeholder:font-semibold outline-none"
-            />
-            <button
-              type="submit"
-              aria-label="Rechercher"
-              className="px-5 bg-secondary-600 hover:bg-secondary-700 text-white transition-colors flex items-center justify-center"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
+        {/* License-plate style input */}
+        <div className="flex items-stretch h-14 rounded-xl overflow-hidden ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-secondary-500">
+          {/* EU "F" band */}
+          <div className="flex items-center justify-center bg-[#003399] px-2.5 select-none">
+            <span className="text-white font-bold text-base leading-none">F</span>
           </div>
-        ) : (
-          /* Model / VIN free-text input */
-          <div className="flex items-stretch h-14 rounded-xl overflow-hidden ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-secondary-500">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Marque, modèle ou VIN"
-              aria-label="Marque, modèle ou VIN"
-              className="flex-1 min-w-0 px-4 text-base text-gray-900 placeholder:text-gray-400 outline-none"
-            />
-            <button
-              type="submit"
-              aria-label="Rechercher"
-              className="px-5 bg-secondary-600 hover:bg-secondary-700 text-white transition-colors flex items-center justify-center"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-              </svg>
-            </button>
-          </div>
-        )}
+          <input
+            type="text"
+            value={plate}
+            onChange={(e) => setPlate(e.target.value.toUpperCase())}
+            placeholder="AA-456-BB"
+            aria-label="Plaque d'immatriculation"
+            className="flex-1 min-w-0 px-4 text-center text-lg font-bold tracking-wider text-gray-900 placeholder:text-gray-400 placeholder:font-semibold outline-none"
+          />
+          <button
+            type="submit"
+            aria-label="Rechercher"
+            className="px-5 bg-secondary-600 hover:bg-secondary-700 text-white transition-colors flex items-center justify-center"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </div>
 
         {/* Save to garage */}
         <label className="mt-4 flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
