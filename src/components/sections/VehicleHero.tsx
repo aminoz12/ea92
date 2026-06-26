@@ -459,6 +459,16 @@ export function VehicleHero() {
             <PromoCarousel />
           </div>
         </div>
+
+        {/* Tagline below both columns */}
+        <h1 className="anton-regular uppercase text-center leading-tight tracking-wide mt-10 lg:mt-14 text-2xl sm:text-3xl lg:text-5xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+          <span className="block bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+            Ici trouvez l'excellence
+          </span>
+          <span className="block text-white">
+            Là où les prix font la différence
+          </span>
+        </h1>
       </div>
     </section>
   )
