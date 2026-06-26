@@ -1,11 +1,31 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Smoothly scroll to the parts-ordering form (the hero's "search" target while
 // the real vehicle lookup is not wired up yet).
 function scrollToParts() {
   document.getElementById('parts-ordering')?.scrollIntoView({ behavior: 'smooth' })
+}
+
+// Lower-case + strip accents so "etrier" matches "Étrier", "batt" matches
+// "Batterie", etc.
+const deburr = (s: string) =>
+  s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+
+// Render a suggestion with the matched portion emphasised.
+function highlightMatch(text: string, query: string) {
+  const idx = deburr(text).indexOf(deburr(query))
+  if (idx === -1) return text
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="font-semibold text-secondary-700">
+        {text.slice(idx, idx + query.length)}
+      </span>
+      {text.slice(idx + query.length)}
+    </>
+  )
 }
 
 /* ------------------------------------------------------------------ */
@@ -104,6 +124,50 @@ const PART_SUGGESTIONS = [
 function VehicleFinder() {
   const [plate, setPlate] = useState('')
   const [part, setPart] = useState('')
+  const [open, setOpen] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const partBoxRef = useRef<HTMLDivElement>(null)
+
+  const query = part.trim()
+  // Only start suggesting once at least 2 characters have been typed.
+  const matches =
+    query.length >= 2
+      ? PART_SUGGESTIONS.filter((p) => deburr(p).includes(deburr(query)))
+      : []
+  const showList = open && matches.length > 0
+
+  const selectPart = (value: string) => {
+    setPart(value)
+    setOpen(false)
+    setActiveIndex(-1)
+  }
+
+  const handlePartKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showList) return
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIndex((i) => (i + 1) % matches.length)
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIndex((i) => (i - 1 + matches.length) % matches.length)
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
+      e.preventDefault()
+      selectPart(matches[activeIndex])
+    } else if (e.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  // Close the suggestion list when clicking outside the field.
+  useEffect(() => {
+    const onDown = (e: MouseEvent) => {
+      if (partBoxRef.current && !partBoxRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -134,22 +198,65 @@ function VehicleFinder() {
           />
         </div>
 
-        {/* Part searched — free text with autocomplete suggestions */}
-        <input
-          type="text"
-          value={part}
-          onChange={(e) => setPart(e.target.value)}
-          placeholder="Pièce recherchée"
-          aria-label="Pièce recherchée"
-          list="part-suggestions"
-          autoComplete="off"
-          className="mt-4 w-full h-14 px-4 rounded-xl text-base text-gray-900 placeholder:text-gray-400 outline-none ring-1 ring-gray-300 focus:ring-2 focus:ring-secondary-500"
-        />
-        <datalist id="part-suggestions">
-          {PART_SUGGESTIONS.map((p) => (
-            <option key={p} value={p} />
-          ))}
-        </datalist>
+        {/* Part searched — free text with styled autocomplete (opens at 2+ chars) */}
+        <div ref={partBoxRef} className="relative mt-4">
+          {/* search icon */}
+          <svg
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+          </svg>
+          <input
+            type="text"
+            value={part}
+            onChange={(e) => {
+              setPart(e.target.value)
+              setOpen(true)
+              setActiveIndex(-1)
+            }}
+            onFocus={() => setOpen(true)}
+            onKeyDown={handlePartKeyDown}
+            placeholder="Pièce recherchée"
+            aria-label="Pièce recherchée"
+            autoComplete="off"
+            role="combobox"
+            aria-expanded={showList}
+            aria-controls="part-suggestions"
+            className="w-full h-14 pl-12 pr-4 rounded-xl text-base text-gray-900 placeholder:text-gray-400 outline-none ring-1 ring-gray-300 focus:ring-2 focus:ring-secondary-500"
+          />
+
+          {showList && (
+            <ul
+              id="part-suggestions"
+              role="listbox"
+              className="absolute z-30 left-0 right-0 mt-2 max-h-64 overflow-auto rounded-2xl bg-white py-2 shadow-2xl ring-1 ring-gray-200"
+            >
+              {matches.map((p, i) => (
+                <li key={p} role="option" aria-selected={i === activeIndex}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onMouseEnter={() => setActiveIndex(i)}
+                    onClick={() => selectPart(p)}
+                    className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
+                      i === activeIndex
+                        ? 'bg-secondary-50 text-secondary-700'
+                        : 'text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                        i === activeIndex ? 'bg-secondary-600' : 'bg-gray-300'
+                      }`}
+                    />
+                    <span className="truncate">{highlightMatch(p, query)}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <button
           type="submit"
@@ -330,8 +437,20 @@ function PromoCarousel() {
 
 export function VehicleHero() {
   return (
-    <section className="pt-28 pb-12 lg:pb-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden pt-28 pb-12 lg:pb-16">
+      {/* Blurred photo background — keeps the finder card and carousel legible */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <img
+          src="/hero.png"
+          alt=""
+          className="h-full w-full object-cover scale-110 blur-md"
+        />
+        {/* Dark, slightly red-tinted overlay so the white card and the promo
+            carousel stand out against the photo */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/75 via-gray-900/55 to-secondary-900/70" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           <div className="lg:col-span-5 flex">
             <VehicleFinder />
