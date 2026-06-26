@@ -443,11 +443,11 @@ export function VehicleHero() {
         <img
           src="/hero.png"
           alt=""
-          className="h-full w-full object-cover scale-110 blur-md"
+          className="h-full w-full object-cover object-center scale-105 blur-[3px]"
         />
-        {/* Dark, slightly red-tinted overlay so the white card and the promo
-            carousel stand out against the photo */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/75 via-gray-900/55 to-secondary-900/70" />
+        {/* Lighter overlay so the photo shows through while keeping the white
+            card and the promo carousel readable */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/55 via-gray-900/35 to-secondary-900/45" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
