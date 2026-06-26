@@ -28,7 +28,7 @@ function VehicleFinder() {
   return (
     <div className="w-full rounded-3xl bg-white shadow-xl ring-1 ring-gray-100 p-6 sm:p-8">
       <h2 className="text-center text-2xl font-display font-bold text-gray-900 mb-6">
-        Identifiez votre véhicule
+        Je commande ma pièce !
       </h2>
 
       {/* Tabs */}
