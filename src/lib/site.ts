@@ -10,6 +10,7 @@ export const SITE = {
     'Distributeur de pièces détachées auto à Nanterre (92) : large stock, prix pros, carte grise et plaques en 10 min.',
   phone: '+33147851000',
   phoneDisplay: '01 47 85 10 00',
+  whatsapp: '33756997939', // wa.me number (international, no +)
   email: 'espaceauto92.info@gmail.com',
   street: '426 Avenue de la République',
   city: 'Nanterre',
