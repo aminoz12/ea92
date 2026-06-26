@@ -437,7 +437,7 @@ function PromoCarousel() {
 
 export function VehicleHero() {
   return (
-    <section className="relative overflow-hidden pt-28 pb-12 lg:pb-16">
+    <section className="relative overflow-hidden pt-36 lg:pt-44 pb-12 lg:pb-16">
       {/* Blurred photo background — keeps the finder card and carousel legible */}
       <div className="absolute inset-0" aria-hidden="true">
         <img
