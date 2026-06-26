@@ -14,6 +14,7 @@ function scrollToParts() {
 
 function VehicleFinder() {
   const [plate, setPlate] = useState('')
+  const [part, setPart] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,40 +54,16 @@ function VehicleFinder() {
           </button>
         </div>
 
-        {/* Save to garage */}
-        <label className="mt-4 flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            className="w-4 h-4 rounded border-gray-300 text-secondary-600 focus:ring-secondary-500"
-          />
-          Enregistrer dans mon garage
-          <span
-            title="Retrouvez vos véhicules enregistrés à chaque visite."
-            className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full border border-gray-400 text-gray-400 text-[10px] font-bold cursor-help"
-          >
-            i
-          </span>
-        </label>
+        {/* Part searched */}
+        <input
+          type="text"
+          value={part}
+          onChange={(e) => setPart(e.target.value)}
+          placeholder="Pièce recherchée"
+          aria-label="Pièce recherchée"
+          className="mt-4 w-full h-14 px-4 rounded-xl text-base text-gray-900 placeholder:text-gray-400 outline-none ring-1 ring-gray-300 focus:ring-2 focus:ring-secondary-500"
+        />
       </form>
-
-      {/* Separator */}
-      <div className="flex items-center gap-4 my-5">
-        <span className="h-px flex-1 bg-gray-200" />
-        <span className="text-sm font-medium text-gray-500">Ou</span>
-        <span className="h-px flex-1 bg-gray-200" />
-      </div>
-
-      {/* Saved vehicle picker (empty until a garage exists) */}
-      <select
-        defaultValue=""
-        aria-label="Sélectionnez un véhicule enregistré"
-        onChange={(e) => e.target.value && scrollToParts()}
-        className="w-full h-12 px-4 rounded-xl bg-gray-100 text-gray-600 text-sm font-medium outline-none ring-1 ring-transparent focus:ring-2 focus:ring-secondary-500 cursor-pointer"
-      >
-        <option value="" disabled>
-          Sélectionnez un véhicule enregistré
-        </option>
-      </select>
     </div>
   )
 }
