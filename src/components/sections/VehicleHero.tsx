@@ -62,9 +62,8 @@ function VehicleFinder() {
           /* License-plate style input */
           <div className="flex items-stretch h-14 rounded-xl overflow-hidden ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-secondary-500">
             {/* EU "F" band */}
-            <div className="flex flex-col items-center justify-center bg-[#003399] px-2.5 select-none">
-              <span className="text-[7px] leading-none tracking-tighter text-yellow-400">★★★</span>
-              <span className="text-white font-bold text-base leading-none mt-0.5">F</span>
+            <div className="flex items-center justify-center bg-[#003399] px-2.5 select-none">
+              <span className="text-white font-bold text-base leading-none">F</span>
             </div>
             <input
               type="text"
