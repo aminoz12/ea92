@@ -209,6 +209,7 @@ function VehicleFinder() {
             }}
             placeholder="AA-456-BB"
             aria-label="Plaque d'immatriculation"
+            required
             className="flex-1 min-w-0 px-4 text-center text-lg font-bold tracking-wider text-gray-900 placeholder:text-gray-400 placeholder:font-semibold outline-none"
           />
         </div>
@@ -235,6 +236,7 @@ function VehicleFinder() {
             onKeyDown={handlePartKeyDown}
             placeholder="Pièce recherchée"
             aria-label="Pièce recherchée"
+            required
             autoComplete="off"
             role="combobox"
             aria-expanded={showList}
