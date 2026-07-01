@@ -9,6 +9,7 @@ import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
 import { FAQSection } from '../components/sections/FAQSection'
 import { BrandsSection } from '../components/sections/BrandsSection'
+import { BlogSection } from '../components/sections/BlogSection'
 import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
 
 export function HomePage() {
@@ -43,6 +44,9 @@ export function HomePage() {
 
         {/* Compact Opening Hours */}
         <CompactOpeningHours />
+
+        {/* Blog / Conseils */}
+        <BlogSection />
       </main>
 
       <Footer />
