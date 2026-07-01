@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { SITE } from '@/lib/site'
+import { ARTICLES } from '@/lib/blog'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date()
@@ -14,7 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pro', priority: 0.9, changeFrequency: 'monthly' },
     { path: '/contact', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/about', priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
     { path: '/en', priority: 0.6, changeFrequency: 'monthly' },
+    ...ARTICLES.map((a) => ({
+      path: `/blog/${a.slug}`,
+      priority: 0.6,
+      changeFrequency: 'monthly' as const,
+    })),
   ]
 
   return routes.map((r) => ({
