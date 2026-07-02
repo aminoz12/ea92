@@ -351,8 +351,8 @@ interface Slide {
 // Promo banners — add more as images arrive, each with its own CTA label.
 const SLIDES: Slide[] = [
   { image: '/promo1.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
-  // { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: "JE PRENDS L'OFFRE" },
-  // { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'PROFITEZ MAINTENANT' },
+  { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: "JE PRENDS L'OFFRE" },
+  { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'PROFITEZ MAINTENANT' },
 ]
 
 function PromoCarousel() {
