@@ -3,12 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { SITE } from '@/lib/site'
 
-// Smoothly scroll to the contact section (the hero's "search"/CTA target while
-// the real vehicle lookup is not wired up yet).
-function scrollToContact() {
-  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-}
-
 // Lower-case + strip accents so "etrier" matches "Étrier", "batt" matches
 // "Batterie", etc.
 const deburr = (s: string) =>
@@ -386,18 +380,19 @@ function PromoCarousel() {
             className="h-full w-full object-cover"
           />
 
-          {/* CTA overlaid on the banner */}
-          <button
-            onClick={scrollToContact}
+          {/* CTA overlaid on the banner — calls the shop */}
+          <a
+            href={`tel:${SITE.phone}`}
+            aria-label={`${slide.cta} — appeler le ${SITE.phoneDisplay}`}
             className={`absolute left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl bg-secondary-600 hover:bg-secondary-700 px-7 py-3 text-white font-display font-extrabold tracking-wide text-sm sm:text-base shadow-xl transition-colors ${
               multiple ? 'bottom-14' : 'bottom-6'
             }`}
           >
             {slide.cta}
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
-          </button>
+          </a>
         </div>
       ))}
 
