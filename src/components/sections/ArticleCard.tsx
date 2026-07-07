@@ -1,18 +1,24 @@
 import Link from 'next/link'
 import type { Article } from '@/lib/blog'
-import { BlogIcon } from '@/components/ui/BlogIcon'
 
 // Presentational card linking to the full article. Shared by the homepage
-// blog section and the /blog index.
+// blog section and the /blog index. The thumbnail image is shown here only —
+// the full article page intentionally has no images.
 export function ArticleCard({ article }: { article: Article }) {
   return (
     <Link
       href={`/blog/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
     >
-      {/* Header */}
+      {/* Header image */}
       <div className={`relative h-40 overflow-hidden bg-gradient-to-br ${article.accent}`}>
-        <BlogIcon name={article.icon} className="absolute -right-6 -bottom-8 w-40 h-40 text-white/15" />
+        <img
+          src={article.image}
+          alt={article.title}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/10" />
         <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-bold tracking-wide">
           {article.category}
         </span>

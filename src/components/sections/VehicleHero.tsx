@@ -345,8 +345,8 @@ interface Slide {
 // Promo banners — add more as images arrive, each with its own CTA label.
 const SLIDES: Slide[] = [
   { image: '/promo1.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
-  { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: "JE PRENDS L'OFFRE" },
-  { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'PROFITEZ MAINTENANT' },
+  { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
+  { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
 ]
 
 function PromoCarousel() {
@@ -364,7 +364,7 @@ function PromoCarousel() {
   }, [paused, multiple])
 
   return (
-    <div className="relative w-full h-full min-h-[300px] lg:min-h-0 rounded-3xl overflow-hidden shadow-xl">
+    <div className="relative w-full aspect-[3/2] lg:aspect-auto lg:h-full lg:min-h-[300px] rounded-3xl overflow-hidden shadow-xl bg-gray-900">
       {SLIDES.map((slide, i) => (
         <div
           key={slide.image}
@@ -373,11 +373,23 @@ function PromoCarousel() {
             i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
         >
+          {/* Blurred fill so the whole promo can be shown (object-contain)
+              without leaving empty bars when the box ratio differs. */}
+          <img
+            src={slide.image}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-50"
+          />
+          {/* The promo itself. On mobile the box matches the image ratio, so
+              object-contain shows it fully. On laptop the box is slightly wider,
+              so object-cover fills the frame width (no empty side bars). */}
           <img
             src={slide.image}
             alt={slide.alt}
             loading={i === 0 ? 'eager' : 'lazy'}
-            className="h-full w-full object-cover"
+            className="relative h-full w-full object-contain lg:object-cover"
           />
 
           {/* CTA overlaid on the banner — calls the shop */}

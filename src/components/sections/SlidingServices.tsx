@@ -79,7 +79,7 @@ const services = [
     name: 'Carrosserie',
     image: '/carosserie.png',
     color: 'from-teal-500 to-teal-600',
-    description: 'Réparation carrosserie, peinture, tôlerie et rénovation'
+    description: 'Pièces carrosserie et rénovation'
   },
   {
     id: 'vitrage',

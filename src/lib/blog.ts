@@ -16,6 +16,7 @@ export interface Article {
   readTime: string
   accent: string // gradient for the card / hero header
   icon: BlogIconName
+  image: string // card thumbnail shown on the /blog index (not on the article page)
   intro: string
   sections: ArticleSection[]
 }
@@ -30,6 +31,7 @@ export const ARTICLES: Article[] = [
     readTime: '4 min',
     accent: 'from-red-600 to-red-800',
     icon: 'brake',
+    image: '/blog1.jpeg',
     intro:
       "Les plaquettes de frein sont une pièce d'usure essentielle à votre sécurité. Les remplacer au bon moment évite un freinage dégradé et protège vos disques. Voici comment savoir quand agir.",
     sections: [
@@ -65,6 +67,7 @@ export const ARTICLES: Article[] = [
     readTime: '3 min',
     accent: 'from-sky-600 to-sky-800',
     icon: 'filter',
+    image: '/blog2.jpeg',
     intro:
       "Souvent oubliés, les filtres protègent pourtant votre moteur, votre système d'injection et votre confort à bord. Voici les bons intervalles pour chacun.",
     sections: [
@@ -98,6 +101,7 @@ export const ARTICLES: Article[] = [
     readTime: '3 min',
     accent: 'from-amber-500 to-amber-700',
     icon: 'battery',
+    image: '/blog3.jpeg',
     intro:
       "Une batterie ne tombe presque jamais en panne sans prévenir. En repérant les premiers signes, vous évitez le classique démarrage impossible un matin d'hiver.",
     sections: [
@@ -131,6 +135,7 @@ export const ARTICLES: Article[] = [
     readTime: '5 min',
     accent: 'from-gray-700 to-gray-900',
     icon: 'belt',
+    image: '/blog4.jpeg',
     intro:
       "La courroie de distribution est l'une des pièces les plus critiques du moteur. Négliger son remplacement peut coûter très cher. Voici pourquoi et quand intervenir.",
     sections: [
@@ -165,6 +170,7 @@ export const ARTICLES: Article[] = [
     readTime: '6 min',
     accent: 'from-orange-500 to-red-600',
     icon: 'road',
+    image: '/blog5.jpeg',
     intro:
       "Long trajet, voiture chargée et fortes chaleurs mettent la mécanique à rude épreuve. Un contrôle des pièces d'usure avant le départ vous évite bien des mauvaises surprises sur l'autoroute.",
     sections: [
@@ -199,6 +205,7 @@ export const ARTICLES: Article[] = [
     readTime: '4 min',
     accent: 'from-teal-500 to-cyan-700',
     icon: 'sun',
+    image: '/blog6.jpeg',
     intro:
       "Quand les températures grimpent, la climatisation et le circuit de refroidissement deviennent essentiels — pour votre confort comme pour la santé du moteur.",
     sections: [

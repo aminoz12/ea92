@@ -78,6 +78,9 @@ jspm_packages/
 # Next.js build output
 .next
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Nuxt.js build / generate output
 .nuxt
 

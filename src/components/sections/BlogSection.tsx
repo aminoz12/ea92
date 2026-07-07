@@ -9,14 +9,14 @@ export function BlogSection() {
         {/* Header */}
         <div className="text-center mb-10">
           <span className="inline-block px-3 py-1 rounded-full bg-secondary-50 text-secondary-600 text-xs font-bold tracking-widest mb-4">
-            LE BLOG
+            GUIDES &amp; CONSEILS AUTO
           </span>
           <h2 className="text-3xl lg:text-4xl font-display font-bold text-gray-900 mb-4">
             Conseils d&apos;entretien &amp; de voyage
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Entretenir vos pièces et préparer vos trajets d&apos;été : les bons réflexes pour rouler
-            en toute sérénité.
+            Conseils d&apos;entretien, guides pratiques et astuces pour prendre soin de votre
+            véhicule.
           </p>
         </div>
 
