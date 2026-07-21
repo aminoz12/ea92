@@ -8,6 +8,26 @@ import { SITE } from '@/lib/site'
 const deburr = (s: string) =>
   s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
 
+/* ------------------------------------------------------------------ */
+/*  French license-plate (SIV) validation                              */
+/* ------------------------------------------------------------------ */
+
+// SIV format in use since 2009: two letters, three digits, two letters —
+// e.g. AA-123-BB. The letters I, O and U are never issued (too close to 1, 0
+// and V), so they are excluded from both letter groups.
+const PLATE_LETTER = '[A-HJ-NP-TV-Z]'
+const FRENCH_PLATE_RE = new RegExp(`^${PLATE_LETTER}{2}-[0-9]{3}-${PLATE_LETTER}{2}$`)
+
+const isValidFrenchPlate = (value: string) => FRENCH_PLATE_RE.test(value)
+
+// Normalise anything the customer types into the plate shape: upper-case,
+// keep only letters/digits, cap at the 7 plate characters and re-insert the
+// dashes so the field always reads like a real plate (XX-999-XX).
+function formatPlate(raw: string) {
+  const c = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 7)
+  return [c.slice(0, 2), c.slice(2, 5), c.slice(5, 7)].filter(Boolean).join('-')
+}
+
 // Render a suggestion with the matched portion emphasised.
 function highlightMatch(text: string, query: string) {
   const idx = deburr(text).indexOf(deburr(query))
@@ -132,6 +152,11 @@ function VehicleFinder() {
     '.'
   const waHref = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(waMessage)}`
 
+  // Live plate validation: valid once it matches the full SIV format, in
+  // error only when the customer has typed something that can't be a plate.
+  const plateValid = isValidFrenchPlate(plate)
+  const plateError = plate.length > 0 && !plateValid
+
   const query = part.trim()
   // Only start suggesting once at least 2 characters have been typed.
   const matches =
@@ -176,6 +201,8 @@ function VehicleFinder() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setOpen(false)
+    // Refuse the lookup unless the plate is a valid French (SIV) plate.
+    if (!isValidFrenchPlate(plate)) return
     // Visual-only: simulate an availability lookup, then show the result.
     setStatus('searching')
     setTimeout(() => setStatus('available'), 1500)
@@ -189,7 +216,15 @@ function VehicleFinder() {
 
       <form onSubmit={handleSubmit}>
         {/* License-plate style input */}
-        <div className="flex items-stretch h-14 rounded-xl overflow-hidden ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-secondary-500">
+        <div
+          className={`flex items-stretch h-14 rounded-xl overflow-hidden ring-1 focus-within:ring-2 ${
+            plateError
+              ? 'ring-red-400 focus-within:ring-red-500'
+              : plateValid
+                ? 'ring-green-400 focus-within:ring-green-500'
+                : 'ring-gray-300 focus-within:ring-secondary-500'
+          }`}
+        >
           {/* EU "F" band */}
           <div className="flex items-center justify-center bg-[#003399] px-2.5 select-none">
             <span className="text-white font-bold text-base leading-none">F</span>
@@ -198,15 +233,27 @@ function VehicleFinder() {
             type="text"
             value={plate}
             onChange={(e) => {
-              setPlate(e.target.value.toUpperCase())
+              setPlate(formatPlate(e.target.value))
               setStatus('idle')
             }}
             placeholder="AA-456-BB"
-            aria-label="Plaque d'immatriculation"
+            aria-label="Plaque d'immatriculation française"
+            aria-invalid={plateError}
+            aria-describedby={plateError ? 'plate-error' : undefined}
+            inputMode="text"
+            autoCapitalize="characters"
+            maxLength={9}
             required
             className="flex-1 min-w-0 px-4 text-center text-lg font-bold tracking-wider text-gray-900 placeholder:text-gray-400 placeholder:font-semibold outline-none"
           />
         </div>
+
+        {/* Format hint — only while the entry can't be a French plate */}
+        {plateError && (
+          <p id="plate-error" role="alert" className="mt-1.5 px-1 text-xs font-medium text-red-600">
+            Format attendu : AA-123-BB (plaque française).
+          </p>
+        )}
 
         {/* Part searched — free text with styled autocomplete (opens at 2+ chars) */}
         <div ref={partBoxRef} className="relative mt-4">
