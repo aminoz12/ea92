@@ -4,7 +4,9 @@ import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { VehicleHero } from '../components/sections/VehicleHero'
 import { ServicesSection } from '../components/sections/ServicesSection'
-import { CarteGriseSection } from '../components/sections/CarteGriseSection'
+// TEMP (Google Ads — certification en cours) : section « Carte Grise & Plaque »
+// retirée. Décommenter cet import + le <CarteGriseSection /> plus bas pour restaurer.
+// import { CarteGriseSection } from '../components/sections/CarteGriseSection'
 import { TestimonialsSection } from '../components/sections/TestimonialsSection'
 import { ContactSection } from '../components/sections/ContactSection'
 import { FAQSection } from '../components/sections/FAQSection'
@@ -27,8 +29,8 @@ export function HomePage() {
         {/* Brands Section */}
         <BrandsSection />
 
-        {/* Carte Grise Section */}
-        <CarteGriseSection />
+        {/* Carte Grise Section — TEMP retirée (Google Ads, certification en cours) */}
+        {/* <CarteGriseSection /> */}
 
         {/* Testimonials Section */}
         <TestimonialsSection />

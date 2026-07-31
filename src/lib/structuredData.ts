@@ -55,7 +55,10 @@ export const localBusinessSchema = {
     '@type': 'Offer',
     itemOffered: {
       '@type': 'Service',
-      name: "Pièces détachées automobiles, carte grise et plaques d'immatriculation",
+      // TEMP (Google Ads — certification en cours) : mention « carte grise »
+      // retirée du JSON-LD. Restaurer la ligne commentée après certification.
+      // name: "Pièces détachées automobiles, carte grise et plaques d'immatriculation",
+      name: "Pièces détachées automobiles et plaques d'immatriculation",
     },
   },
 }
@@ -92,11 +95,13 @@ const faqItems: { question: string; answer: string }[] = [
     answer:
       'Consultez notre page « Nos Services » et découvrez tous les bénéfices que vous pourrez tirer avec Espace Auto 92. Vous pouvez également nous contacter directement au 01 47 85 10 00, nous serons ravis de vous renseigner.',
   },
-  {
-    question: "Quels sont les documents nécessaires pour la création d'une carte grise ?",
-    answer:
-      "Vos cartes grises et plaques d'immatriculation sont réalisées en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles au téléchargement sur notre page FAQ.",
-  },
+  // TEMP (Google Ads — certification en cours) : question FAQ « carte grise »
+  // retirée du JSON-LD (miroir de la FAQ visible). Décommenter pour restaurer.
+  // {
+  //   question: "Quels sont les documents nécessaires pour la création d'une carte grise ?",
+  //   answer:
+  //     "Vos cartes grises et plaques d'immatriculation sont réalisées en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles au téléchargement sur notre page FAQ.",
+  // },
 ]
 
 export const faqSchema = {

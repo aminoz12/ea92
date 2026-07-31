@@ -28,7 +28,9 @@ export function Footer() {
     { name: 'Outillage', href: '#services' },
     { name: 'Carrosserie', href: '#services' },
     { name: 'Vitrage', href: '#services' },
-    { name: 'Service Carte Grise', href: '#services' },
+    // TEMP (Google Ads — certification en cours) : lien « Service Carte Grise »
+    // retiré du footer, à restaurer après certification.
+    // { name: 'Service Carte Grise', href: '#services' },
   ]
 
   return (

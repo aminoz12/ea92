@@ -88,13 +88,15 @@ const services = [
     color: 'from-amber-500 to-amber-600',
     description: 'Pare-brise, vitres latérales, rétroviseurs et vitrage sécurisé'
   },
-  {
-    id: 'carte-grise',
-    name: 'Service Carte Grise',
-    image: '/carte.png',
-    color: 'from-emerald-500 to-emerald-600',
-    description: 'Démarches administratives, immatriculation et transfert de propriété'
-  },
+  // TEMP (Google Ads — certification en cours) : carte « Service Carte Grise »
+  // retirée. Décommenter ce bloc pour la restaurer après certification.
+  // {
+  //   id: 'carte-grise',
+  //   name: 'Service Carte Grise',
+  //   image: '/carte.png',
+  //   color: 'from-emerald-500 to-emerald-600',
+  //   description: 'Démarches administratives, immatriculation et transfert de propriété'
+  // },
   {
     id: 'production-cle',
     name: 'Production de Clé',

@@ -23,7 +23,8 @@ export const metadata: Metadata = {
     'pièces auto 92',
     'distributeur pièces auto',
     'pièces auto professionnels',
-    'carte grise Nanterre',
+    // TEMP (Google Ads — certification en cours) : mot-clé retiré, à restaurer après certification.
+    // 'carte grise Nanterre',
     "plaque d'immatriculation",
     'freinage',
     'filtration',

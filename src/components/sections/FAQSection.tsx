@@ -51,13 +51,15 @@ export function FAQSection() {
       icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
       color: "purple"
     },
-    {
-      id: 5,
-      question: "Quelles sont les documents nécessaires pour la création d'une carte grise ?",
-      answer: "Vos cartes grises et plaques d'immatriculation sont réalisés en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles ci-dessous :",
-      icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-      color: "orange"
-    }
+    // TEMP (Google Ads — certification en cours) : question FAQ « carte grise »
+    // retirée. Décommenter ce bloc pour la restaurer après certification.
+    // {
+    //   id: 5,
+    //   question: "Quelles sont les documents nécessaires pour la création d'une carte grise ?",
+    //   answer: "Vos cartes grises et plaques d'immatriculation sont réalisés en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles ci-dessous :",
+    //   icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+    //   color: "orange"
+    // }
   ]
 
   const getColorClasses = (color: string) => {
@@ -268,8 +270,8 @@ export function FAQSection() {
                               </div>
                             )}
                             
-                            {/* Carte grise documents */}
-                            {item.id === 5 && (
+                            {/* Carte grise documents — TEMP retiré (Google Ads, certification en cours) ; décommenter pour restaurer */}
+                            {false && item.id === 5 && (
                               <div className="flex flex-col space-y-3">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
