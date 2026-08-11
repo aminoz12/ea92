@@ -15,6 +15,17 @@ const nextConfig = {
       },
     ]
   },
+  // This machine has limited RAM. Webpack's persistent (filesystem) cache
+  // serializes a single large buffer and can crash the dev server with
+  // "RangeError: Array buffer allocation failed" during PackFileCacheStrategy.
+  // Disable the persistent cache in development to keep the dev server stable
+  // (production `next build` is unaffected).
+  webpack(config, { dev }) {
+    if (dev) {
+      config.cache = false
+    }
+    return config
+  },
 }
 
 export default nextConfig
