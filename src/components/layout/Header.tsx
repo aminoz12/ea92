@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 // import { useTheme } from '../../hooks/useTheme' // DARK MODE DISABLED - Uncomment to restore
 import { Button } from '../ui/Button'
+import { AnnouncementBar } from './AnnouncementBar'
 
 export function Header() {
   // const { setTheme, resolvedTheme } = useTheme() // DARK MODE DISABLED - Uncomment to restore
@@ -52,6 +53,8 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      {/* Scam-warning banner (full-width, above the nav) */}
+      <AnnouncementBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 gap-8">
           {/* Logo */}

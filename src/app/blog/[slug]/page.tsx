@@ -46,7 +46,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
       <main>
         {/* Hero */}
-        <section className={`relative overflow-hidden pt-28 pb-14 bg-gradient-to-br ${article.accent}`}>
+        <section className={`relative overflow-hidden pt-32 pb-14 bg-gradient-to-br ${article.accent}`}>
           <BlogIcon name={article.icon} className="absolute -right-10 -bottom-12 w-72 h-72 text-white/10" />
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <Link

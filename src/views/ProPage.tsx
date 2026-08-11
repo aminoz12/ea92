@@ -102,7 +102,7 @@ export function ProPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Header />
       
-      <main className="pt-20">
+      <main className="pt-32">
         {/* Hero Section */}
         <section 
           className="pt-0 pb-20 text-white relative overflow-hidden -mt-40"
