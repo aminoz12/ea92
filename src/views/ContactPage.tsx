@@ -133,7 +133,7 @@ export function ContactPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Header />
       
-      <main className="pt-32">
+      <main className="pt-36">
         {/* Hero Section */}
         <section className="relative py-24 md:py-32 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">

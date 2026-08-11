@@ -17,7 +17,7 @@ export default function BlogIndexPage() {
       <Header />
 
       <main>
-        <section className="pt-32 pb-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <section className="pt-36 pb-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
               <span className="inline-block px-3 py-1 rounded-full bg-secondary-50 text-secondary-600 text-xs font-bold tracking-widest mb-4">
