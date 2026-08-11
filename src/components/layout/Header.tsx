@@ -1,12 +1,16 @@
+'use client'
+
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 // import { useTheme } from '../../hooks/useTheme' // DARK MODE DISABLED - Uncomment to restore
 import { Button } from '../ui/Button'
+import { AnnouncementBar } from './AnnouncementBar'
 
 export function Header() {
   // const { setTheme, resolvedTheme } = useTheme() // DARK MODE DISABLED - Uncomment to restore
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const location = useLocation()
+  const pathname = usePathname()
 
   const navigation = [
     { name: 'Accueil', href: '/' },
@@ -20,7 +24,7 @@ export function Header() {
 
   const handleSectionNavigation = (href: string) => {
     if (href.startsWith('#')) {
-      if (location.pathname !== '/') {
+      if (pathname !== '/') {
         // If not on home page, navigate to home with hash
         window.location.href = `/${href}`
       } else {
@@ -35,23 +39,26 @@ export function Header() {
 
   // Handle hash navigation when page loads
   useEffect(() => {
-    if (location.pathname === '/' && location.hash) {
+    if (pathname === '/' && window.location.hash) {
+      const hash = window.location.hash
       // Small delay to ensure page is fully loaded
       setTimeout(() => {
-        const element = document.querySelector(location.hash)
+        const element = document.querySelector(hash)
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' })
         }
       }, 100)
     }
-  }, [location.pathname, location.hash])
+  }, [pathname])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      {/* Scam-warning banner (full-width, above the nav) */}
+      <AnnouncementBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 gap-8">
           {/* Logo */}
-          <Link to="/" className="flex items-center group h-20">
+          <Link href="/" className="flex items-center group h-20">
             <img 
               src="/logo.png" 
               alt="Espace Auto 92 Logo" 
@@ -78,7 +85,7 @@ export function Header() {
               return (
                 <Link
                   key={item.name}
-                  to={item.href}
+                  href={item.href}
                   className="text-gray-800 hover:text-secondary-600 font-display font-semibold text-base transition-all duration-300 relative group py-2"
                 >
                   {item.name}
@@ -120,7 +127,7 @@ export function Header() {
               )}
             </button> */}
 
-            <Link to="/contact">
+            <Link href="/contact">
               <Button size="sm" className="bg-secondary-600 hover:bg-secondary-700 text-white font-display font-bold px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
                 Contact
               </Button>
@@ -161,7 +168,7 @@ export function Header() {
                 return (
                   <Link
                     key={item.name}
-                    to={item.href}
+                    href={item.href}
                     className="block px-4 py-3 text-lg font-display font-semibold text-gray-800 hover:text-secondary-600 hover:bg-gray-50 rounded-xl transition-all duration-300"
                     onClick={() => setIsMenuOpen(false)}
                   >

@@ -1,5 +1,7 @@
+'use client'
+
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { usePathname, useRouter } from 'next/navigation'
 import { getLocaleFromPath, getPathWithLocale } from '../lib/i18n'
 import type { Locale } from '../lib/i18n'
 import { fr } from '../data/messages/fr'
@@ -18,23 +20,23 @@ interface LocaleProviderProps {
 }
 
 export function LocaleProvider({ children }: LocaleProviderProps) {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const [locale, setLocaleState] = useState<Locale>(() => getLocaleFromPath(location.pathname))
+  const pathname = usePathname()
+  const router = useRouter()
+  const [locale, setLocaleState] = useState<Locale>(() => getLocaleFromPath(pathname))
 
   // Update locale when path changes
   useEffect(() => {
-    const newLocale = getLocaleFromPath(location.pathname)
+    const newLocale = getLocaleFromPath(pathname)
     if (newLocale !== locale) {
       setLocaleState(newLocale)
     }
-  }, [location.pathname, locale])
+  }, [pathname, locale])
 
   const setLocale = (newLocale: Locale) => {
     if (newLocale !== locale) {
       setLocaleState(newLocale)
-      const newPath = getPathWithLocale(location.pathname, newLocale)
-      navigate(newPath, { replace: true })
+      const newPath = getPathWithLocale(pathname, newLocale)
+      router.replace(newPath)
     }
   }
 

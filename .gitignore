@@ -78,6 +78,9 @@ jspm_packages/
 # Next.js build output
 .next
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Nuxt.js build / generate output
 .nuxt
 
@@ -91,8 +94,5 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/
-# Large files
-vid2.mp4
-
 # Wrangler
 .wrangler/

@@ -1,5 +1,7 @@
+'use client'
+
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 interface FAQItem {
   id: number
@@ -49,13 +51,15 @@ export function FAQSection() {
       icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
       color: "purple"
     },
-    {
-      id: 5,
-      question: "Quelles sont les documents nécessaires pour la création d'une carte grise ?",
-      answer: "Vos cartes grises et plaques d'immatriculation sont réalisés en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles ci-dessous :",
-      icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-      color: "orange"
-    }
+    // TEMP (Google Ads — certification en cours) : question FAQ « carte grise »
+    // retirée. Décommenter ce bloc pour la restaurer après certification.
+    // {
+    //   id: 5,
+    //   question: "Quelles sont les documents nécessaires pour la création d'une carte grise ?",
+    //   answer: "Vos cartes grises et plaques d'immatriculation sont réalisés en seulement 10 minutes en magasin ou en ligne. Les documents nécessaires sont disponibles ci-dessous :",
+    //   icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+    //   color: "orange"
+    // }
   ]
 
   const getColorClasses = (color: string) => {
@@ -105,16 +109,10 @@ export function FAQSection() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl mb-6 shadow-lg">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 relative">
-            <span className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-transparent">
-              Questions Fréquentes
+          <h2 className="text-3xl lg:text-4xl font-display font-bold leading-tight mb-6">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700">
+              FAQ
             </span>
-            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-red-500 to-red-700 rounded-full"></div>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Trouvez rapidement les réponses à vos questions les plus courantes
@@ -272,8 +270,8 @@ export function FAQSection() {
                               </div>
                             )}
                             
-                            {/* Carte grise documents */}
-                            {item.id === 5 && (
+                            {/* Carte grise documents — TEMP retiré (Google Ads, certification en cours) ; décommenter pour restaurer */}
+                            {false && item.id === 5 && (
                               <div className="flex flex-col space-y-3">
                                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                   <svg className="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -319,7 +317,7 @@ export function FAQSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="tel:+33123456789"
+                href="tel:+33147851000"
                 className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -327,8 +325,8 @@ export function FAQSection() {
                 </svg>
                 Appelez-nous
               </a>
-              <Link 
-                to="/contact"
+              <Link
+                href="/contact"
                 className="inline-flex items-center justify-center px-6 py-3 border-2 border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 font-semibold rounded-xl transition-all duration-300 hover:border-red-400 dark:hover:border-red-500"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

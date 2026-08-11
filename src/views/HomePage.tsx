@@ -1,0 +1,58 @@
+'use client'
+
+import { Header } from '../components/layout/Header'
+import { Footer } from '../components/layout/Footer'
+import { VehicleHero } from '../components/sections/VehicleHero'
+import { ServicesSection } from '../components/sections/ServicesSection'
+// TEMP (Google Ads — certification en cours) : section « Carte Grise & Plaque »
+// retirée. Décommenter cet import + le <CarteGriseSection /> plus bas pour restaurer.
+// import { CarteGriseSection } from '../components/sections/CarteGriseSection'
+import { TestimonialsSection } from '../components/sections/TestimonialsSection'
+import { ContactSection } from '../components/sections/ContactSection'
+import { FAQSection } from '../components/sections/FAQSection'
+import { BrandsSection } from '../components/sections/BrandsSection'
+import { BlogSection } from '../components/sections/BlogSection'
+import { CompactOpeningHours } from '../components/sections/CompactOpeningHours'
+
+export function HomePage() {
+  return (
+    <div className="min-h-screen">
+      <Header />
+
+      <main>
+        {/* Hero — vehicle identification + promo carousel */}
+        <VehicleHero />
+
+        {/* Services Section */}
+        <ServicesSection />
+
+        {/* Brands Section */}
+        <BrandsSection />
+
+        {/* Carte Grise Section — TEMP retirée (Google Ads, certification en cours) */}
+        {/* <CarteGriseSection /> */}
+
+        {/* Testimonials Section */}
+        <TestimonialsSection />
+
+        {/* Products Section - TEMPORARILY HIDDEN */}
+        {/* <ProductsSection /> */}
+
+        {/* FAQ Section */}
+        <FAQSection />
+
+        {/* Contact Section */}
+        <ContactSection />
+
+        {/* Compact Opening Hours */}
+        <CompactOpeningHours />
+
+        {/* Blog / Conseils */}
+        <BlogSection />
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
+

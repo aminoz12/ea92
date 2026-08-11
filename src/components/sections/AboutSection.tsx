@@ -1,5 +1,7 @@
+'use client'
+
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 export function AboutSection() {
 
@@ -475,7 +477,7 @@ export function AboutSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                   >
-                    <Link to="/contact">
+                    <Link href="/contact">
                       <motion.button
                         className="group relative px-10 py-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden"
                         whileHover={{ scale: 1.05, y: -3 }}

@@ -1,39 +1,21 @@
+'use client'
+
 import { useState } from 'react'
 import { sendEmail } from '../../lib/emailService'
-
-// Data moved outside component to prevent recreation on each render
-const YEARS = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i)
-
-const MAKES = [
-  'Renault', 'Peugeot', 'Citroën', 'Volkswagen', 'Audi', 'BMW', 'Mercedes-Benz',
-  'Ford', 'Opel', 'Toyota', 'Nissan', 'Honda', 'Mazda', 'Hyundai', 'Kia',
-  'Fiat', 'Alfa Romeo', 'Lancia', 'Seat', 'Skoda', 'Mini', 'Smart', 'Dacia',
-  'Suzuki', 'Mitsubishi', 'Subaru', 'Land Rover', 'Jaguar', 'Volvo', 'Saab'
-]
-
-const PART_GROUPS = [
-  'Moteur', 'Transmission', 'Freinage', 'Suspension', 'Direction',
-  'Échappement', 'Éclairage', 'Électricité', 'Carrosserie', 'Climatisation',
-  'Filtration', 'Embrayage', 'Distribution', 'Démarrage', 'Outillage'
-]
 
 export function PartsOrderingForm() {
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
-    year: '',
-    make: '',
-    model: '',
     matricule: '',
-    partGroup: '',
-    partSubGroup: '',
+    partSearched: '',
     additionalInfo: ''
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
@@ -41,7 +23,7 @@ export function PartsOrderingForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     try {
       await sendEmail('Commandez Votre Pièce', formData)
       setIsSubmitted(true)
@@ -58,12 +40,8 @@ export function PartsOrderingForm() {
     setFormData({
       fullName: '',
       phone: '',
-      year: '',
-      make: '',
-      model: '',
       matricule: '',
-      partGroup: '',
-      partSubGroup: '',
+      partSearched: '',
       additionalInfo: ''
     })
   }
@@ -100,8 +78,8 @@ export function PartsOrderingForm() {
     <section id="parts-ordering" className="py-16 pb-40 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+          <h2 className="text-3xl lg:text-4xl font-display font-bold leading-tight mb-6">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700">
               Commandez Votre Pièce
             </span>
           </h2>
@@ -112,7 +90,7 @@ export function PartsOrderingForm() {
 
         <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-200 dark:border-gray-700">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Personal Information */}
+            {/* Nom Complet + Téléphone */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -128,10 +106,10 @@ export function PartsOrderingForm() {
                   placeholder="Votre nom"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Numéro de Téléphone *
+                  Téléphone *
                 </label>
                 <input
                   type="tel"
@@ -145,61 +123,7 @@ export function PartsOrderingForm() {
               </div>
             </div>
 
-            {/* Vehicle Information */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Année *
-                </label>
-                <select
-                  name="year"
-                  value={formData.year}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                >
-                  <option value="">Sélectionnez une année</option>
-                  {YEARS.map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Marque *
-                </label>
-                <select
-                  name="make"
-                  value={formData.make}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                >
-                  <option value="">Sélectionnez une marque</option>
-                  {MAKES.map(make => (
-                    <option key={make} value={make}>{make}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Modèle *
-                </label>
-                <input
-                  type="text"
-                  name="model"
-                  value={formData.model}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                  placeholder="Ex: Clio, Golf, 308..."
-                />
-              </div>
-            </div>
-
-            {/* Additional Vehicle Info */}
+            {/* Matricule + Pièce Recherchée */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
@@ -215,45 +139,24 @@ export function PartsOrderingForm() {
                   placeholder="AA-123-BB"
                 />
               </div>
-            </div>
 
-            {/* Parts Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Groupe de Pièce *
-                </label>
-                <select
-                  name="partGroup"
-                  value={formData.partGroup}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                >
-                  <option value="">Sélectionnez un groupe</option>
-                  {PART_GROUPS.map(group => (
-                    <option key={group} value={group}>{group}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Sous-groupe de Pièce *
+                  Pièce Recherchée *
                 </label>
                 <input
                   type="text"
-                  name="partSubGroup"
-                  value={formData.partSubGroup}
+                  name="partSearched"
+                  value={formData.partSearched}
                   onChange={handleInputChange}
                   required
                   className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                  placeholder="Ex: Plaquettes, Disques, Amortisseurs..."
+                  placeholder="Ex: Plaquettes de frein, Filtre à huile, Amortisseur..."
                 />
               </div>
             </div>
 
-            {/* Additional Information */}
+            {/* Informations Supplémentaires */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Informations Supplémentaires (optionnel)
@@ -264,7 +167,7 @@ export function PartsOrderingForm() {
                 onChange={handleInputChange}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                placeholder="Précisez toute information utile : numéro de pièce, référence, description du problème..."
+                placeholder="Précisez toute information utile : marque, modèle, année, numéro de pièce, référence..."
               />
             </div>
 

@@ -31,6 +31,12 @@
   animation: scroll-left-right 20s linear infinite;
 }
 
+/* Soft fade on the left/right edges of a horizontal marquee row */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
 
 :root {
   --primary-50: #eff6ff;
