@@ -391,9 +391,21 @@ interface Slide {
 
 // Promo banners — add more as images arrive, each with its own CTA label.
 const SLIDES: Slide[] = [
-  { image: '/promo1.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
-  { image: '/promo2.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
-  { image: '/promo3.jpeg', alt: 'Promotion Espace Auto 92', cta: 'JE PROFITE' },
+  {
+    image: '/images/promos/promo1.jpeg',
+    alt: 'Promotion distribution : prix promo sur une sélection de kits de distribution Gates, SKF, Dayco et SNR',
+    cta: 'JE PROFITE',
+  },
+  {
+    image: '/images/promos/promo2.jpeg',
+    alt: "Promotion embrayage : prix promo sur une sélection d'embrayages LuK, Valeo, Sachs et FAG",
+    cta: 'JE PROFITE',
+  },
+  {
+    image: '/images/promos/promo3.png',
+    alt: 'Promotion suspension : prix promo sur une sélection de pièces de suspension KYB, Monroe, Sachs, TRW et FAG',
+    cta: 'JE PROFITE',
+  },
 ]
 
 function PromoCarousel() {
@@ -410,84 +422,91 @@ function PromoCarousel() {
     return () => clearInterval(id)
   }, [paused, multiple])
 
-  return (
-    <div className="relative w-full aspect-[3/2] lg:aspect-auto lg:h-full lg:min-h-[300px] rounded-3xl overflow-hidden shadow-xl bg-gray-900">
-      {SLIDES.map((slide, i) => (
-        <div
-          key={slide.image}
-          aria-hidden={i !== index}
-          className={`absolute inset-0 transition-opacity duration-700 ${
-            i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
-        >
-          {/* Blurred fill so the whole promo can be shown (object-contain)
-              without leaving empty bars when the box ratio differs. */}
-          <img
-            src={slide.image}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-50"
-          />
-          {/* The promo itself. On mobile the box matches the image ratio, so
-              object-contain shows it fully. On laptop the box is slightly wider,
-              so object-cover fills the frame width (no empty side bars). */}
-          <img
-            src={slide.image}
-            alt={slide.alt}
-            loading={i === 0 ? 'eager' : 'lazy'}
-            className="relative h-full w-full object-contain lg:object-cover"
-          />
+  const current = SLIDES[index]
 
-          {/* CTA overlaid on the banner — calls the shop */}
-          <a
-            href={`tel:${SITE.phone}`}
-            aria-label={`${slide.cta} — appeler le ${SITE.phoneDisplay}`}
-            className={`absolute left-1/2 -translate-x-1/2 inline-flex items-center gap-2 rounded-xl bg-secondary-600 hover:bg-secondary-700 px-7 py-3 text-white font-display font-extrabold tracking-wide text-sm sm:text-base shadow-xl transition-colors ${
-              multiple ? 'bottom-14' : 'bottom-6'
+  return (
+    <div className="relative w-full flex flex-col lg:min-h-[300px] rounded-3xl overflow-hidden shadow-xl bg-gray-900">
+      {/* Banner area. The promos have different ratios (16:9 to ~2.8:1), so
+          each one is shown in full (object-contain) over a blurred copy of
+          itself — no text or brand logos get cropped or covered. */}
+      <div className="relative w-full aspect-[2/1] lg:aspect-auto lg:flex-1">
+        {SLIDES.map((slide, i) => (
+          <div
+            key={slide.image}
+            aria-hidden={i !== index}
+            className={`absolute inset-0 transition-opacity duration-700 ${
+              i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
-            {slide.cta}
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-          </a>
-        </div>
-      ))}
-
-      {/* Controls: pause/play + dots (only with several slides) */}
-      {multiple && (
-        <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-4">
-          <button
-            onClick={() => setPaused((p) => !p)}
-            aria-label={paused ? 'Reprendre le défilement' : 'Mettre en pause'}
-            className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 flex items-center justify-center shadow"
-          >
-            {paused ? (
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            ) : (
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
-              </svg>
-            )}
-          </button>
-
-          <div className="flex items-center gap-2">
-            {SLIDES.map((s, i) => (
-              <button
-                key={s.image}
-                onClick={() => setIndex(i)}
-                aria-label={`Aller à la promotion ${i + 1}`}
-                className={`h-2.5 rounded-full transition-all ${
-                  i === index ? 'w-6 bg-white' : 'w-2.5 bg-white/50 hover:bg-white/80'
-                }`}
-              />
-            ))}
+            <img
+              src={slide.image}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover scale-110 blur-2xl opacity-50"
+            />
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              className="relative h-full w-full object-contain"
+            />
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+
+      {/* Bottom bar: pause/play + dots on the left, CTA (calls the shop) on
+          the right — kept off the banner so it never hides promo content. */}
+      <div
+        className={`flex items-center gap-3 px-4 py-3 border-t border-white/10 ${
+          multiple ? 'justify-between' : 'justify-center'
+        }`}
+      >
+        {multiple && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setPaused((p) => !p)}
+              aria-label={paused ? 'Reprendre le défilement' : 'Mettre en pause'}
+              className="w-8 h-8 rounded-full bg-white/80 hover:bg-white text-gray-800 flex items-center justify-center shadow"
+            >
+              {paused ? (
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+                </svg>
+              )}
+            </button>
+
+            <div className="flex items-center gap-2">
+              {SLIDES.map((s, i) => (
+                <button
+                  key={s.image}
+                  onClick={() => setIndex(i)}
+                  aria-label={`Aller à la promotion ${i + 1}`}
+                  aria-current={i === index}
+                  className={`h-2.5 rounded-full transition-all ${
+                    i === index ? 'w-6 bg-white' : 'w-2.5 bg-white/50 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <a
+          href={`tel:${SITE.phone}`}
+          aria-label={`${current.cta} — appeler le ${SITE.phoneDisplay}`}
+          className="inline-flex items-center gap-2 whitespace-nowrap rounded-xl bg-secondary-600 hover:bg-secondary-700 px-5 sm:px-7 py-2.5 sm:py-3 text-white font-display font-extrabold tracking-wide text-sm sm:text-base shadow-lg transition-colors"
+        >
+          {current.cta}
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+        </a>
+      </div>
     </div>
   )
 }
