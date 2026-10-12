@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 
 interface WheelProps {
@@ -226,12 +228,15 @@ export const AnimatedWheels = () => {
 
 // Floating particles effect
 export const FloatingParts = () => {
+  // Positions/timings are fixed per part (no Math.random at render): random
+  // values would differ between the server prerender and client hydration and
+  // trigger a hydration mismatch on the rendered inline styles.
   const parts = [
-    { icon: "🔧", size: "text-xl" },
-    { icon: "⚙️", size: "text-lg" },
-    { icon: "🔩", size: "text-sm" },
-    { icon: "🛠️", size: "text-base" },
-    { icon: "⚡", size: "text-lg" },
+    { icon: "🔧", size: "text-xl", left: "12%", top: "22%", duration: 7, delay: 0.4 },
+    { icon: "⚙️", size: "text-lg", left: "78%", top: "34%", duration: 8.5, delay: 1.3 },
+    { icon: "🔩", size: "text-sm", left: "45%", top: "68%", duration: 6.5, delay: 2.1 },
+    { icon: "🛠️", size: "text-base", left: "88%", top: "16%", duration: 9, delay: 0.9 },
+    { icon: "⚡", size: "text-lg", left: "26%", top: "54%", duration: 7.5, delay: 1.8 },
   ]
 
   return (
@@ -241,8 +246,8 @@ export const FloatingParts = () => {
           key={index}
           className={`absolute ${part.size} opacity-20`}
           style={{
-            left: `${Math.random() * 90 + 5}%`,
-            top: `${Math.random() * 80 + 10}%`,
+            left: part.left,
+            top: part.top,
           }}
           animate={{
             y: [-20, -40, -20],
@@ -251,9 +256,9 @@ export const FloatingParts = () => {
             opacity: [0.2, 0.5, 0.2]
           }}
           transition={{
-            duration: 6 + Math.random() * 4,
+            duration: part.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: part.delay,
             ease: "easeInOut"
           }}
         >

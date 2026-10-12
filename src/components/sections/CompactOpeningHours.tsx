@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
@@ -10,9 +12,14 @@ interface HourItem {
 }
 
 export const CompactOpeningHours = () => {
-  const [currentTime, setCurrentTime] = useState(new Date())
+  const [currentTime, setCurrentTime] = useState(() => new Date())
+  // Time-dependent values must only render after mount, otherwise the static
+  // server-prerendered HTML won't match the client and React throws a
+  // hydration error. `mounted` stays false on the server + first client render.
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
@@ -21,11 +28,13 @@ export const CompactOpeningHours = () => {
   }, [])
 
   const getCurrentDay = () => {
+    if (!mounted) return ''
     const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
     return days[currentTime.getDay()]
   }
 
   const isCurrentlyOpen = () => {
+    if (!mounted) return false
     const now = currentTime
     const currentHour = now.getHours()
     const currentMinutes = now.getMinutes()
@@ -90,6 +99,8 @@ export const CompactOpeningHours = () => {
   ]
 
   const formatCurrentTime = () => {
+    // Stable placeholder before mount keeps server and client HTML identical
+    if (!mounted) return '--:--:--'
     return currentTime.toLocaleTimeString('fr-FR', {
       hour: '2-digit',
       minute: '2-digit',

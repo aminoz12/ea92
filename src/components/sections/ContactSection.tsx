@@ -33,8 +33,10 @@ export function ContactSection() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-6">
-            Notre Localisation
+          <h2 className="text-3xl lg:text-4xl font-display font-bold leading-tight mb-6">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700">
+              Notre Localisation
+            </span>
           </h2>
         </div>
 
