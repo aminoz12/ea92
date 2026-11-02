@@ -396,24 +396,31 @@ interface Slide {
 // its real pixel size.
 const SLIDES: Slide[] = [
   {
-    image: '/images/promos/promo1.jpeg',
+    image: '/images/promos/promo-1.jpeg',
     width: 1672,
     height: 941,
-    alt: 'Promotion distribution : prix promo sur une sélection de kits de distribution Gates, SKF, Dayco et SNR',
+    alt: 'Offre novembre batteries : batteries Classique, EFB et AGM Reborn, Bosch, Fulmen, Banner et Varta pour démarrer l’hiver',
     cta: 'JE PROFITE',
   },
   {
-    image: '/images/promos/promo2.jpeg',
-    width: 2048,
-    height: 728,
-    alt: "Promotion embrayage : prix promo sur une sélection d'embrayages LuK, Valeo, Sachs et FAG",
+    image: '/images/promos/promo-2.jpeg',
+    width: 1672,
+    height: 941,
+    alt: 'L’indispensable de l’hiver : booster de démarrage compact Amio, Noco et Osram pour redémarrer par temps froid',
     cta: 'JE PROFITE',
   },
   {
-    image: '/images/promos/promo3.png',
-    width: 1600,
-    height: 643,
-    alt: 'Promotion suspension : prix promo sur une sélection de pièces de suspension KYB, Monroe, Sachs, TRW et FAG',
+    image: '/images/promos/promo-3.jpeg',
+    width: 1672,
+    height: 941,
+    alt: 'Promo essuie-glace : une paire de balais Bosch, Valeo, Storm ou Technikit achetée, un dégivrant Holts offert',
+    cta: 'JE PROFITE',
+  },
+  {
+    image: '/images/promos/promo-4.jpeg',
+    width: 1672,
+    height: 941,
+    alt: 'Spécial hiver : chaussettes à neige compatibles Loi Montagne, montage rapide et faible encombrement',
     cta: 'JE PROFITE',
   },
 ]
