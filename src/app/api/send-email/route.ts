@@ -20,6 +20,15 @@ const fieldLabels: Record<string, string> = {
   partSubGroup: 'Sous-groupe de Pièce',
   partSearched: 'Pièce Recherchée',
   additionalInfo: 'Informations Supplémentaires',
+  companyName: 'Raison sociale',
+  siret: 'SIRET',
+  address: 'Adresse',
+  city: 'Ville',
+  postalCode: 'Code postal',
+  activity: 'Activité',
+  monthlyVolume: 'Volume d’achats mensuel',
+  currentSupplier: 'Fournisseur / plateforme actuel',
+  sepaAgreement: 'Accord prélèvement SEPA',
 }
 
 function escapeHtml(text: string): string {

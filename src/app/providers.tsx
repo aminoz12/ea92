@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { LocaleProvider } from '@/providers/LocaleProvider'
+import { ShopProvider } from '@/providers/ShopProvider'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { WhatsAppWidget } from '@/components/ui/WhatsAppWidget'
 import { registerServiceWorker } from '@/lib/serviceWorker'
@@ -14,9 +15,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <LocaleProvider>
-      <ScrollToTop />
-      <div className="min-h-screen bg-white transition-colors">{children}</div>
-      <WhatsAppWidget />
+      <ShopProvider>
+        <ScrollToTop />
+        <div className="min-h-screen bg-white transition-colors">{children}</div>
+        <WhatsAppWidget />
+      </ShopProvider>
     </LocaleProvider>
   )
 }

@@ -1,51 +1,64 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import Link from 'next/link'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
-import { Button } from '../components/ui/Button'
-import { Input } from '../components/ui/Input'
-import { AnimatedWheels, FloatingParts } from '../components/animations/AnimatedWheels'
-import { SpeedLines, EnginePulse } from '../components/animations/SpeedLines'
-import { AutomotiveGears } from '../components/animations/AutomotiveGears'
-import { AnimatedOpeningHours } from '../components/animations/AnimatedOpeningHours'
-import { ContactSection } from '../components/sections/ContactSection'
+import { Icon, WhatsAppIcon, type IconName } from '../components/ui/Icon'
 import { sendEmail } from '../lib/emailService'
+import { PRO } from '../lib/shop/config'
+import { formatEUR } from '../lib/shop/format'
+import { SITE } from '../lib/site'
+
+const DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+
+const STEPS: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'document', title: 'Ouvrez votre compte', text: 'SIRET + mandat de prélèvement SEPA. Réponse sous 48 h.' },
+  { icon: 'search', title: 'Cherchez par référence', text: 'Référence fabricant ou d’origine (OE) : on vous donne les équivalences.' },
+  { icon: 'truck', title: 'Recevez à l’atelier', text: 'Coursier en ~1 h, tournée ou retrait comptoir à Nanterre.' },
+  { icon: 'banknotes', title: 'Payez chaque semaine', text: `Relevé + prélèvement automatique le ${DAYS[PRO.debitWeekday]}.` },
+]
+
+const ADVANTAGES: { icon: IconName; title: string; text: string }[] = [
+  { icon: 'lock', title: 'Accès en marque blanche', text: 'Un espace de commande Espace Auto 92, sans plateforme tierce ni abonnement. Vos prix restent confidentiels.' },
+  { icon: 'search', title: 'Recherche par référence', text: 'Tapez la référence, on affiche la disponibilité réelle et le prix net. Pas de catalogue à parcourir.' },
+  { icon: 'percent', title: 'Prix nets pros', text: 'Le prix affiché est le prix payé, votre remise est déjà incluse. Aucun calcul à faire.' },
+  { icon: 'bolt', title: 'Livraison atelier express', text: 'Pièce en stock : chez vous en ~1 h en Île-de-France. Sinon dès ~4 h via notre fournisseur.' },
+  { icon: 'banknotes', title: 'Encours & prélèvement', text: `Encours de départ ${formatEUR(PRO.creditLimitDefaultTTC)}, réglé par prélèvement chaque semaine.` },
+  { icon: 'chat', title: 'Un interlocuteur dédié', text: 'Sur WhatsApp ou au téléphone, quelqu’un qui connaît votre atelier.' },
+]
+
+const EMPTY_FORM = {
+  companyName: '',
+  siret: '',
+  email: '',
+  phone: '',
+  address: '',
+  city: '',
+  postalCode: '',
+  activity: 'Garage mécanique',
+  monthlyVolume: 'Moins de 1 000 €',
+  currentSupplier: '',
+  additionalInfo: '',
+}
 
 export function ProPage() {
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
-
-  const [formData, setFormData] = useState({
-    companyName: '',
-    siret: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    postalCode: '',
-    additionalInfo: '',
-  })
+  const [formData, setFormData] = useState(EMPTY_FORM)
+  const [sepa, setSepa] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  const update = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
     try {
-      // Send email via API
-      await sendEmail("Demande d'ouverture de compte professionnel", formData)
+      await sendEmail("Demande d'ouverture de compte professionnel", {
+        ...formData,
+        sepaAgreement: sepa ? 'Oui' : 'Non',
+      })
       setIsSubmitted(true)
     } catch (error) {
       console.error('Error submitting form:', error)
@@ -55,440 +68,212 @@ export function ProPage() {
     }
   }
 
-  const proAdvantages = [
-    {
-      image: "/des-boites.png",
-      title: "Stock réel disponible\nimmédiatement",
-      description: "Plus de 10 000 pièces en stock, prêtes à être enlevées ou livrées. Pas de délai, pas de mauvaise surprise.",
-      color: "red"
-    },
-    {
-      image: "/livraison-express.png",
-      title: "Livraison\nExpress",
-      description: "Commandez par téléphone ou WhatsApp, on vous livre directement dans votre atelier, souvent dans l'heure.",
-      color: "red"
-    },
-    {
-      image: "/affordable.png",
-      title: "Tarifs pros ultra\ncompétitifs",
-      description: "Réservé aux professionnels de l'automobile : accédez à des prix remisés sur l'ensemble de notre catalogue.",
-      color: "red"
-    }
-  ]
-
-
-  const getColorClasses = (color: string) => {
-    const colorMap = {
-      blue: {
-        icon: 'bg-gradient-to-r from-blue-500 to-blue-600',
-        border: 'border-blue-200 dark:border-blue-500/30',
-        text: 'text-blue-700 dark:text-blue-400'
-      },
-      green: {
-        icon: 'bg-gradient-to-r from-green-500 to-green-600',
-        border: 'border-green-200 dark:border-green-500/30',
-        text: 'text-green-700 dark:text-green-400'
-      },
-      red: {
-        icon: 'bg-gradient-to-r from-red-500 to-red-600',
-        border: 'border-red-200 dark:border-red-500/30',
-        text: 'text-gray-900 dark:text-gray-100'
-      }
-    }
-    return colorMap[color as keyof typeof colorMap] || colorMap.blue
-  }
+  const input = 'h-12 w-full rounded-xl bg-gray-50 px-4 text-sm text-gray-900 ring-1 ring-gray-200 outline-none focus:bg-white focus:ring-2 focus:ring-secondary-500'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-white">
       <Header />
-      
-      <main className="pt-36">
-        {/* Hero Section */}
-        <section 
-          className="pt-0 pb-20 text-white relative overflow-hidden -mt-40"
-          style={{
-            backgroundImage: 'url(/pro.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center -320px',
-            backgroundRepeat: 'no-repeat'
-          }}
-        >
-          {/* Background Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-red-600/40 via-red-700/40 to-red-800/40"></div>
-          
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-          
-          {/* Animated Wheels - Framer Motion */}
-          <AnimatedWheels />
-          
-          {/* Automotive Gears */}
-          <AutomotiveGears />
-          
-          {/* Speed Lines Effect */}
-          <SpeedLines />
-          
-          {/* Engine Pulse Background */}
-          <EnginePulse />
-          
-          {/* Floating Parts */}
-          <FloatingParts />
-          
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div className="text-center mb-8 mt-[600px]">
-              <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight tracking-tight">
-                <span className="block">
-                  <span className="text-red-500 drop-shadow-2xl uppercase">
-                    DISTRIBUTEUR
-                  </span>{" "}
-                  <span className="text-white uppercase font-black">
-                    PIÈCES DÉTACHÉES
-                  </span>
-                </span>
-                <span className="block text-3xl md:text-4xl font-bold mt-4 tracking-wider">
-                  <span className="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent drop-shadow-xl uppercase">
-                    PARTICULIERS
-                  </span>{" "}
-                  <span className="text-white mx-4 text-2xl md:text-3xl font-bold">&</span>{" "}
-                  <span className="bg-gradient-to-r from-green-400 via-green-500 to-green-600 bg-clip-text text-transparent drop-shadow-xl uppercase">
-                    PROFESSIONNELS
-                  </span>
-                </span>
-              </h1>
-              <p className="text-2xl md:text-3xl font-light text-white/95 max-w-5xl mx-auto leading-relaxed tracking-wide">
-                <span className="block mb-2">
-                  VOUS <span className="font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent uppercase">RÉPAREZ</span>
-                </span>
-                <span className="block">
-                  ON VOUS <span className="font-bold bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent uppercase">ÉQUIPE</span>
-                </span>
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-8">
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
-                  <div className="w-3 h-3 bg-gradient-to-r from-red-500 to-red-600 rounded-full animate-pulse"></div>
-                  <span className="text-white font-bold uppercase tracking-wider">Prix pro</span>
-                </div>
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
-                  <div className="w-3 h-3 bg-gradient-to-r from-green-500 to-green-600 rounded-full animate-pulse"></div>
-                  <span className="text-white font-bold uppercase tracking-wider">Dispo immédiate</span>
-                </div>
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20">
-                  <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-pulse"></div>
-                  <span className="text-white font-bold uppercase tracking-wider">Service réactif</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Info */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-center">
-              <a 
-                href="tel:0147851000" 
-                className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300 cursor-pointer group"
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-green-400 group-hover:text-green-300 transition-colors duration-300">01 47 85 10 00</p>
-                  <p className="text-sm opacity-80 text-green-300">Appelez-nous <span className="font-bold">
-                    <span className="bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent">maintenant</span>
-                  </span></p>
-                </div>
+      <main>
+        {/* Hero */}
+        <section className="relative overflow-hidden bg-gray-900 text-white">
+          <img src="/images/atelier-equipe.jpg" alt="" className="absolute inset-0 h-full w-full object-cover object-center opacity-35" />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-900/90 to-gray-900/30" />
+          <div className="relative max-w-7xl mx-auto px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-400">Garages · carrossiers · magasins · flottes</p>
+            <h1 className="mt-3 max-w-3xl font-display text-4xl font-extrabold leading-tight lg:text-6xl">
+              Votre fournisseur de pièces, <span className="text-secondary-500">sans plateforme.</span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-lg text-white/80">
+              Pas d’accès aux plateformes pros ? Commandez chez nous en marque blanche : recherche par référence, prix
+              nets affichés, livraison à l’atelier et paiement par prélèvement chaque semaine.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#ouvrir-un-compte" className="inline-flex h-12 items-center gap-2 rounded-xl bg-secondary-600 px-6 font-display font-bold hover:bg-secondary-700">
+                Ouvrir un compte pro <Icon name="arrow-right" className="w-4 h-4" />
               </a>
-              
-              <button 
-                onClick={() => {
-                  const address = "426 Avenue de la République, 92000 Nanterre, France"
-                  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
-                  const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(address)}`
-                  const appleMapsUrl = `http://maps.apple.com/?q=${encodeURIComponent(address)}`
-                  
-                  // Show options
-                  if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-                    window.open(appleMapsUrl, '_blank')
-                  } else if (navigator.userAgent.includes('Android')) {
-                    window.open(googleMapsUrl, '_blank')
-                  } else {
-                    // Desktop - show options
-                    const choice = confirm('Choisir une application de navigation:\nOK = Google Maps\nAnnuler = Waze')
-                    if (choice) {
-                      window.open(googleMapsUrl, '_blank')
-                    } else {
-                      window.open(wazeUrl, '_blank')
-                    }
-                  }
-                }}
-                className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300 cursor-pointer group"
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-blue-400 group-hover:text-blue-300 transition-colors duration-300">426 <span className="font-bold">
-                    <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">Avenue de la République</span>
-                  </span></p>
-                  <p className="text-sm opacity-80 text-blue-300">92000 <span className="font-bold text-blue-400">Nanterre</span></p>
-                </div>
-              </button>
+              <Link href="/pro/espace" className="inline-flex h-12 items-center gap-2 rounded-xl bg-white/10 px-6 font-semibold ring-1 ring-white/30 hover:bg-white/20">
+                <Icon name="lock" className="w-4 h-4" /> Voir l’Espace Pro (démo)
+              </Link>
             </div>
+            <dl className="mt-10 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {[
+                { k: formatEUR(PRO.creditLimitDefaultTTC), v: 'encours de départ' },
+                { k: 'Hebdo', v: 'prélèvement SEPA' },
+                { k: '~1 h', v: 'livraison atelier' },
+                { k: '10 000+', v: 'pièces en stock' },
+              ].map((s) => (
+                <div key={s.v} className="rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/10">
+                  <dt className="font-display text-2xl font-extrabold">{s.k}</dt>
+                  <dd className="text-xs text-white/70">{s.v}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
-        {/* Professional Advantages */}
-        <section className="py-12 bg-white dark:bg-gray-800">
+        {/* How it works */}
+        <section className="max-w-7xl mx-auto px-4 py-14 sm:px-6 lg:px-8">
+          <h2 className="font-display text-3xl font-extrabold text-gray-900">Comment ça marche</h2>
+          <ol className="mt-6 grid gap-4 md:grid-cols-4">
+            {STEPS.map((s, i) => (
+              <li key={s.title} className="relative rounded-2xl bg-gray-50 p-5">
+                <span className="absolute right-4 top-3 font-display text-4xl font-extrabold text-gray-200">{i + 1}</span>
+                <Icon name={s.icon} className="w-7 h-7 text-secondary-600" />
+                <p className="mt-3 font-display font-bold text-gray-900">{s.title}</p>
+                <p className="mt-1 text-sm text-gray-600">{s.text}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* Advantages */}
+        <section className="bg-gray-50 py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
-                  Avantages Exclusifs PRO
-                </span>
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                Rejoignez les nombreux garagistes qui nous font déjà confiance
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {proAdvantages.map((advantage, index) => {
-                const colors = getColorClasses(advantage.color)
-                return (
-                  <div 
-                    key={index}
-                    className={`group bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-500 border-2 ${colors.border} hover:scale-105 text-center flex flex-col h-full`}
-                  >
-                    <div className="flex justify-center mb-6 flex-shrink-0">
-                      <div className="w-48 h-48 group-hover:scale-110 transition-transform duration-300">
-                        <img 
-                          src={advantage.image} 
-                          alt={advantage.title}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    </div>
-                    <h3 className={`text-2xl font-bold mb-4 ${colors.text} group-hover:scale-105 transition-transform duration-300 flex-shrink-0 whitespace-pre-line`}>
-                      {advantage.title}
-                    </h3>
-                    <p className="text-base font-semibold text-gray-700 dark:text-gray-200 leading-relaxed flex-grow">
-                      {advantage.description}
-                    </p>
-                  </div>
-                )
-              })}
+            <h2 className="font-display text-3xl font-extrabold text-gray-900">Pourquoi les garages nous choisissent</h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {ADVANTAGES.map((a) => (
+                <div key={a.title} className="rounded-2xl bg-white p-6 ring-1 ring-gray-200">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gray-900 text-white">
+                    <Icon name={a.icon} className="w-5 h-5" />
+                  </span>
+                  <p className="mt-4 font-display text-lg font-bold text-gray-900">{a.title}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-gray-600">{a.text}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Account Request Form */}
-        <section className="py-12 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                <span className="bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
-                  Prêt à passer en mode PRO ?
-                </span>
-              </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                Demande d'ouverture de compte professionnel
+        {/* Conditions */}
+        <section id="conditions" className="scroll-mt-36 max-w-7xl mx-auto px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-600">Conditions</p>
+              <h2 className="mt-1.5 font-display text-3xl font-extrabold text-gray-900">Encours et paiement, en clair</h2>
+              <p className="mt-3 text-gray-600">
+                Vous commandez toute la semaine sur votre encours. Chaque {DAYS[PRO.debitWeekday]}, vous recevez le
+                relevé de la semaine écoulée et le montant est prélevé automatiquement.
               </p>
             </div>
+            <dl className="divide-y divide-gray-100 rounded-2xl ring-1 ring-gray-200">
+              {[
+                { k: 'Encours de départ', v: `${formatEUR(PRO.creditLimitDefaultTTC)} TTC` },
+                { k: 'Paiement', v: `Prélèvement SEPA chaque ${DAYS[PRO.debitWeekday]}` },
+                { k: 'Alerte', v: `Message à ${Math.round(PRO.alertThreshold * 100)} % de l’encours utilisé` },
+                { k: 'Plafond atteint', v: 'La commande se règle par carte, ou attend le prochain prélèvement' },
+                { k: 'Prélèvement rejeté', v: 'Commandes à crédit suspendues jusqu’à régularisation' },
+                { k: 'Évolution', v: 'Encours revu à la hausse après 3 mois sans incident' },
+              ].map((r) => (
+                <div key={r.k} className="grid grid-cols-[140px_1fr] gap-4 px-4 py-3 text-sm">
+                  <dt className="font-semibold text-gray-900">{r.k}</dt>
+                  <dd className="text-gray-600">{r.v}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-200 dark:border-gray-700">
+        {/* Account request */}
+        <section id="ouvrir-un-compte" className="scroll-mt-36 bg-gray-900 py-14">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center text-white">
+              <h2 className="font-display text-3xl font-extrabold">Prêt à passer en mode PRO ?</h2>
+              <p className="mt-2 text-white/70">Demande d’ouverture de compte professionnel — réponse sous 48 h ouvrées.</p>
+            </div>
+
+            <div className="mt-8 rounded-3xl bg-white p-6 shadow-2xl sm:p-10">
               {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Raison Sociale *
-                      </label>
-                      <Input
-                        type="text"
-                        name="companyName"
-                        value={formData.companyName}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="Nom de votre entreprise"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Numéro SIRET *
-                      </label>
-                      <Input
-                        type="text"
-                        name="siret"
-                        value={formData.siret}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="12345678901234"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        E-mail *
-                      </label>
-                      <Input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="contact@votre-garage.fr"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Téléphone *
-                      </label>
-                      <Input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="01 23 45 67 89"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Adresse *
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Raison sociale *
+                      <input name="companyName" value={formData.companyName} onChange={update} required placeholder="Nom de votre entreprise" className={`mt-1.5 ${input}`} />
                     </label>
-                    <Input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full"
-                      placeholder="123 Rue de l'Automobile"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Ville *
-                      </label>
-                      <Input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="Paris"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Code Postal *
-                      </label>
-                      <Input
-                        type="text"
-                        name="postalCode"
-                        value={formData.postalCode}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full"
-                        placeholder="75000"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Informations Complémentaires
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Numéro SIRET *
+                      <input name="siret" value={formData.siret} onChange={update} required inputMode="numeric" pattern="[0-9 ]{14,17}" title="14 chiffres" placeholder="123 456 789 00012" className={`mt-1.5 ${input}`} />
                     </label>
-                    <textarea
-                      name="additionalInfo"
-                      value={formData.additionalInfo}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="Type d'activité, nombre de véhicules traités par mois, besoins spécifiques..."
-                    />
+                    <label className="block text-sm font-semibold text-gray-700">
+                      E-mail *
+                      <input type="email" name="email" value={formData.email} onChange={update} required placeholder="contact@votre-garage.fr" className={`mt-1.5 ${input}`} />
+                    </label>
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Téléphone *
+                      <input type="tel" name="phone" value={formData.phone} onChange={update} required placeholder="06 12 34 56 78" className={`mt-1.5 ${input}`} />
+                    </label>
                   </div>
-
-                  <div className="pt-6">
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 text-lg rounded-xl transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? (
-                        <div className="flex items-center justify-center space-x-3">
-                          <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
-                          <span>Envoi en cours...</span>
-                        </div>
-                      ) : (
-                        'Envoyer ma demande'
-                      )}
-                    </Button>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Adresse *
+                    <input name="address" value={formData.address} onChange={update} required placeholder="12 rue de l’Atelier" className={`mt-1.5 ${input}`} />
+                  </label>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Ville *
+                      <input name="city" value={formData.city} onChange={update} required placeholder="Nanterre" className={`mt-1.5 ${input}`} />
+                    </label>
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Code postal *
+                      <input name="postalCode" value={formData.postalCode} onChange={update} required inputMode="numeric" pattern="[0-9]{5}" placeholder="92000" className={`mt-1.5 ${input}`} />
+                    </label>
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Activité
+                      <select name="activity" value={formData.activity} onChange={update} className={`mt-1.5 ${input}`}>
+                        {['Garage mécanique', 'Carrosserie', 'Magasin de pièces', 'Flotte / loueur', 'Autre'].map((o) => <option key={o}>{o}</option>)}
+                      </select>
+                    </label>
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Achats de pièces par mois
+                      <select name="monthlyVolume" value={formData.monthlyVolume} onChange={update} className={`mt-1.5 ${input}`}>
+                        {['Moins de 1 000 €', '1 000 à 3 000 €', '3 000 à 8 000 €', 'Plus de 8 000 €'].map((o) => <option key={o}>{o}</option>)}
+                      </select>
+                    </label>
                   </div>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Où achetez-vous vos pièces aujourd’hui ?
+                    <input name="currentSupplier" value={formData.currentSupplier} onChange={update} placeholder="Distributeur, plateforme, magasin…" className={`mt-1.5 ${input}`} />
+                  </label>
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Informations complémentaires
+                    <textarea name="additionalInfo" value={formData.additionalInfo} onChange={update} rows={3} placeholder="Marques travaillées, nombre de véhicules par mois, besoins de livraison…" className="mt-1.5 w-full rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-900 ring-1 ring-gray-200 outline-none focus:bg-white focus:ring-2 focus:ring-secondary-500" />
+                  </label>
+                  <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700">
+                    <input type="checkbox" checked={sepa} onChange={(e) => setSepa(e.target.checked)} className="mt-0.5 h-4 w-4 accent-secondary-600" />
+                    J’accepte le principe du paiement par prélèvement SEPA hebdomadaire (le mandat est signé à l’ouverture du compte).
+                  </label>
+                  <button type="submit" disabled={isSubmitting} className="flex h-14 w-full items-center justify-center gap-3 rounded-xl bg-secondary-600 font-display text-lg font-bold text-white hover:bg-secondary-700 disabled:opacity-60">
+                    {isSubmitting ? 'Envoi en cours…' : 'Envoyer ma demande'}
+                  </button>
+                  <p className="text-center text-xs text-gray-500">
+                    Plus rapide ?{' '}
+                    <a href={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite ouvrir un compte professionnel.')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-green-700 hover:underline">
+                      <WhatsAppIcon className="w-3.5 h-3.5" /> Écrivez-nous sur WhatsApp
+                    </a>
+                  </p>
                 </form>
               ) : (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Demande envoyée avec succès !
-                  </h3>
-                  <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-                    Merci de nous avoir contacté, nous reviendrons vers vous dans les plus brefs délais.
-                  </p>
-                  <Button
+                <div className="py-10 text-center">
+                  <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-600 text-white">
+                    <Icon name="check" className="w-8 h-8" strokeWidth={3} />
+                  </span>
+                  <h3 className="mt-5 font-display text-2xl font-bold text-gray-900">Demande envoyée !</h3>
+                  <p className="mt-2 text-gray-600">Merci, nous revenons vers vous sous 48 h ouvrées avec votre mandat SEPA et vos accès.</p>
+                  <button
+                    type="button"
                     onClick={() => {
                       setIsSubmitted(false)
-                      setFormData({
-                        companyName: '',
-                        siret: '',
-                        email: '',
-                        phone: '',
-                        address: '',
-                        city: '',
-                        postalCode: '',
-                        additionalInfo: '',
-                      })
+                      setFormData(EMPTY_FORM)
+                      setSepa(false)
                     }}
-                    variant="outline"
-                    className="border-2 border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    className="mt-6 rounded-xl px-5 py-2.5 font-semibold text-secondary-700 ring-1 ring-secondary-200 hover:bg-secondary-50"
                   >
                     Nouvelle demande
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </section>
-
-
-        {/* Animated Opening Hours */}
-        <AnimatedOpeningHours />
-
-        {/* Contact Section - Same as Index Page */}
-        <ContactSection />
       </main>
-
       <Footer />
     </div>
   )

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Balais d'essuie-glace plats">
+  <defs>
+    <linearGradient id="blade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4b525c"/>
+      <stop offset="0.55" stop-color="#1f242b"/>
+      <stop offset="1" stop-color="#0d1014"/>
+    </linearGradient>
+    <linearGradient id="clip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d6dbe1"/>
+      <stop offset="1" stop-color="#8e98a3"/>
+    </linearGradient>
+    <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#000" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="#ffffff"/>
+  <ellipse cx="200" cy="318" rx="160" ry="16" fill="url(#shadow)"/>
+  <g transform="rotate(-24 200 200)">
+    <!-- long blade -->
+    <rect x="28" y="150" width="344" height="24" rx="12" fill="url(#blade)"/>
+    <rect x="34" y="172" width="332" height="7" rx="3.5" fill="#07090b"/>
+    <path d="M60 156 L340 156" stroke="#7d8793" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <rect x="172" y="138" width="56" height="20" rx="6" fill="url(#clip)"/>
+    <rect x="184" y="143" width="32" height="6" rx="3" fill="#5b6570"/>
+    <!-- short blade -->
+    <rect x="68" y="214" width="268" height="22" rx="11" fill="url(#blade)"/>
+    <rect x="74" y="234" width="256" height="6" rx="3" fill="#07090b"/>
+    <path d="M96 220 L308 220" stroke="#7d8793" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <rect x="176" y="203" width="50" height="18" rx="6" fill="url(#clip)"/>
+    <rect x="187" y="207" width="28" height="5" rx="2.5" fill="#5b6570"/>
+  </g>
+  <g font-family="Poppins, Arial, sans-serif" font-weight="700">
+    <rect x="292" y="36" width="72" height="34" rx="17" fill="#dc2626"/>
+    <text x="328" y="59" text-anchor="middle" font-size="17" fill="#ffffff">x2</text>
+  </g>
+</svg>

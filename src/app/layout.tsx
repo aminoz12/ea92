@@ -3,7 +3,20 @@ import Script from 'next/script'
 import { Providers } from './providers'
 import { SITE } from '@/lib/site'
 import { localBusinessSchema, webSiteSchema } from '@/lib/structuredData'
+import { Anton, Barlow, Barlow_Semi_Condensed } from 'next/font/google'
 import '@/styles/globals.css'
+
+// Fonts are self-hosted by next/font (no render-blocking Google import).
+// Barlow comes from licence plates and highway signs: text in Barlow, titles,
+// prices and buttons in its semi-condensed cut, Anton for the hero slogan.
+const fontBody = Barlow({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-body', display: 'swap' })
+const fontDisplay = Barlow_Semi_Condensed({
+  subsets: ['latin'],
+  weight: ['500', '600', '700', '800'],
+  variable: '--font-display',
+  display: 'swap',
+})
+const fontAnton = Anton({ subsets: ['latin'], weight: '400', variable: '--font-anton', display: 'swap' })
 
 const TITLE = 'Espace Auto 92 - Pièces détachées auto à Nanterre (92)'
 
@@ -87,7 +100,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className={`${fontBody.variable} ${fontDisplay.variable} ${fontAnton.variable}`}>
       <body>
         {/* Structured data (JSON-LD) for SEO / AEO / GEO */}
         <script

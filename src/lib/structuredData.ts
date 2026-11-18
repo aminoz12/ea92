@@ -78,12 +78,22 @@ const faqItems: { question: string; answer: string }[] = [
   {
     question: 'Comment puis-je retourner un article ?',
     answer:
-      "Sauf erreur de notre part, les articles ne sont ni repris ni échangés. Pour tous articles retournés, ils doivent être dans leur emballage et état d'origine, sans aucune trace de montage ou d'usure.",
+      "Achat en ligne : vous disposez de 14 jours après réception pour exercer votre droit de rétractation, la pièce doit être retournée non montée, dans son emballage et son état d'origine. Achat en magasin : sauf erreur de notre part, les articles ne sont ni repris ni échangés. Dans tous les cas, une erreur de référence de notre part est échangée immédiatement.",
   },
   {
     question: 'Après avoir passé commande, quel est le délai de réception ?',
     answer:
       "Notre boutique dispose d'un vaste stock. Si l'article est épuisé et nécessite une commande, celle-ci arrive en boutique dans un délai allant de 4h à 24h (sous réserve de disponibilité).",
+  },
+  {
+    question: 'Puis-je commander en ligne et me faire livrer ?',
+    answer:
+      'Oui, partout en France. Choisissez au moment du paiement : retrait au magasin de Nanterre (ou en casier click & collect), livraison express par coursier en Île-de-France, envoi en colis partout en France, ou livraison directe dans un garage partenaire qui monte la pièce à prix fixe.',
+  },
+  {
+    question: 'Comment être sûr que la pièce est compatible avec mon véhicule ?',
+    answer:
+      "Saisissez votre plaque d'immatriculation dans la boutique : nous identifions votre véhicule et n'affichons que les pièces compatibles. En cas de doute, envoyez-nous votre carte grise sur WhatsApp et un conseiller vérifie la référence avant l'envoi.",
   },
   {
     question: 'Les pièces sont-elles garanties ?',
@@ -93,7 +103,7 @@ const faqItems: { question: string; answer: string }[] = [
   {
     question: 'Je souhaiterais avoir plus d\'informations sur vos services, comment faire ?',
     answer:
-      'Consultez notre page « Nos Services » et découvrez tous les bénéfices que vous pourrez tirer avec Espace Auto 92. Vous pouvez également nous contacter directement au 01 47 85 10 00, nous serons ravis de vous renseigner.',
+      'Retrait au magasin, livraison, montage en garage partenaire, club fidélité, carnet d’entretien : tout est détaillé dans le menu du site. Vous pouvez aussi nous poser directement vos questions, nous serons ravis de vous renseigner au 01 47 85 10 00.',
   },
   // TEMP (Google Ads — certification en cours) : question FAQ « carte grise »
   // retirée du JSON-LD (miroir de la FAQ visible). Décommenter pour restaurer.

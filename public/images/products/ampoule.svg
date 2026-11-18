@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Ampoule halogène de phare">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d9e6f4"/>
+      <stop offset="0.35" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#c3d4e8"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8f99a4"/>
+      <stop offset="0.45" stop-color="#e3e7eb"/>
+      <stop offset="1" stop-color="#7d8893"/>
+    </linearGradient>
+    <linearGradient id="plastic" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#151a20"/>
+      <stop offset="0.5" stop-color="#3a424c"/>
+      <stop offset="1" stop-color="#11151a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fde68a" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fde68a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="shadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#000" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="#ffffff"/>
+  <ellipse cx="200" cy="356" rx="80" ry="10" fill="url(#shadow)"/>
+  <circle cx="200" cy="128" r="70" fill="url(#glow)"/>
+  <!-- glass capsule -->
+  <path d="M168 66 Q200 44 232 66 L232 182 Q232 204 200 206 Q168 204 168 182 Z" fill="url(#glass)" stroke="#a9bdd3" stroke-width="3"/>
+  <!-- blue-black tip -->
+  <path d="M170 66 Q200 46 230 66 L228 80 Q200 64 172 80 Z" fill="#2f3d4d"/>
+  <!-- filament -->
+  <path d="M200 98 L200 106 Q206 110 200 114 Q194 118 200 122 Q206 126 200 130 Q194 134 200 138 L200 150" fill="none" stroke="#c08b16" stroke-width="4" stroke-linecap="round"/>
+  <path d="M186 150 L186 196 M214 150 L214 196" stroke="#9aa5b1" stroke-width="3"/>
+  <!-- metal flange -->
+  <rect x="160" y="204" width="80" height="16" rx="4" fill="url(#metal)"/>
+  <rect x="138" y="220" width="124" height="14" rx="4" fill="url(#metal)"/>
+  <!-- plastic base + pins -->
+  <rect x="172" y="234" width="56" height="78" rx="8" fill="url(#plastic)"/>
+  <rect x="184" y="312" width="10" height="34" rx="2" fill="#b98f2a"/>
+  <rect x="206" y="312" width="10" height="34" rx="2" fill="#b98f2a"/>
+</svg>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { HomePage } from '@/views/HomePage'
+import { getPublicCatalog } from '@/lib/shop/catalog.server'
 
 export const metadata: Metadata = {
   title: 'Espace Auto 92 - Car parts store in Nanterre (92)',
@@ -15,5 +16,5 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <HomePage />
+  return <HomePage products={getPublicCatalog()} />
 }

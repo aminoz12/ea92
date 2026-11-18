@@ -1,3 +1,6 @@
+import { SITE } from '@/lib/site'
+import { SectionHeading } from '../ui/SectionHeading'
+
 interface GoogleReview {
   id: number
   name: string
@@ -26,16 +29,16 @@ const reviewsRowTwo: GoogleReview[] = [
   { id: 12, name: 'Sandra P.', rating: 5, comment: 'Accueil chaleureux et vrai savoir-faire sur les pièces auto. Je recommande.', avatar: 'S' },
 ]
 
-const TOTAL_REVIEWS = 893
-const AVERAGE_RATING = 4.9
+const TOTAL_REVIEWS = SITE.googleReviewCount
+const AVERAGE_RATING = SITE.googleRating
 
 const avatarGradients = [
-  'from-rose-500 to-red-600',
-  'from-blue-500 to-indigo-600',
-  'from-emerald-500 to-teal-600',
-  'from-amber-500 to-orange-600',
-  'from-violet-500 to-purple-600',
-  'from-cyan-500 to-sky-600',
+  'from-gray-800 to-gray-900',
+  'from-gray-800 to-gray-900',
+  'from-gray-800 to-gray-900',
+  'from-gray-800 to-gray-900',
+  'from-gray-800 to-gray-900',
+  'from-gray-800 to-gray-900',
 ]
 
 const GoogleLogo = ({ className = 'w-5 h-5' }: { className?: string }) => (
@@ -64,7 +67,7 @@ const Stars = ({ rating, className = 'w-4 h-4' }: { rating: number; className?: 
 )
 
 const ReviewCard = ({ review, index }: { review: GoogleReview; index: number }) => (
-  <article className="shrink-0 w-[300px] sm:w-[340px] bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 dark:ring-gray-700 hover:shadow-lg transition-shadow duration-300">
+  <article className="shrink-0 w-[300px] sm:w-[340px] bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm ring-1 ring-gray-100 dark:ring-gray-700 hover:shadow-lg transition-shadow duration-300">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-3 min-w-0">
         <div
@@ -111,38 +114,26 @@ const MarqueeRow = ({
 
 export function TestimonialsSection() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden">
+    <section className="relative overflow-hidden bg-white py-10 lg:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 rounded-full text-sm font-semibold text-gray-700 dark:text-gray-200 shadow-sm mb-6">
-            <GoogleLogo className="w-4 h-4" />
-            Avis Google vérifiés
-          </div>
-
-          <h2 className="text-3xl lg:text-4xl font-display font-bold leading-tight mb-5">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-600 to-secondary-700">
-              L'avis de nos clients compte
-            </span>
-          </h2>
-
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
-            La satisfaction de nos clients, notre plus grande fierté.
-          </p>
-
-          {/* Rating summary */}
-          <div className="mt-8 inline-flex items-center gap-4 px-6 py-3 bg-white dark:bg-gray-800 rounded-2xl shadow-md ring-1 ring-gray-100 dark:ring-gray-700">
-            <span className="text-3xl font-bold text-gray-900 dark:text-white leading-none">
-              {AVERAGE_RATING.toFixed(1)}
-            </span>
-            <div className="text-left">
-              <Stars rating={5} className="w-4 h-4" />
-              <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                Basé sur <span className="font-semibold text-gray-700 dark:text-gray-200">{TOTAL_REVIEWS} avis</span>
-              </p>
+        <SectionHeading
+          title={`Nos clients nous notent ${AVERAGE_RATING.toLocaleString('fr-FR', { minimumFractionDigits: 1 })} / 5`}
+          subtitle="Les derniers avis laissés sur notre fiche Google."
+          aside={
+            <div className="inline-flex shrink-0 items-center gap-3 self-start rounded-xl bg-white px-4 py-2.5 ring-1 ring-gray-200 sm:self-auto">
+              <GoogleLogo className="w-6 h-6" />
+              <span className="font-display text-3xl font-extrabold leading-none text-gray-900">
+                {AVERAGE_RATING.toLocaleString('fr-FR', { minimumFractionDigits: 1 })}
+              </span>
+              <div>
+                <Stars rating={5} className="w-4 h-4" />
+                <p className="mt-0.5 text-xs text-gray-500">
+                  <span className="font-semibold text-gray-700">{TOTAL_REVIEWS.toLocaleString('fr-FR')} avis</span> Google
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
+          }
+        />
 
         {/* Marquee rows */}
         <div className="space-y-5">

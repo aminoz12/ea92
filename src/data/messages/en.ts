@@ -100,6 +100,7 @@ export const en = {
     },
   },
   brands: {
+    eyebrow: 'Our brands',
     title: 'Original Parts Only',
     subtitle: 'We work exclusively with recognized brands to guarantee the quality and origin of our parts.',
     note: 'All our parts are guaranteed and come from approved manufacturers.',

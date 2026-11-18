@@ -15,8 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/pro', priority: 0.9, changeFrequency: 'monthly' },
     { path: '/contact', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/about', priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/livraison-retrait', priority: 0.8, changeFrequency: 'monthly' },
+    { path: '/montage-garage', priority: 0.7, changeFrequency: 'monthly' },
+    { path: '/fidelite', priority: 0.7, changeFrequency: 'monthly' },
     { path: '/blog', priority: 0.7, changeFrequency: 'weekly' },
     { path: '/en', priority: 0.6, changeFrequency: 'monthly' },
+    // /boutique, /ampoules, /essuie-glaces and /carnet-entretien are noindex
+    // while the catalogue is demo data. Add them here once real prices are live.
     ...ARTICLES.map((a) => ({
       path: `/blog/${a.slug}`,
       priority: 0.6,

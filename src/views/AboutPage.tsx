@@ -1,159 +1,142 @@
-'use client'
-
-import { useEffect } from 'react'
-import { motion } from 'framer-motion'
+import Image from 'next/image'
+import Link from 'next/link'
 import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
-import { AboutSection } from '../components/sections/AboutSection'
+import { PageHero, heroPrimaryBtn, heroSecondaryBtn } from '../components/ui/PageHero'
+import { SectionHeading } from '../components/ui/SectionHeading'
+import { Icon, WhatsAppIcon, type IconName } from '../components/ui/Icon'
+import { BrandsSection } from '../components/sections/BrandsSection'
+import { TestimonialsSection } from '../components/sections/TestimonialsSection'
+import { AudienceSplit } from '../components/home/AudienceSplit'
+import { HelpBanner } from '../components/home/HelpBanner'
+import { SITE } from '../lib/site'
+
+const COMMITMENTS: { icon: IconName; title: string; text: string }[] = [
+  {
+    icon: 'wrench',
+    title: 'La bonne pièce, du premier coup',
+    text: 'Avec votre plaque ou votre carte grise, on trouve la référence exacte. Si une pièce ne convient pas, on vous le dit.',
+  },
+  {
+    icon: 'bolt',
+    title: 'Vite, vraiment',
+    text: `Plus de ${SITE.partsInStock} pièces en rayon, le reste chez nos fournisseurs en ~4 h. Retrait en 30 min, coursier en ~1 h.`,
+  },
+  {
+    icon: 'shield',
+    title: 'Des marques de confiance',
+    text: 'Les fabricants qui équipent les garages (Bosch, TRW, Valeo, Brembo…). Toutes nos pièces sont garanties 1 an minimum.',
+  },
+  {
+    icon: 'heart',
+    title: 'Des prix clairs, des conseils honnêtes',
+    text: 'Prix affichés, pas de vente forcée. Et une seule adresse officielle : nous ne vendons rien sur Facebook.',
+  },
+]
 
 export function AboutPage() {
-  // Scroll to top when component mounts
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-white">
       <Header />
-      
-      <main className="pt-36">
-        {/* Hero Section for About Page */}
-        <section className="py-20 text-white relative overflow-hidden min-h-screen flex items-center">
-          {/* Background Image */}
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: 'url(/coverabout.png)',
-            }}
-          />
-          
-          {/* Dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/50"></div>
-          
-          {/* Additional overlay for better contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-red-900/30 via-transparent to-red-900/30"></div>
-          
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px] opacity-30"></div>
-          
-          {/* Animated background elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <motion.div
-              className="absolute top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-20 -left-20 w-60 h-60 bg-white/10 rounded-full blur-3xl"
-              animate={{ scale: [1.2, 1, 1.2], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            />
-            <motion.div
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white/5 rounded-full blur-2xl"
-              animate={{ rotate: 360, scale: [1, 1.3, 1] }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-             <div className="text-center pt-20">
-            </div>
+      <main>
+        <PageHero
+          eyebrow="À propos"
+          title={
+            <>
+              Les pièces auto à Nanterre, <span className="text-secondary-500">depuis {SITE.foundingDate}.</span>
+            </>
+          }
+          intro="Un magasin de pièces détachées où l’on vous conseille comme au comptoir, que vous passiez nous voir, que vous écriviez sur WhatsApp ou que vous commandiez en ligne."
+          image="/coverabout.png"
+          imagePosition="center 35%"
+          stats={[
+            { value: SITE.foundingDate, label: 'ouvert à Nanterre' },
+            { value: `${SITE.partsInStock}+`, label: 'pièces en stock' },
+            { value: `${SITE.googleRating.toLocaleString('fr-FR')}/5`, label: `${SITE.googleReviewCount.toLocaleString('fr-FR')} avis Google` },
+            { value: '4', label: 'façons de recevoir vos pièces' },
+          ]}
+        >
+          <Link href="/contact" className={heroPrimaryBtn}>
+            Venir au magasin <Icon name="arrow-right" className="w-4 h-4" />
+          </Link>
+          <a href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener noreferrer" className={heroSecondaryBtn}>
+            <WhatsAppIcon className="w-4 h-4" /> Écrire sur WhatsApp
+          </a>
+        </PageHero>
 
-            {/* Floating Automotive Parts - Left and Right Only */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              {/* Left side parts */}
-              <motion.div
-                className="absolute top-1/4 left-4 w-6 h-6 text-white/20"
-                animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, 180, 360]
-                }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M12 1v6m0 8v6m11-7h-6m-8 0H1"/>
-                </svg>
-              </motion.div>
-              
-              <motion.div
-                className="absolute bottom-1/3 left-6 w-5 h-5 text-white/18"
-                animate={{ 
-                  x: [0, 5, 0],
-                  y: [0, -8, 0]
-                }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <circle cx="12" cy="12" r="4"/>
-                  <path d="M12 4v4m0 8v4"/>
-                </svg>
-              </motion.div>
-              
-              <motion.div
-                className="absolute top-1/2 left-3 w-4 h-4 text-white/22"
-                animate={{ 
-                  rotate: [0, 90, 180, 270, 360],
-                  scale: [1, 1.1, 1]
-                }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <path d="M3 12h18m-9-9v18"/>
-                </svg>
-              </motion.div>
-              
-              {/* Right side parts */}
-              <motion.div
-                className="absolute top-1/3 right-4 w-6 h-6 text-white/20"
-                animate={{ 
-                  rotate: [0, -180, -360],
-                  y: [0, -12, 0]
-                }}
-                transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <circle cx="12" cy="12" r="4"/>
-                  <circle cx="12" cy="12" r="2"/>
-                  <path d="M12 2v4m0 12v4m10-10h-4m-12 0H2"/>
-                </svg>
-              </motion.div>
-              
-              <motion.div
-                className="absolute bottom-1/4 right-6 w-5 h-5 text-white/16"
-                animate={{ 
-                  x: [0, -5, 0],
-                  y: [0, 8, 0],
-                  scale: [1, 1.05, 1]
-                }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              </motion.div>
-              
-              <motion.div
-                className="absolute top-2/3 right-3 w-4 h-4 text-white/19"
-                animate={{ 
-                  y: [0, -6, 0],
-                  rotate: [0, 10, -10, 0]
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-full h-full">
-                  <circle cx="12" cy="12" r="3"/>
-                  <path d="M12 1v6m0 8v6"/>
-                </svg>
-              </motion.div>
+        {/* Story */}
+        <section className="py-12 lg:py-20">
+          <div className="max-w-7xl mx-auto grid items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary-600">Notre histoire</p>
+              <h2 className="mt-1.5 font-display text-3xl font-extrabold leading-tight text-gray-900 lg:text-4xl">
+                Un comptoir de quartier devenu le fournisseur des garages du 92
+              </h2>
+              <div className="mt-5 space-y-4 text-lg leading-relaxed text-gray-600">
+                <p>
+                  Depuis nos débuts en {SITE.foundingDate}, notre objectif est simple : fournir des{' '}
+                  <strong className="text-gray-900">pièces de qualité rapidement</strong>, avec un service fiable et honnête.
+                </p>
+                <p>
+                  Avec le temps, nous avons gagné la confiance de nombreux <strong className="text-gray-900">garages et particuliers</strong>{' '}
+                  grâce à notre réactivité, notre stock et notre expertise technique.
+                </p>
+                <p>
+                  Aujourd’hui, le comptoir se prolonge en ligne : commande sur WhatsApp ou sur le site, retrait en 30 minutes,
+                  coursier, expédition partout en France ou montage en garage partenaire. Avec toujours la même priorité :{' '}
+                  <strong className="text-secondary-600">vous dépanner vite, bien et au juste prix.</strong>
+                </p>
+              </div>
             </div>
-            
+            <figure className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-gray-100 shadow-xl ring-1 ring-gray-200">
+              <Image
+                src="/magasin.png"
+                alt="Façade du magasin Espace Auto 92, avenue de la République à Nanterre"
+                fill
+                sizes="(min-width: 1024px) 600px, 100vw"
+                className="object-cover"
+              />
+              <figcaption className="absolute bottom-4 left-4 right-4 flex items-center gap-3 rounded-2xl bg-white/95 p-3 shadow-lg sm:right-auto">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary-600 text-white">
+                  <Icon name="map-pin" className="w-5 h-5" />
+                </span>
+                <span className="text-sm">
+                  <span className="block font-bold text-gray-900">{SITE.street}</span>
+                  <span className="text-gray-500">{SITE.postalCode} {SITE.city}</span>
+                </span>
+              </figcaption>
+            </figure>
           </div>
         </section>
-        
-        <AboutSection />
-      </main>
 
+        {/* Commitments */}
+        <section className="bg-gray-50 py-12 lg:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeading eyebrow="Nos engagements" title="Ce qui ne change pas, au comptoir comme en ligne" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {COMMITMENTS.map((c) => (
+                <div key={c.title} className="rounded-2xl bg-white p-6 ring-1 ring-gray-200">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary-50 text-secondary-600">
+                    <Icon name={c.icon} className="w-6 h-6" />
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-bold text-gray-900">{c.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{c.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <BrandsSection />
+        <TestimonialsSection />
+        <AudienceSplit />
+
+        <section className="pb-12 lg:pb-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <HelpBanner />
+          </div>
+        </section>
+      </main>
       <Footer />
     </div>
   )

@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import Link from 'next/link'
 import { ArticleCard } from '@/components/sections/ArticleCard'
+import { SectionHeading } from '@/components/ui/SectionHeading'
 import { ARTICLES } from '@/lib/blog'
 
 export const metadata: Metadata = {
@@ -17,20 +19,19 @@ export default function BlogIndexPage() {
       <Header />
 
       <main>
-        <section className="pt-36 pb-16 bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        <section className="bg-gray-50 pb-16 pt-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <span className="inline-block px-3 py-1 rounded-full bg-secondary-50 text-secondary-600 text-xs font-bold tracking-widest mb-4">
-                GUIDES &amp; CONSEILS AUTO
-              </span>
-              <h1 className="text-3xl lg:text-5xl font-display font-bold text-gray-900 mb-4">
-                Conseils d&apos;entretien &amp; de voyage
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Conseils d&apos;entretien, guides pratiques et astuces pour prendre soin de votre
-                véhicule.
-              </p>
-            </div>
+            <nav aria-label="Fil d’Ariane" className="mb-4 text-xs text-gray-500">
+              <Link href="/" className="hover:text-gray-900">Accueil</Link>
+              <span className="mx-1.5">/</span>
+              <span className="text-gray-900">Conseils</span>
+            </nav>
+            <SectionHeading
+              as="h1"
+              eyebrow="Guides & conseils auto"
+              title="Conseils d’entretien & de voyage"
+              subtitle="Quand changer, quoi vérifier, quelle pièce choisir : nos conseils de comptoir, par écrit. Une question ? On répond aussi sur WhatsApp."
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {ARTICLES.map((article) => (

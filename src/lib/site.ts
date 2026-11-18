@@ -26,4 +26,8 @@ export const SITE = {
   country: 'FR',
   foundingDate: '2017',
   priceRange: '€€',
+  // Google Business Profile rating — update when it changes (shown on the site).
+  googleRating: 4.9,
+  googleReviewCount: 1041,
+  partsInStock: '10 000',
 } as const

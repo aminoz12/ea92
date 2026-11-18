@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Anton:wght@400&family=Libre+Franklin:wght@300;400;500;600;700;800;900&family=League+Spartan:wght@300;400;500;600;700;800;900&display=swap');
+/* Fonts are loaded with next/font in src/app/layout.tsx (CSS variables below). */
 
 @tailwind base;
 @tailwind components;
@@ -57,40 +57,62 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Barlow has a low x-height (0.51): draw it as tall as the previous text
+     font (0.54) so small text stays readable, without touching layout sizes. */
+  font-size-adjust: 0.54;
 }
 
-/* Professional font classes */
+/* Fonts with their own proportions keep them. */
+.anton-regular,
+.font-mono,
+code,
+kbd {
+  font-size-adjust: none;
+}
+
+/* Titles, prices, buttons: Barlow Semi Condensed */
 .font-display {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-display), var(--font-body), system-ui, sans-serif;
 }
 
 .font-body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
 }
 
 .anton-regular {
-  font-family: "Anton", sans-serif;
+  font-family: var(--font-anton), var(--font-display), sans-serif;
   font-weight: 400;
   font-style: normal;
 }
 
-.libre-franklin {
-  font-family: "Libre Franklin", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-}
-
+/* Legacy classes from the first version of the site: same display font. */
+.libre-franklin,
 .league-spartan {
-  font-family: "League Spartan", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+  font-family: var(--font-display), var(--font-body), sans-serif;
+}
+
+@layer base {
+  /* Buttons and button-like links set in the display font read as labels:
+     uppercase with a little tracking (override with `normal-case`). */
+  :where(a, button).font-display {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  /* Solid buttons get a darker bottom edge and a 1px press, so they read as
+     buttons and not as flat coloured labels. */
+  :where(a, button).font-display:where(.bg-secondary-600, .bg-gray-900, .bg-green-600, .bg-signal-500, .bg-white) {
+    box-shadow: inset 0 -2px 0 rgb(0 0 0 / 0.18);
+  }
+  :where(a, button).font-display:active {
+    transform: translateY(1px);
+  }
+  /* Prices and counters line up digit for digit. */
+  .font-display {
+    font-variant-numeric: lining-nums tabular-nums;
+  }
 }
 
 /* Custom scrollbar */

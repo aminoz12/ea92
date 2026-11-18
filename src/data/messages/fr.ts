@@ -100,8 +100,9 @@ export const fr = {
     },
   },
   brands: {
-    title: 'Les Meilleures Marques, Au Meilleur Prix',
-    subtitle: 'Parce que votre sécurité est notre priorité, nous ne proposons que le meilleur.',
+    eyebrow: 'Nos marques',
+    title: 'Les grandes marques d’équipementiers, au meilleur prix',
+    subtitle: 'Les mêmes fabricants que les garages, sélectionnés pour leur fiabilité.',
     note: 'Toutes nos pièces sont garanties et proviennent de fabricants agréés.',
   },
   about: {
