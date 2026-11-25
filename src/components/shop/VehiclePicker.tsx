@@ -87,14 +87,14 @@ export function VehiclePicker({
   if (!showForm && vehicle) {
     return (
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-        <PlateChip plate={vehicle.plate} />
+        {vehicle.plate && <PlateChip plate={vehicle.plate} />}
         <div className="min-w-0 flex-1 basis-40 leading-tight">
           <p className={`flex ${compact || lg ? 'items-start' : 'items-center'} gap-1.5 font-display text-lg font-bold leading-tight ${dark ? 'text-white' : 'text-gray-900'}`}>
             <span className={compact || lg ? '' : 'truncate'}>{vehicleLabel(vehicle)}</span>
             <Icon name="check-circle" weight="fill" className={`mt-0.5 h-5 w-5 shrink-0 ${dark ? 'text-emerald-400' : 'text-emerald-600'}`} />
           </p>
           <p className={`text-sm ${dark ? 'text-white/70' : 'text-gray-500'}`}>
-            {vehicle.fuel} · {vehicle.year}
+            {vehicle.fuel} · {vehicle.yearsLabel ?? vehicle.year}
             {vehicle.source === 'demo' && ' · véhicule de démonstration'}
           </p>
         </div>

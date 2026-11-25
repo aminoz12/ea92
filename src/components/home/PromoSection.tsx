@@ -1,46 +1,30 @@
 import Link from 'next/link'
 import { LOYALTY, PROMOS } from '@/lib/shop/config'
-import type { PublicProduct } from '@/lib/shop/types'
-import { ProductCard } from '../shop/ProductCard'
 import { Icon } from '../ui/Icon'
 import { CallProductsBanners } from './CallProductsBanners'
-import { PromoCountdown } from './PromoCountdown'
 
-const isDeal = (p: PublicProduct) => !!p.compareAtTTC && p.compareAtTTC > p.offers[0].priceTTC
-const isSeasonal = (p: PublicProduct) => p.tags.some((t) => t === 'promo' || t === 'hiver' || t === 'appel')
-
-// Home, right under the hero: "Promos de la semaine" with countdown, the
-// season's banners, the parts at a crossed-out price, and the club offer.
-export function PromoSection({ products }: { products: PublicProduct[] }) {
-  const deals = [...products.filter(isDeal), ...products.filter((p) => !isDeal(p) && isSeasonal(p))].slice(0, 4)
+// Home, right under the hero: the season's offers and the club offer.
+//
+// No product cards and no countdown here: the shop sells the real catalogue,
+// whose prices come live from the suppliers, so there is no list of
+// crossed-out prices to show. PromoCountdown is still in the folder: bring it
+// back next to the title when a promotion has a real end date (PROMOS.endsAt).
+export function PromoSection() {
   const welcome = LOYALTY.particulier.welcomePoints
 
   return (
     <section id="promos" className="scroll-mt-32 py-10 lg:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading: title + countdown + subtitle, link on the right */}
-        <div className="mb-6 flex flex-col gap-3 border-b-2 border-gray-900 pb-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mb-6 border-b-2 border-gray-900 pb-3">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <h2 className="font-display text-3xl font-bold text-gray-900 lg:text-4xl">
-              Promos <span className="text-secondary-600">de la semaine</span>
+              Promos <span className="text-secondary-600">du moment</span>
             </h2>
-            <PromoCountdown />
-            <p className="w-full text-sm text-gray-500 xl:w-auto">Prix barrés et offres de saison, en stock au magasin de Nanterre.</p>
+            <p className="w-full text-sm text-gray-500 xl:w-auto">Les offres de saison du magasin de Nanterre.</p>
           </div>
-          <Link href="/boutique?promo=1" className="inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-gray-900 hover:text-secondary-600">
-            Toutes les promos <Icon name="arrow-right" className="w-4 h-4" strokeWidth={2.2} />
-          </Link>
         </div>
 
         <CallProductsBanners />
-
-        {deals.length > 0 && (
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-            {deals.map((p) => (
-              <ProductCard key={p.slug} product={p} />
-            ))}
-          </div>
-        )}
 
         {/* Dashed "coupon" strip — the club welcome offer */}
         {PROMOS.welcomeStrip && (

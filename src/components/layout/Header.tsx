@@ -95,11 +95,11 @@ export function Header() {
     return path === '/' ? pathname === '/' : pathname === path
   }
 
-  const searchAction = isPro ? '/pro/espace' : '/boutique'
-  const searchName = isPro ? 'ref' : 'q'
-  const searchPlaceholder = isPro
-    ? 'Référence pièce ou OE (ex. GDB1550)'
-    : 'Rechercher une pièce, une marque, une référence…'
+  // The catalogue is searched by reference (part number, OE number or EAN).
+  // To browse by kind of part, the customer picks a vehicle instead.
+  const searchAction = '/pieces/recherche'
+  const searchName = 'q'
+  const searchPlaceholder = isPro ? 'Référence pièce ou OE (ex. GDB1677)' : 'Référence de pièce ou d’origine (ex. GDB1677)'
 
   // The search bar is the main tool of the header: full-height field with an
   // ink border and a labelled button. Callers set the display (flex / hidden).
@@ -219,7 +219,7 @@ export function Header() {
                   </span>
                   <span className="flex min-w-0 max-w-[170px] flex-col justify-center pl-3 pr-1 leading-tight">
                     <span className={myVehicle ? 'font-display text-xs font-semibold tracking-[0.1em] text-gray-600' : 'text-[11px] text-gray-500'}>
-                      {myVehicle ? myVehicle.plate : 'Mon véhicule'}
+                      {myVehicle?.plate || 'Mon véhicule'}
                     </span>
                     <span className="flex items-center gap-1 font-display text-[15px] font-bold text-gray-900">
                       <span className="truncate">{myVehicle ? `${myVehicle.make} ${myVehicle.model}` : 'Ajouter ma plaque'}</span>
@@ -256,7 +256,7 @@ export function Header() {
                     </div>
                     {myVehicle ? (
                       <Link
-                        href="/boutique"
+                        href={myVehicle.ktype ? `/pieces/${myVehicle.ktype}` : '/boutique'}
                         onClick={() => setVehicleOpen(false)}
                         className="mt-4 flex h-11 items-center justify-center gap-2 rounded-lg bg-gray-900 font-display text-sm font-bold text-white hover:bg-secondary-600"
                       >

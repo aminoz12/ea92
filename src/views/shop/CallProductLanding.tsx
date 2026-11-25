@@ -1,14 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { ProductCard } from '@/components/shop/ProductCard'
 import { VehiclePicker } from '@/components/shop/VehiclePicker'
 import { FulfilmentStrip } from '@/components/shop/FulfilmentStrip'
 import { HelpBanner } from '@/components/home/HelpBanner'
 import { Icon } from '@/components/ui/Icon'
 import { useShop } from '@/providers/ShopProvider'
-import type { PublicProduct } from '@/lib/shop/types'
 
 export interface LandingContent {
   pill: string
@@ -17,15 +16,21 @@ export interface LandingContent {
   bullets: string[]
   heroImage: string
   heroImageIsBanner?: boolean
+  /** The part type of the real catalogue this page leads to (TecDoc genart, see lib/shop/partTypes). */
+  catalog: { genart: number; label: string }
   guide: { title: string; text: string }[]
   helpMessage: string
 }
 
 // "Produit d'appel" page: cheap, frequent, often urgent — the goal is to
 // bring the customer to the store (or the cart) in one visit.
-export function CallProductLanding({ content, products }: { content: LandingContent; products: PublicProduct[] }) {
+//
+// The page sells nothing by itself: once the vehicle is known it sends the
+// customer to the real list of references that fit it, with live prices.
+export function CallProductLanding({ content }: { content: LandingContent }) {
   const { vehicle, hydrated } = useShop()
-  const help = hydrated && vehicle ? `${content.helpMessage} Véhicule : ${vehicle.make} ${vehicle.model} (${vehicle.plate}).` : content.helpMessage
+  const known = hydrated && vehicle ? vehicle : null
+  const help = known ? `${content.helpMessage} Véhicule : ${known.make} ${known.model}${known.plate ? ` (${known.plate})` : ''}.` : content.helpMessage
 
   return (
     <div className="min-h-screen bg-white">
@@ -60,16 +65,32 @@ export function CallProductLanding({ content, products }: { content: LandingCont
           <div className="-mt-6 rounded-2xl bg-white p-4 shadow-lg ring-1 ring-gray-200 sm:p-5">
             <p className="mb-3 font-display font-bold text-gray-900">Trouvez la bonne référence avec votre plaque</p>
             <VehiclePicker />
-          </div>
 
-          <section className="mt-10">
-            <h2 className="mb-5 font-display text-2xl font-extrabold text-gray-900">En stock au magasin</h2>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
-              {products.map((p) => (
-                <ProductCard key={p.slug} product={p} />
-              ))}
+            {/* The way into the real catalogue, once the vehicle is known */}
+            <div className="mt-4 border-t border-gray-200 pt-4">
+              {known?.ktype ? (
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-gray-600">
+                    Les références qui se montent sur votre <span className="font-semibold text-gray-900">{known.make} {known.model}</span>, avec le prix et la disponibilité en temps réel.
+                  </p>
+                  <Link
+                    href={`/pieces/${known.ktype}/${content.catalog.genart}`}
+                    className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-secondary-600 px-5 font-display text-sm font-bold text-white hover:bg-secondary-700"
+                  >
+                    Voir les {content.catalog.label} <Icon name="arrow-right" strokeWidth={2.4} className="h-4 w-4" />
+                  </Link>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  Entrez votre plaque pour voir les {content.catalog.label} de votre véhicule. Pas la plaque sous la main ?{' '}
+                  <Link href="/pieces" className="font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
+                    Choisir marque et modèle
+                  </Link>
+                  .
+                </p>
+              )}
             </div>
-          </section>
+          </div>
 
           <section className="mt-12 grid gap-4 md:grid-cols-3">
             {content.guide.map((g) => (

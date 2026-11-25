@@ -130,7 +130,7 @@ export function ServiceLogView() {
 
   const urgent = rows.filter((r) => r.status !== 'ok').length
 
-  const plate = hydrated && vehicle ? vehicle.plate : 'AB-123-CD'
+  const plate = hydrated && vehicle ? vehicle.plate || 'Plaque non renseignée' : 'AB-123-CD'
   const label = hydrated && vehicle ? vehicleLabel(vehicle) : 'Peugeot 208 II 1.2 PureTech 100'
 
   return (

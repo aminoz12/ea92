@@ -20,15 +20,15 @@ import { SaleBanners } from '../components/home/SaleBanners'
 import { GarageFittingPromo } from '../components/home/GarageFittingPromo'
 import { HelpBanner } from '../components/home/HelpBanner'
 import { StoreSection } from '../components/home/StoreSection'
-import type { PublicProduct } from '@/lib/shop/types'
 
 // Home — PARTICULIERS only (the PRO offer lives on /pro, reached from the
 // header switch and the "Vous êtes un pro ?" link).
 // Order: quote card + promo carousel (WhatsApp) → 4 ways to receive a part →
-// BUY (promos → departments → e-shop → category offers + help) →
+// BUY (season's offers → departments → e-shop → two part types + help) →
 // SERVICES (services → fitting) → TRUST (reviews → store → brands) →
 // HELP (FAQ → guides). Backgrounds alternate white / gray-50 in this order.
-export function HomePage({ products }: { products: PublicProduct[] }) {
+// No product is listed here: the shop is the real catalogue, per vehicle.
+export function HomePage() {
   return (
     <div className="min-h-screen">
       <Header />
@@ -46,8 +46,8 @@ export function HomePage({ products }: { products: PublicProduct[] }) {
           </div>
         </section>
 
-        {/* Promos of the moment: seasonal banners + crossed-out prices */}
-        <PromoSection products={products} />
+        {/* Offers of the moment: seasonal banners + the club offer */}
+        <PromoSection />
 
         {/* Departments */}
         <section className="bg-gray-50 py-10 lg:py-14">
@@ -60,12 +60,12 @@ export function HomePage({ products }: { products: PublicProduct[] }) {
           </div>
         </section>
 
-        {/* --- BUY: products, then category offers + help choosing --- */}
-        <ShopShowcase products={products} />
+        {/* --- BUY: plate search + most requested part types, then two part types + help choosing --- */}
+        <ShopShowcase />
 
         <section className="bg-gray-50 py-10 lg:py-14">
           <div className="max-w-7xl mx-auto space-y-4 px-4 sm:px-6 lg:px-8">
-            <SaleBanners products={products} />
+            <SaleBanners />
             <HelpBanner />
           </div>
         </section>

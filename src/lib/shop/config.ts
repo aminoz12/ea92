@@ -10,6 +10,45 @@
 export const VAT_RATE = 0.2
 
 /* ------------------------------------------------------------------ */
+/*  Public price of a catalogue part (real articles, supplier prices)  */
+/* ------------------------------------------------------------------ */
+// What the supplier platform (EasyOrder) really answers, excl. VAT: what the
+// part costs us, and for some suppliers the manufacturer's public price. It
+// gives NO selling price for our account, so the shop's price has to come
+// from a rule of ours. [À VALIDER with the owner before real sales]
+export const CATALOG_PRICING = {
+  // The retail rule, as a mark-up on what the part costs us: 0.6 means
+  // purchase price × 1.6. The result never goes above the manufacturer's
+  // public price when one is known. null = not decided yet.
+  markupOnPurchase: null as number | null,
+  // No mark-up decided (or no purchase price in the answer): show the
+  // manufacturer's public price when a supplier gives it.
+  // false = such parts stay "sur demande".
+  fallbackToPublicPrice: true,
+  // A part is shown with a price only if that price is at least this much
+  // above what it costs us (0 = simply never below cost).
+  minMarkupOnPurchase: 0,
+} as const
+
+/* ------------------------------------------------------------------ */
+/*  Plate lookup — protecting the paid credits                         */
+/* ------------------------------------------------------------------ */
+// Each lookup costs one credit and the account is allowed 300 a day. These
+// limits apply to /api/vehicle/identify; past them the visitor is told to pick
+// the vehicle by make and model, which costs nothing.
+// See lib/rateLimit.server.ts for what an in-memory limit can and cannot stop.
+export const PLATE_LOOKUP = {
+  // One visitor = one network address. Kept loose on purpose: a mobile
+  // operator can put many customers behind the same address.
+  perVisitor: [
+    { limit: 6, windowMinutes: 10 },
+    { limit: 40, windowMinutes: 24 * 60 },
+  ],
+  // Everybody together: stays under the account's 300 a day.
+  everyone: [{ limit: 250, windowMinutes: 24 * 60 }],
+} as const
+
+/* ------------------------------------------------------------------ */
 /*  Brand ranking ("Meilleur choix")                                  */
 /* ------------------------------------------------------------------ */
 // Among equivalent offers (same part, several brands), the shop pushes the
@@ -31,6 +70,10 @@ export const FULFILMENT = {
   supplierLeadHours: 4, // "fournisseur_4h" parts reach the store in ~4 h
   // Click & collect lockers in front of the store (not installed yet)
   lockersAvailable: false,
+  // Fitting at a partner garage. The garages in lib/shop/garages.ts are
+  // placeholders: keep false until real partners are signed. The mode is then
+  // shown as "bientôt disponible" in the cart and cannot be paid for.
+  partnerGaragesAvailable: false,
 
   // Courier (Uber Direct) — fallback estimate used until the API is wired.
   courier: {

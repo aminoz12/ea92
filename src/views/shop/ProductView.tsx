@@ -35,7 +35,7 @@ export function ProductView({ product, related }: { product: PublicProduct; rela
 
   const waText =
     `Bonjour, je souhaite commander : ${product.name} — ${offer.brand} ${offer.reference} (x${qty})` +
-    (hydrated && vehicle ? ` pour ma ${vehicle.make} ${vehicle.model} (${vehicle.plate})` : '') +
+    (hydrated && vehicle ? ` pour ma ${vehicle.make} ${vehicle.model}${vehicle.plate ? ` (${vehicle.plate})` : ''}` : '') +
     '.'
 
   const pickupDelay =

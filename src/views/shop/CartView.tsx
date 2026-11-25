@@ -1,15 +1,14 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Icon, StarIcon, WhatsAppIcon, type IconName } from '@/components/ui/Icon'
 import { useShop } from '@/providers/ShopProvider'
 import { FULFILMENT, getFittingJob } from '@/lib/shop/config'
-import { FULFILMENT_MODES, pointsFor, type QuoteEstimate } from '@/lib/shop/fulfilment'
+import { FULFILMENT_MODES, type QuoteEstimate } from '@/lib/shop/fulfilment'
 import { DEMO_GARAGES } from '@/lib/shop/garages'
 import { formatEUR } from '@/lib/shop/format'
 import { DEPOSIT_RETURN } from '@/lib/shop/deposit'
@@ -18,13 +17,6 @@ import { SITE } from '@/lib/site'
 import type { CartLine, FulfilmentMode } from '@/lib/shop/types'
 
 const MODE_ICONS: Record<FulfilmentMode, IconName> = { retrait: 'store', coursier: 'bolt', colis: 'box', montage: 'wrench' }
-
-// Stored with the reminder as proof of consent: keep it identical to the label.
-const RECOVERY_CONSENT =
-  'J’accepte de recevoir sur WhatsApp un rappel de mon panier si je ne finalise pas ma commande (2 messages maximum).'
-
-const formatSendAt = (iso: string) =>
-  new Date(iso).toLocaleString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' })
 
 type Quote = QuoteEstimate & { source: string }
 
@@ -48,8 +40,7 @@ function StepTitle({ n, children, aside }: { n: number; children: React.ReactNod
 }
 
 export function CartView() {
-  const router = useRouter()
-  const { cart, count, subtotalTTC, depositsTTC, setQty, removeLine, clearCart, restoreCart, hydrated } = useShop()
+  const { cart, count, subtotalTTC, depositsTTC, setQty, removeLine, restoreCart, vehicle, hydrated } = useShop()
 
   const [mode, setMode] = useState<FulfilmentMode>('retrait')
   const [pickup, setPickup] = useState<'comptoir' | 'casier'>('comptoir')
@@ -61,80 +52,19 @@ export function CartView() {
   const [garageId, setGarageId] = useState(DEMO_GARAGES[0].id)
   const [contact, setContact] = useState({ name: '', phone: '' })
   const [optIn, setOptIn] = useState(false)
-  const [recoveryConsent, setRecoveryConsent] = useState(false)
-  const [recoveryPlan, setRecoveryPlan] = useState<string[] | null>(null)
-  const [restoreNote, setRestoreNote] = useState<{ ok: boolean; text: string } | null>(null)
-  const registeredPhone = useRef<string | null>(null)
+  const [notice, setNotice] = useState<{ ok: boolean; text: string } | null>(null)
+  const [paying, setPaying] = useState(false)
+  const [payError, setPayError] = useState('')
 
   const phoneE164 = normalizePhone(contact.phone)
-  const cartKey = cart.map((l) => `${l.slug}|${l.reference}|${l.qty}`).join(',')
 
-  const cancelReminder = () => {
-    const phone = registeredPhone.current
-    if (!phone) return
-    registeredPhone.current = null
-    setRecoveryPlan(null)
-    void fetch('/api/cart/reminder', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone }),
-      keepalive: true,
-    }).catch(() => {})
-  }
-
-  // Abandoned-cart reminder: (re)scheduled on every cart change while the
-  // customer has ticked the box; cancelled when unticked, emptied or ordered.
+  // Back from the payment page without paying: the cart is untouched.
   useEffect(() => {
     if (!hydrated) return
-    if (!recoveryConsent || !phoneE164 || cart.length === 0) {
-      cancelReminder()
-      return
-    }
-    const timer = setTimeout(async () => {
-      if (registeredPhone.current && registeredPhone.current !== phoneE164) cancelReminder()
-      try {
-        const res = await fetch('/api/cart/reminder', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: phoneE164,
-            firstName: contact.name,
-            items: cart.map((l) => ({ slug: l.slug, reference: l.reference, qty: l.qty })),
-            consent: true,
-            consentText: RECOVERY_CONSENT,
-          }),
-        })
-        const json = (await res.json()) as { sendAt?: string[] }
-        if (res.ok && json.sendAt) {
-          registeredPhone.current = phoneE164
-          setRecoveryPlan(json.sendAt)
-        }
-      } catch {
-        /* reminder not scheduled — never blocks the order */
-      }
-    }, 1500)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cartKey stands for cart
-  }, [hydrated, recoveryConsent, phoneE164, cartKey, contact.name])
-
-  // Link from the WhatsApp reminder: /panier?reprise=<token>
-  useEffect(() => {
-    if (!hydrated) return
-    const token = new URLSearchParams(window.location.search).get('reprise')
-    if (!token) return
-    fetch(`/api/cart/restore?panier=${encodeURIComponent(token)}`)
-      .then((r) => r.json() as Promise<{ lines?: CartLine[] }>)
-      .then((json) => {
-        if (json.lines?.length) {
-          restoreCart(json.lines)
-          setRestoreNote({ ok: true, text: 'Votre panier a été restauré, aux prix du jour.' })
-        } else {
-          setRestoreNote({ ok: false, text: 'Ce lien de panier n’est plus valide : les pièces ne sont plus disponibles.' })
-        }
-      })
-      .catch(() => setRestoreNote({ ok: false, text: 'Impossible de restaurer le panier pour le moment.' }))
-      .finally(() => window.history.replaceState(null, '', '/panier'))
-  }, [hydrated, restoreCart])
+    if (new URLSearchParams(window.location.search).get('paiement') !== 'annule') return
+    setNotice({ ok: false, text: 'Paiement annulé : rien n’a été débité et votre panier est conservé.' })
+    window.history.replaceState(null, '', '/panier')
+  }, [hydrated])
 
   const weightKg = useMemo(() => cart.reduce((w, l) => w + (l.weightKg ?? 1) * l.qty, 0), [cart])
   const parcelBlocked = cart.some((l) => l.parcelForbidden)
@@ -184,16 +114,54 @@ export function CartView() {
   if (contact.phone.replace(/\D/g, '').length < 9) missing.push('votre numéro de mobile')
   const canCheckout = cart.length > 0 && missing.length === 0
 
-  // ⚠️ MOCKUP: no payment provider is connected yet. This only empties the
-  // cart and opens the tracking page with a made-up order number — nothing is
-  // charged and no order reaches the shop. Replace with the real checkout
-  // (payment provider + server-side order, re-priced from the catalogue)
-  // before this page goes live.
-  const payOnline = () => {
-    const id = `EA92-${Math.floor(10000 + Math.random() * 89999)}`
-    cancelReminder()
-    clearCart()
-    router.push(`/suivi-commande?commande=${id}&mode=${mode}`)
+  // Online payment. The server re-prices the cart at the suppliers and creates
+  // the Stripe payment page; the browser only goes there. The cart is emptied
+  // on the confirmation page, once Stripe says the order is paid.
+  const payOnline = async () => {
+    if (paying) return
+    setPaying(true)
+    setPayError('')
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: cart.map((l) => ({ slug: l.slug, reference: l.reference, dlNr: l.dlNr, qty: l.qty, name: l.name, brand: l.brand, image: l.image, href: l.href, priceTTC: l.priceTTC })),
+          mode,
+          pickup,
+          parcelOption,
+          address,
+          contact: { name: contact.name, phone: phoneE164 ?? contact.phone },
+          whatsappOptIn: optIn,
+          vehicle: vehicle ? `${vehicle.make} ${vehicle.model} ${vehicle.version}${vehicle.plate ? ` (${vehicle.plate})` : ''}` : '',
+          totalTTC,
+        }),
+      })
+      const json = (await res.json().catch(() => ({}))) as {
+        url?: string
+        error?: string
+        message?: string
+        lines?: CartLine[]
+        removed?: { slug: string; reference: string }[]
+        quote?: Quote
+      }
+      if (res.ok && json.url) {
+        window.location.assign(json.url) // the Stripe payment page
+        return // keep the button busy while the browser leaves
+      }
+      if (res.status === 409) {
+        // Prices, stock or delivery moved: show the cart as it is now, the customer pays the total they see.
+        for (const r of json.removed ?? []) removeLine(r.slug, r.reference)
+        if (json.lines?.length) restoreCart(json.lines)
+        if (json.quote) setQuote(json.quote)
+        setPayError(json.message ?? 'Votre panier a été mis à jour. Vérifiez le total avant de payer.')
+      } else {
+        setPayError(json.error ?? 'Le paiement est momentanément indisponible. Réessayez dans quelques minutes.')
+      }
+    } catch {
+      setPayError('Connexion impossible. Vérifiez votre réseau et réessayez.')
+    }
+    setPaying(false)
   }
 
   if (!hydrated) {
@@ -219,10 +187,10 @@ export function CartView() {
         </nav>
         <h1 className="mt-2 font-display text-3xl font-bold text-gray-900 lg:text-4xl">Mon panier</h1>
 
-        {restoreNote && (
+        {notice && (
           <p role="status" className="mt-4 flex items-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-800 ring-1 ring-gray-200">
-            <Icon name={restoreNote.ok ? 'check-circle' : 'info'} weight="fill" className={`h-5 w-5 shrink-0 ${restoreNote.ok ? 'text-emerald-600' : 'text-gray-500'}`} />
-            {restoreNote.text}
+            <Icon name={notice.ok ? 'check-circle' : 'info'} weight="fill" className={`h-5 w-5 shrink-0 ${notice.ok ? 'text-emerald-600' : 'text-gray-500'}`} />
+            {notice.text}
           </p>
         )}
 
@@ -260,13 +228,18 @@ export function CartView() {
                 <ul className="divide-y divide-gray-200">
                   {cart.map((l) => (
                     <li key={l.slug + l.reference} className="flex gap-4 p-4 sm:gap-5 sm:p-6">
-                      <Link href={`/boutique/${l.slug}`} className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200 sm:h-24 sm:w-24">
-                        <Image src={l.image} alt="" fill sizes="96px" unoptimized={l.image.endsWith('.svg')} className="object-contain p-1.5" />
+                      <Link href={l.href ?? `/boutique/${l.slug}`} className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white text-gray-300 ring-1 ring-gray-200 sm:h-24 sm:w-24">
+                        {l.image ? (
+                          // Catalogue pictures come from the supplier's CDN at a fixed size: served as they are.
+                          <Image src={l.image} alt="" fill sizes="96px" unoptimized={l.image.endsWith('.svg') || l.image.startsWith('http')} className="object-contain p-1.5" />
+                        ) : (
+                          <Icon name="box" className="h-10 w-10" />
+                        )}
                       </Link>
                       <div className="flex min-w-0 flex-1 flex-col">
                         <div className="flex items-start justify-between gap-3">
                           <div className="min-w-0">
-                            <Link href={`/boutique/${l.slug}`} className="font-semibold leading-snug text-gray-900 hover:text-secondary-600">
+                            <Link href={l.href ?? `/boutique/${l.slug}`} className="font-semibold leading-snug text-gray-900 hover:text-secondary-600">
                               {l.name}
                             </Link>
                             <p className="mt-0.5 text-xs text-gray-500">
@@ -313,7 +286,8 @@ export function CartView() {
                   <legend className="sr-only">Mode de réception</legend>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {FULFILMENT_MODES.map((m) => {
-                      const disabled = m.id === 'colis' && parcelBlocked
+                      const soon = m.id === 'montage' && !FULFILMENT.partnerGaragesAvailable
+                      const disabled = (m.id === 'colis' && parcelBlocked) || soon
                       const selected = mode === m.id
                       return (
                         <label key={m.id} className={radioCard(selected, disabled)}>
@@ -321,7 +295,7 @@ export function CartView() {
                           <Icon name={MODE_ICONS[m.id]} className="h-8 w-8 shrink-0 text-secondary-600" />
                           <span className="min-w-0 flex-1 pr-6">
                             <span className="block font-display text-lg font-bold leading-tight text-gray-900">{m.name}</span>
-                            <span className="mt-0.5 block text-sm text-gray-500">{m.delay}</span>
+                            <span className="mt-0.5 block text-sm text-gray-500">{soon ? 'Bientôt disponible' : m.delay}</span>
                             <span className="mt-1.5 block text-sm font-semibold text-gray-900">{m.priceLabel}</span>
                           </span>
                           {selected && <Icon name="check-circle" weight="fill" className="absolute right-3 top-3 h-6 w-6 text-gray-900" />}
@@ -493,21 +467,8 @@ export function CartView() {
                   <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700">
                     <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-gray-900" />
                     <span>
-                      Je souhaite recevoir sur WhatsApp la confirmation, le suivi de livraison et les rappels d’entretien de mes pièces d’usure.
-                      <span className="block text-xs text-gray-500">Désinscription à tout moment en répondant STOP.</span>
-                    </span>
-                  </label>
-                  <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-700">
-                    <input type="checkbox" checked={recoveryConsent} onChange={(e) => setRecoveryConsent(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-gray-900" />
-                    <span>
-                      {RECOVERY_CONSENT}
-                      <span className="block text-xs text-gray-500">
-                        {recoveryConsent && !phoneE164
-                          ? 'Indiquez un numéro de mobile valide pour activer le rappel.'
-                          : recoveryPlan
-                            ? `Rappel prévu ${formatSendAt(recoveryPlan[0])} si vous ne commandez pas d’ici là. Vos données sont effacées sous 7 jours.`
-                            : 'Facultatif. Vos données sont effacées dès la commande ou sous 7 jours.'}
-                      </span>
+                      Je préfère être contacté(e) sur WhatsApp au sujet de ma commande.
+                      <span className="block text-xs text-gray-500">Sinon, nous vous appelons au numéro indiqué.</span>
                     </span>
                   </label>
                 </div>
@@ -563,32 +524,38 @@ export function CartView() {
                   <button
                     type="button"
                     onClick={payOnline}
-                    disabled={!canCheckout}
+                    disabled={!canCheckout || paying}
+                    aria-busy={paying}
                     className="mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-lg bg-secondary-600 font-display text-lg font-bold text-white hover:bg-secondary-700 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500 disabled:shadow-none"
                   >
                     <Icon name="lock" weight="fill" className="h-5 w-5" />
-                    Payer en ligne
+                    {paying ? 'Redirection…' : 'Payer en ligne'}
                   </button>
+                  {payError && (
+                    <p className="mt-2.5 flex items-start gap-2 text-sm font-medium text-secondary-700" role="alert">
+                      <Icon name="warning" weight="fill" className="mt-0.5 h-4 w-4 shrink-0" />
+                      {payError}
+                    </p>
+                  )}
                   {!canCheckout && (
                     <p className="mt-2.5 text-sm text-gray-600" role="status">
                       Pour payer, il manque : <span className="font-semibold text-gray-900">{missing.join(', ')}</span>.
                     </p>
                   )}
 
-                  <p className="mt-4 flex items-center gap-2 text-sm text-gray-700">
-                    <Icon name="gift" className="h-5 w-5 shrink-0 text-secondary-600" />
-                    <span>
-                      <span className="font-semibold text-gray-900">+{pointsFor(subtotalTTC)} points</span> fidélité avec cette commande
-                    </span>
+                  <p className="mt-2.5 text-xs text-gray-500">
+                    Paiement par carte sur la page sécurisée de Stripe : aucune donnée bancaire ne passe par notre site. En payant, vous acceptez nos{' '}
+                    <Link href="/cgv" className="font-semibold text-gray-700 underline underline-offset-2 hover:text-gray-900">conditions générales de vente</Link>.
                   </p>
+
                 </div>
 
                 <ul className="space-y-2.5 border-t border-gray-200 bg-gray-50 p-5 text-sm text-gray-700 sm:px-6">
                   <li className="flex items-center gap-2.5">
-                    <Icon name="shield" className="h-5 w-5 shrink-0 text-gray-900" /> Pièces garanties 1 an minimum
+                    <Icon name="shield" className="h-5 w-5 shrink-0 text-gray-900" /> Garantie légale de conformité : 2 ans
                   </li>
                   <li className="flex items-center gap-2.5">
-                    <Icon name="refresh" className="h-5 w-5 shrink-0 text-gray-900" /> Retour sous 14 jours pour un achat en ligne
+                    <Icon name="refresh" className="h-5 w-5 shrink-0 text-gray-900" /> Rétractation sous 14 jours pour un achat en ligne
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Icon name="phone" className="h-5 w-5 shrink-0 text-gray-900" />

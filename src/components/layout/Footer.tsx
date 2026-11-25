@@ -35,7 +35,6 @@ const COLUMNS: { title: string; links: { name: string; href: string }[] }[] = [
     title: 'Professionnels',
     links: [
       { name: 'Ouvrir un compte pro', href: '/pro#ouvrir-un-compte' },
-      { name: 'Espace Pro', href: '/pro/espace' },
       { name: 'Conditions & encours', href: '/pro#conditions' },
       { name: 'Fidélité Pro', href: '/fidelite?espace=pro' },
       { name: 'À propos', href: '/about' },
@@ -146,7 +145,11 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {SITE.name} — Pièces détachées auto à Nanterre (92)</p>
-          <p>Particuliers & professionnels · Toutes marques · Pièces garanties 1 an</p>
+          <nav aria-label="Informations légales" className="flex flex-wrap gap-x-5 gap-y-1">
+            <Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link>
+            <Link href="/cgv" className="hover:text-white">Conditions générales de vente</Link>
+            <Link href="/confidentialite" className="hover:text-white">Confidentialité</Link>
+          </nav>
         </div>
       </div>
     </footer>

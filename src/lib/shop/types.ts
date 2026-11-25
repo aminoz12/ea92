@@ -124,17 +124,28 @@ export interface Vehicle {
   year: number
   firstRegistration?: string // ISO date of first registration (DPMC), drives the CT reminder
   vin?: string
-  source: 'yq' | 'demo'
+  /** TecDoc vehicle type (KTYP): what the real catalogue needs to list compatible parts. */
+  ktype?: number
+  /** Production period, shown instead of `year` when the vehicle was picked by make and model. */
+  yearsLabel?: string
+  /** 'siv' = identified by its plate; 'tecdoc' = picked by make and model in the catalogue; 'demo' = placeholder when the plate API is not configured. */
+  source: 'siv' | 'demo' | 'tecdoc'
 }
 
 export type FulfilmentMode = 'retrait' | 'coursier' | 'colis' | 'montage'
 
 export interface CartLine {
+  /** Demo product slug, or `tecdoc-<dlNr>-<artNr>` for an article of the real catalogue. */
   slug: string
   brand: string
   reference: string
+  /** TecDoc manufacturer code: with the reference it identifies a catalogue article at the supplier's. */
+  dlNr?: number
   name: string
+  /** May be empty for a catalogue article that has no picture. */
   image: string
+  /** Page the line links back to; demo products link to /boutique/<slug>. */
+  href?: string
   priceTTC: number
   qty: number
   fittingJob?: FittingJobId

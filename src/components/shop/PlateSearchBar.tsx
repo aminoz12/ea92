@@ -36,7 +36,7 @@ export function PlateSearchBar({ className = '' }: { className?: string }) {
             </div>
             {found && (
               <Link
-                href="/boutique"
+                href={vehicle?.ktype ? `/pieces/${vehicle.ktype}` : '/boutique'}
                 className="flex h-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-secondary-600 px-5 font-display text-sm font-bold text-white hover:bg-secondary-700"
               >
                 Voir les pièces compatibles <Icon name="arrow-right" strokeWidth={2.4} className="h-4 w-4" />
@@ -46,8 +46,8 @@ export function PlateSearchBar({ className = '' }: { className?: string }) {
           {!found && (
             <p className="mt-3 text-sm text-white/60">
               Pas la plaque sous la main ?{' '}
-              <Link href="/boutique" className="font-semibold text-white underline underline-offset-4 hover:text-signal-400">
-                Parcourir les rayons
+              <Link href="/pieces" className="font-semibold text-white underline underline-offset-4 hover:text-signal-400">
+                Choisir marque et modèle
               </Link>{' '}
               ou{' '}
               <a href={cardWa} target="_blank" rel="noopener noreferrer" className="font-semibold text-white underline underline-offset-4 hover:text-signal-400">

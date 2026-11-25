@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { CallProductLanding, type LandingContent } from '@/views/shop/CallProductLanding'
-import { getPublicCatalog } from '@/lib/shop/catalog.server'
+import { GENART } from '@/lib/shop/partTypes'
 
 export const metadata: Metadata = {
   title: 'Balais d’essuie-glace — promo hiver à Nanterre',
   description:
     'Balais d’essuie-glace Bosch, Valeo et plus en stock à Nanterre. Promo hiver : une paire achetée, un dégivrant Holts offert.',
   alternates: { canonical: '/essuie-glaces' },
-  // Switch to index once real prices are live (demo catalogue for now).
+  // Switch to index when the shop opens to the public.
   robots: { index: false, follow: true },
 }
 
@@ -22,6 +22,7 @@ const CONTENT: LandingContent = {
   ],
   heroImage: '/images/promos/promo-3.jpeg',
   heroImageIsBanner: true,
+  catalog: { genart: GENART.wiperBlades, label: 'balais d’essuie-glace' },
   guide: [
     {
       title: 'Quand les changer ?',
@@ -40,6 +41,5 @@ const CONTENT: LandingContent = {
 }
 
 export default function Page() {
-  const products = getPublicCatalog().filter((p) => p.category === 'visibilite')
-  return <CallProductLanding content={CONTENT} products={products} />
+  return <CallProductLanding content={CONTENT} />
 }

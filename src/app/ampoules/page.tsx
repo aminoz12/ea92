@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { CallProductLanding, type LandingContent } from '@/views/shop/CallProductLanding'
-import { getPublicCatalog } from '@/lib/shop/catalog.server'
+import { GENART } from '@/lib/shop/partTypes'
 
 export const metadata: Metadata = {
   title: 'Ampoules de phare H1, H4, H7 — en stock à Nanterre',
   description:
     'Ampoules de phare H1, H4, H7 Philips, Osram, Bosch en stock au magasin Espace Auto 92 à Nanterre. Trouvez la bonne référence avec votre plaque.',
   alternates: { canonical: '/ampoules' },
-  // Switch to index once real prices are live (demo catalogue for now).
+  // Switch to index when the shop opens to the public.
   robots: { index: false, follow: true },
 }
 
@@ -21,6 +21,8 @@ const CONTENT: LandingContent = {
     'On vérifie la référence avec votre plaque avant de vous la donner',
   ],
   heroImage: '/images/products/ampoule.svg',
+  // Headlight bulbs; the other bulbs of the vehicle are in its catalogue pages.
+  catalog: { genart: GENART.headlightBulb, label: 'ampoules de phare' },
   guide: [
     {
       title: 'H1, H4, H7 : quel culot ?',
@@ -39,6 +41,5 @@ const CONTENT: LandingContent = {
 }
 
 export default function Page() {
-  const products = getPublicCatalog().filter((p) => p.category === 'eclairage')
-  return <CallProductLanding content={CONTENT} products={products} />
+  return <CallProductLanding content={CONTENT} />
 }
