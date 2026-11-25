@@ -126,7 +126,8 @@ export function CartView() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items: cart.map((l) => ({ slug: l.slug, reference: l.reference, dlNr: l.dlNr, qty: l.qty, name: l.name, brand: l.brand, image: l.image, href: l.href, priceTTC: l.priceTTC })),
+          // The slug carries the article's opaque token: the server reads the reference from it.
+          items: cart.map((l) => ({ slug: l.slug, qty: l.qty, name: l.name, brand: l.brand, image: l.image, href: l.href, priceTTC: l.priceTTC })),
           mode,
           pickup,
           parcelOption,
@@ -199,7 +200,7 @@ export function CartView() {
             <Icon name="cart" className="mx-auto h-14 w-14 text-gray-300" />
             <p className="mt-4 font-display text-2xl font-bold text-gray-900">Votre panier est vide</p>
             <p className="mx-auto mt-1 max-w-md text-gray-600">
-              Trouvez votre pièce avec votre plaque, ou demandez-nous la référence : on vous répond sur WhatsApp.
+              Trouvez votre pièce avec votre plaque, ou écrivez-nous : on vous répond sur WhatsApp.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
               <Link href="/boutique" className="inline-flex h-12 items-center justify-center gap-2 rounded-lg bg-secondary-600 px-6 font-display font-bold text-white hover:bg-secondary-700">
@@ -242,9 +243,8 @@ export function CartView() {
                             <Link href={l.href ?? `/boutique/${l.slug}`} className="font-semibold leading-snug text-gray-900 hover:text-secondary-600">
                               {l.name}
                             </Link>
-                            <p className="mt-0.5 text-xs text-gray-500">
-                              <span className="font-display font-bold uppercase tracking-wide text-gray-700">{l.brand}</span> · Réf. {l.reference}
-                            </p>
+                            {/* No reference here, on purpose: see lib/shop/articleToken.server.ts */}
+                            <p className="mt-0.5 text-xs font-display font-bold uppercase tracking-wide text-gray-700">{l.brand}</p>
                           </div>
                           <div className="shrink-0 text-right">
                             <p className="font-display text-xl font-bold leading-none text-gray-900">{formatEUR(l.priceTTC * l.qty)}</p>

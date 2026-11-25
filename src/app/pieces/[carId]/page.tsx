@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { HelpBanner } from '@/components/home/HelpBanner'
 import { CatalogVehicleBar } from '@/components/shop/CatalogVehicleBar'
 import { Icon } from '@/components/ui/Icon'
 import { CatalogError, getCar, getCarFamilies, type CatalogCar, type CatalogFamily, type CatalogGenart } from '@/lib/integrations/autoprecision/catalog.server'
+import { findPartTypes } from '@/lib/shop/partSearch'
 
 export const metadata: Metadata = {
   title: 'Pièces compatibles',
@@ -23,6 +24,8 @@ const MOST_WANTED = [
   /^Filtre, air de l.habitacle$/i,
   /^Balai d.essuie-glace$/i,
   /^Batterie de démarrage$/i,
+  // The timing kit: a belt ("courroie crantée") or a chain, depending on the engine.
+  /^Kit de courroie crantée$/i,
   /^Kit de distribution/i,
   /^Kit d.embrayage$/i,
   /^Amortisseur$/i,
@@ -32,10 +35,21 @@ const MOST_WANTED = [
 const SHOWN_PER_FAMILY = 8
 
 const parseId = (value: string) => (/^\d{1,9}$/.test(value) ? Number(value) : null)
+const single = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value) ?? ''
 
-export default async function CarPartsPage({ params }: { params: Promise<{ carId: string }> }) {
+// The parts of one vehicle. With `?q=` (the header's search box, the home
+// page's "Je commande ma pièce") the customer's words are looked up among the
+// part types of this vehicle: the search always goes through the vehicle.
+export default async function CarPartsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ carId: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
   const carId = parseId((await params).carId)
   if (carId === null) notFound()
+  const query = single((await searchParams).q).replace(/\s+/g, ' ').trim().slice(0, 60)
 
   let car: CatalogCar | null = null
   let families: CatalogFamily[] = []
@@ -50,6 +64,10 @@ export default async function CarPartsPage({ params }: { params: Promise<{ carId
   for (const family of families) for (const group of family.groups) for (const g of group.genarts) all.set(g.id, g)
   const wanted = MOST_WANTED.map((re) => [...all.values()].find((g) => re.test(g.name))).filter((g): g is CatalogGenart => Boolean(g))
   const vehicleName = car ? `${car.make} ${car.model} ${car.version}` : ''
+
+  const search = query && car ? findPartTypes(query, [...all.values()]) : null
+  // The words name one part type: straight to the parts, prices and availability.
+  if (search?.exact) redirect(`/pieces/${carId}/${search.exact.id}`)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,8 +93,37 @@ export default async function CarPartsPage({ params }: { params: Promise<{ carId
 
             <h1 className="mt-8 font-display text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">Pièces compatibles</h1>
             <p className="mt-1 text-gray-600">
-              {all.size} types de pièces existent pour votre {car.make} {car.model}. Choisissez-en un pour voir les références qui se montent.
+              {all.size} types de pièces existent pour votre {car.make} {car.model}. Choisissez-en un pour voir les pièces qui se montent, avec leur prix.
             </p>
+
+            {search && (
+              <section className="mt-6" aria-labelledby="search-results">
+                <h2 id="search-results" className="font-display text-xl font-bold text-gray-900">
+                  {search.matches.length > 0 ? (search.approximate ? `Les plus proches de « ${query} »` : `« ${query} » pour votre ${car.make} ${car.model}`) : `Rien trouvé pour « ${query} »`}
+                </h2>
+                {search.matches.length > 0 ? (
+                  <div className="mt-3 overflow-hidden rounded-xl bg-white ring-1 ring-gray-200">
+                    <ul className="-mb-px -mr-px grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                      {search.matches.map((g) => (
+                        <li key={g.id} className="border-b border-r border-gray-200">
+                          <Link
+                            href={`/pieces/${carId}/${g.id}`}
+                            className="group flex h-full items-center justify-between gap-2 px-4 py-3.5 text-[15px] font-semibold leading-snug text-gray-900 hover:bg-gray-50 hover:text-secondary-600"
+                          >
+                            {g.name}
+                            <Icon name="chevron-right" strokeWidth={2.4} className="h-4 w-4 shrink-0 text-gray-400 group-hover:text-secondary-600" />
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="mt-2 max-w-3xl text-gray-600">
+                    Aucun type de pièce ne porte ce nom pour ce véhicule. Essayez un autre mot (par exemple « plaquettes », « filtre à huile », « amortisseur »), parcourez les familles ci-dessous, ou écrivez-nous : nous trouvons la pièce pour vous.
+                  </p>
+                )}
+              </section>
+            )}
 
             {wanted.length > 0 && (
               <section className="mt-6" aria-labelledby="most-wanted">
@@ -142,7 +189,7 @@ export default async function CarPartsPage({ params }: { params: Promise<{ carId
             </section>
 
             <div className="mt-10">
-              <HelpBanner message={`Bonjour, je cherche une pièce pour ma ${vehicleName}.`} />
+              <HelpBanner message={query ? `Bonjour, je cherche « ${query} » pour ma ${vehicleName}.` : `Bonjour, je cherche une pièce pour ma ${vehicleName}.`} />
             </div>
           </>
         )}

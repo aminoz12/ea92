@@ -15,7 +15,8 @@ import { randomBytes } from 'node:crypto'
 // ---------------------------------------------------------------------------
 
 import { FULFILMENT } from './config'
-import { areOffersLive, getArticleOffers } from './offers.server'
+import { readArticleToken } from './articleToken.server'
+import { areOffersLive, priceArticles } from './offers.server'
 import type { QuoteEstimate } from './fulfilment'
 import type { CartLine, FulfilmentMode } from './types'
 import { quoteCourier } from '../integrations/uberDirect.server'
@@ -44,7 +45,9 @@ const MAX_LINES = 30
 const MODES: FulfilmentMode[] = ['retrait', 'coursier', 'colis', 'montage']
 
 interface RequestedLine {
+  /** `art-<token>`: all the browser knows about the article. */
   slug: string
+  /** Read from the token, here on the server. Never sent back to the browser, never shown on the payment page. */
   artNr: string
   dlNr: number
   qty: number
@@ -101,12 +104,13 @@ export function parseCheckoutRequest(body: unknown): CheckoutRequest {
   if (b.items.length > MAX_LINES) throw new CheckoutError(`Un panier ne peut pas dépasser ${MAX_LINES} lignes.`)
   const lines: RequestedLine[] = b.items.map((raw) => {
     const it = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
-    const slug = text(it.slug, 120)
-    const artNr = text(it.reference, 60)
-    const dlNr = typeof it.dlNr === 'number' && Number.isInteger(it.dlNr) && it.dlNr > 0 && it.dlNr < 1_000_000 ? it.dlNr : 0
+    const slug = text(it.slug, 220)
     const qty = typeof it.qty === 'number' && Number.isInteger(it.qty) ? it.qty : 0
-    // Only articles of the real catalogue can be paid for: they are the ones a supplier prices.
-    if (!slug.startsWith('tecdoc-') || !artNr || !dlNr) {
+    // Only articles of the real catalogue can be paid for: they are the ones a
+    // supplier prices. The browser names them by their opaque token; a token we
+    // did not issue (or an old cart line) does not open.
+    const article = slug.startsWith('art-') ? readArticleToken(slug.slice(4)) : null
+    if (!article) {
       throw new CheckoutError('Un article de votre panier n’est plus vendu en ligne. Retirez-le pour continuer.')
     }
     if (qty < 1 || qty > 99) throw new CheckoutError('Quantité invalide dans le panier.')
@@ -114,8 +118,8 @@ export function parseCheckoutRequest(body: unknown): CheckoutRequest {
     const href = text(it.href, 200)
     return {
       slug,
-      artNr,
-      dlNr,
+      artNr: article.artNr,
+      dlNr: article.dlNr,
       qty,
       name: text(it.name, 120) || 'Pièce',
       brand: text(it.brand, 60),
@@ -193,14 +197,15 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
   if (!areOffersLive()) throw new CheckoutError('Les prix fournisseurs sont momentanément indisponibles. Réessayez dans quelques minutes.', 503)
 
   // 1. Live price and availability of every line.
-  const offers = await getArticleOffers(request.lines.map((l) => ({ artNr: l.artNr, dlNr: l.dlNr })))
+  const offers = await priceArticles(request.lines.map((l) => ({ artNr: l.artNr, dlNr: l.dlNr })))
   const kept: (RequestedLine & { priceTTC: number; depositTTC?: number })[] = []
+  // What goes back to the browser names a line by its slug; `reference` is the (empty) one the cart holds.
   const removed: { slug: string; reference: string }[] = []
   let moved = false
   request.lines.forEach((line, i) => {
     const offer = offers[i]
     if (!offer) {
-      removed.push({ slug: line.slug, reference: line.artNr })
+      removed.push({ slug: line.slug, reference: '' })
       return
     }
     if (line.shownPriceTTC === undefined || Math.abs(line.shownPriceTTC - offer.priceTTC) > 0.005) moved = true
@@ -210,8 +215,7 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
   const cartLines: CartLine[] = kept.map((l) => ({
     slug: l.slug,
     brand: l.brand,
-    reference: l.artNr,
-    dlNr: l.dlNr,
+    reference: '',
     name: l.name,
     image: l.image ?? '',
     href: l.href,
@@ -247,9 +251,11 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
 
   // 4. The payment page.
   const orderRef = newOrderRef()
+  // The payment page and Stripe's receipt are read by the customer: part type
+  // and brand only, no reference. The shop finds the references in the
+  // session's metadata below, which the customer never sees.
   const lines: CheckoutLine[] = kept.map((l) => ({
-    name: `${l.name} — ${l.brand} ${l.artNr}`.slice(0, 250),
-    description: `Réf. ${l.artNr} · code marque TecDoc ${l.dlNr}`,
+    name: (l.brand ? `${l.name} — ${l.brand}` : l.name).slice(0, 250),
     image: l.image,
     unitAmount: cents(l.priceTTC),
     quantity: l.qty,
@@ -282,7 +288,8 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
   }
   if (request.vehicle) metadata.vehicle = request.vehicle
   // What to order from the supplier: quantity × TecDoc brand code / reference @ unit price.
-  chunked('items', kept.map((l) => `${l.qty} x ${l.dlNr}/${l.artNr} @ ${l.priceTTC.toFixed(2)}`), metadata)
+  // Metadata is only readable with the shop's Stripe account (dashboard, webhook, notification e-mail).
+  chunked('items', kept.map((l) => `${l.qty} x ${l.dlNr}/${l.artNr} (${l.brand}) @ ${l.priceTTC.toFixed(2)}`), metadata)
 
   const session = await createCheckoutSession({
     orderRef,

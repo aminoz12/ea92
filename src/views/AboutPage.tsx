@@ -15,7 +15,7 @@ const COMMITMENTS: { icon: IconName; title: string; text: string }[] = [
   {
     icon: 'wrench',
     title: 'La bonne pièce, du premier coup',
-    text: 'Avec votre plaque ou votre carte grise, on trouve la référence exacte. Si une pièce ne convient pas, on vous le dit.',
+    text: 'Avec votre plaque ou votre carte grise, on trouve la pièce exacte. Si une pièce ne convient pas, on vous le dit.',
   },
   {
     icon: 'bolt',

@@ -3,6 +3,10 @@
 // Price, availability and "add to cart" for the real catalogue articles shown
 // on one page. A single request covers the page; it is made in the browser so
 // the list itself never waits for the suppliers' answer.
+//
+// Articles are only known here by their opaque token: this file runs in the
+// browser and must never receive a part's reference (see
+// lib/shop/articleToken.server.ts).
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import type { ArticleOffer } from '@/lib/shop/offers.server'
@@ -19,8 +23,6 @@ interface OffersState {
 
 const OffersContext = createContext<OffersState>({ status: 'off', offers: new Map() })
 
-const offerKey = (dlNr: number, artNr: string) => `${dlNr}|${artNr}`
-
 export function CatalogOffersProvider({
   live,
   articles,
@@ -28,12 +30,13 @@ export function CatalogOffersProvider({
 }: {
   /** Decided on the server: is a supplier platform connected? */
   live: boolean
-  articles: { artNr: string; dlNr: number }[]
+  /** Tokens of the articles on the page. */
+  articles: string[]
   children: React.ReactNode
 }) {
   const [state, setState] = useState<OffersState>({ status: live ? 'loading' : 'off', offers: new Map() })
   // The list is a new array on every server render: compare by content.
-  const signature = articles.map((a) => offerKey(a.dlNr, a.artNr)).join(',')
+  const signature = articles.join(',')
 
   useEffect(() => {
     if (!live || !signature) {
@@ -49,9 +52,7 @@ export function CatalogOffersProvider({
       signal: ctrl.signal,
     })
       .then((res) => res.json())
-      .then((json: { offers?: ArticleOffer[] }) =>
-        setState({ status: 'ready', offers: new Map((json.offers ?? []).map((o) => [offerKey(o.dlNr, o.artNr), o])) }),
-      )
+      .then((json: { offers?: ArticleOffer[] }) => setState({ status: 'ready', offers: new Map((json.offers ?? []).map((o) => [o.id, o])) }))
       .catch((err: unknown) => {
         // No answer: every card falls back to "sur demande".
         if (!(err instanceof DOMException && err.name === 'AbortError')) setState({ status: 'ready', offers: new Map() })
@@ -65,8 +66,8 @@ export function CatalogOffersProvider({
 }
 
 export interface BuyableArticle {
-  artNr: string
-  dlNr: number
+  /** The article's opaque token. */
+  id: string
   brand: string
   title: string
   image?: string
@@ -78,7 +79,7 @@ export interface BuyableArticle {
 export function CatalogArticleBuy({ article, askHref }: { article: BuyableArticle; askHref: string }) {
   const { status, offers } = useContext(OffersContext)
   const { addToCart } = useShop()
-  const offer = offers.get(offerKey(article.dlNr, article.artNr))
+  const offer = offers.get(article.id)
 
   if (status === 'loading') {
     return (
@@ -107,11 +108,10 @@ export function CatalogArticleBuy({ article, askHref }: { article: BuyableArticl
 
   const add = () =>
     addToCart({
-      // Catalogue lines are told apart from the demo products by this prefix.
-      slug: `tecdoc-${article.dlNr}-${article.artNr}`,
+      // A catalogue line is identified by the article token alone; it has no visible reference.
+      slug: `art-${article.id}`,
+      reference: '',
       brand: article.brand,
-      reference: article.artNr,
-      dlNr: article.dlNr,
       name: article.title,
       image: article.image ?? '',
       href: article.listHref,
@@ -132,7 +132,7 @@ export function CatalogArticleBuy({ article, askHref }: { article: BuyableArticl
         <button
           type="button"
           onClick={add}
-          aria-label={`Ajouter ${article.title} ${article.brand} ${article.artNr} au panier`}
+          aria-label={`Ajouter ${article.title} ${article.brand} au panier`}
           title="Ajouter au panier"
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gray-900 text-white transition-colors hover:bg-secondary-600 active:translate-y-px"
         >

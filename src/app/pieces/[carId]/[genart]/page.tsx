@@ -99,7 +99,7 @@ export default async function CarArticlesPage({
 
             <h1 className="mt-8 font-display text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">{title}</h1>
             <p className="mt-1 text-gray-600">
-              {filtered.length} référence{filtered.length > 1 ? 's' : ''} compatible{filtered.length > 1 ? 's' : ''} avec votre {car.make} {car.model} {car.version}.
+              {filtered.length} pièce{filtered.length > 1 ? 's' : ''} compatible{filtered.length > 1 ? 's' : ''} avec votre {car.make} {car.model} {car.version}.
             </p>
 
             {sides.length > 1 && (
@@ -137,16 +137,16 @@ export default async function CarArticlesPage({
             )}
 
             {shown.length > 0 ? (
-              <CatalogOffersProvider live={areOffersLive()} articles={shown.map((a) => ({ artNr: a.artNr, dlNr: a.dlNr }))}>
+              <CatalogOffersProvider live={areOffersLive()} articles={shown.map((a) => a.token)}>
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                   {shown.map((a) => (
-                    <CatalogArticleCard key={a.id} article={a} vehicleName={vehicleName} listHref={href({ page: current })} />
+                    <CatalogArticleCard key={a.token} article={a} vehicleName={vehicleName} listHref={href({ page: current })} />
                   ))}
                 </div>
               </CatalogOffersProvider>
             ) : (
               <p className="mt-6 rounded-xl bg-white p-6 text-gray-600 ring-1 ring-gray-200">
-                Aucune référence dans le catalogue pour ce type de pièce.{' '}
+                Aucune pièce dans le catalogue pour ce type de pièce.{' '}
                 <Link href={back} className="font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
                   Revenir aux familles
                 </Link>

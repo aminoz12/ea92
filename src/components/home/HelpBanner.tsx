@@ -8,7 +8,7 @@ export function HelpBanner({ message = 'Bonjour, j’ai besoin d’aide pour tro
       <div className="flex-1">
         <h2 className="font-display text-xl font-bold lg:text-2xl">Besoin d’aide pour trouver la bonne pièce ?</h2>
         <p className="mt-1 text-white/85">
-          Envoyez une photo de votre carte grise ou de la pièce : un conseiller vous répond avec la bonne référence.
+          Envoyez une photo de votre carte grise ou de la pièce : un conseiller vous répond avec la bonne pièce et son prix.
         </p>
       </div>
       <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">

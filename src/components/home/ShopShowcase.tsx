@@ -57,7 +57,7 @@ export function ShopShowcase() {
           <div className="min-w-0">
             <h3 className="font-display text-xl font-bold text-gray-900">Les plus demandées</h3>
             <p className="mt-0.5 text-sm text-gray-500">
-              {known && vehicle ? `Pour votre ${vehicle.make} ${vehicle.model}.` : 'Choisissez une pièce, puis votre véhicule : seules les références compatibles s’affichent.'}
+              {known && vehicle ? `Pour votre ${vehicle.make} ${vehicle.model}.` : 'Choisissez une pièce, puis votre véhicule : seules les pièces compatibles s’affichent.'}
             </p>
             {/* Each cell draws its own right/bottom hairline; the list overhangs the frame by 1px so the outer ones are clipped. */}
             <div className="mt-3 overflow-hidden rounded-xl bg-white ring-1 ring-gray-200">

@@ -61,7 +61,7 @@ export function ContactPage() {
               Passez au comptoir, <span className="text-secondary-500">ou écrivez-nous.</span>
             </>
           }
-          intro={`${SITE.street} à ${SITE.city}. Pour une référence ou une disponibilité, WhatsApp est le plus rapide : envoyez une photo de la carte grise ou de la pièce.`}
+          intro={`${SITE.street} à ${SITE.city}. Pour une pièce ou une disponibilité, WhatsApp est le plus rapide : envoyez une photo de la carte grise ou de la pièce.`}
           image="/magasin.png"
           imagePosition="center 40%"
         >

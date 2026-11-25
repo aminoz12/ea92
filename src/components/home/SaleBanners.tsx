@@ -16,7 +16,7 @@ const BANNERS: { genart: number; kicker: string; title: string; text: string; im
     genart: GENART.oilFilter,
     kicker: 'Révision maison',
     title: 'Huile & filtres',
-    text: 'La bonne référence pour votre moteur, avec votre plaque.',
+    text: 'Ce qu’il faut pour votre moteur, avec votre plaque.',
     image: '/blog2.jpeg',
     position: 'center 55%',
   },
@@ -48,7 +48,7 @@ export function SaleBanners() {
               <p className="font-display text-3xl font-extrabold uppercase leading-tight sm:text-4xl">{b.title}</p>
               <p className="mt-2 text-sm text-white/75">{b.text}</p>
               <span className="mt-5 inline-flex h-11 items-center gap-2 rounded-lg bg-secondary-600 px-5 font-display text-sm font-bold uppercase tracking-wide group-hover:bg-secondary-700">
-                Voir les références <Icon name="arrow-right" className="w-4 h-4" />
+                Voir les pièces <Icon name="arrow-right" className="w-4 h-4" />
               </span>
             </div>
           </CatalogLink>

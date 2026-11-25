@@ -1,7 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { SITE } from '@/lib/site'
+import type { Vehicle } from '@/lib/shop/types'
+import { useShop } from '@/providers/ShopProvider'
 
 // Lower-case + strip accents so "etrier" matches "Étrier", "batt" matches
 // "Batterie", etc.
@@ -50,7 +53,7 @@ function highlightMatch(text: string, query: string) {
 // Common car parts (French) offered as autocomplete hints in the
 // "Pièce recherchée" field. The input stays free-text: a customer can pick a
 // suggestion or type anything that is not in the list.
-const PART_SUGGESTIONS = [
+export const PART_SUGGESTIONS = [
   // Freinage
   'Plaquettes de freins avant',
   'Plaquettes de freins arrière',
@@ -136,12 +139,21 @@ const PART_SUGGESTIONS = [
   'Jante',
 ]
 
+// Plate + part → the real parts of that vehicle, with live prices and
+// availability. The plate is looked up for real (/api/vehicle/identify), the
+// vehicle is remembered for the rest of the visit, and the visitor lands on
+// the catalogue of that vehicle, which looks the part name up
+// (/pieces/<type>?q=…). When the plate cannot be identified the form says so
+// and offers WhatsApp and the phone: it never claims a part is available.
 function VehicleFinder() {
+  const router = useRouter()
+  const { setVehicle } = useShop()
   const [plate, setPlate] = useState('')
   const [part, setPart] = useState('')
   const [open, setOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
-  const [status, setStatus] = useState<'idle' | 'searching' | 'available'>('idle')
+  const [status, setStatus] = useState<'idle' | 'searching' | 'error'>('idle')
+  const [error, setError] = useState('')
   const partBoxRef = useRef<HTMLDivElement>(null)
 
   // Pre-filled WhatsApp message with the customer's plate / part.
@@ -198,14 +210,34 @@ function VehicleFinder() {
     return () => document.removeEventListener('mousedown', onDown)
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fail = (message: string) => {
+    setStatus('error')
+    setError(message)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setOpen(false)
     // Refuse the lookup unless the plate is a valid French (SIV) plate.
-    if (!isValidFrenchPlate(plate)) return
-    // Visual-only: simulate an availability lookup, then show the result.
+    if (!isValidFrenchPlate(plate) || status === 'searching') return
     setStatus('searching')
-    setTimeout(() => setStatus('available'), 1500)
+    try {
+      const res = await fetch('/api/vehicle/identify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plate }),
+      })
+      const json = (await res.json().catch(() => ({}))) as { vehicle?: Vehicle; error?: string }
+      if (!res.ok || !json.vehicle) return fail(json.error || 'Véhicule introuvable. Vérifiez votre plaque.')
+      setVehicle(json.vehicle)
+      if (!json.vehicle.ktype) {
+        return fail(`Nous avons reconnu votre ${json.vehicle.make} ${json.vehicle.model}, mais il n’est pas encore dans notre catalogue en ligne. Contactez-nous : nous trouvons la pièce pour vous.`)
+      }
+      // The button stays busy while the catalogue page loads.
+      router.push(`/pieces/${json.vehicle.ktype}?q=${encodeURIComponent(query)}`)
+    } catch {
+      fail('Connexion impossible. Vérifiez votre réseau et réessayez.')
+    }
   }
 
   return (
@@ -317,19 +349,14 @@ function VehicleFinder() {
           )}
         </div>
 
-        {status === 'available' ? (
+        {status === 'error' ? (
           <div className="mt-4">
-            {/* Availability result */}
-            <div className="flex items-center gap-3 rounded-xl bg-green-50 px-4 py-3 ring-1 ring-green-200">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-600 text-white">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+            {/* The lookup did not work out: say why, and offer a person instead */}
+            <div role="alert" className="flex items-start gap-3 rounded-xl bg-red-50 px-4 py-3 ring-1 ring-red-200">
+              <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-600 font-display text-sm font-bold leading-none text-white" aria-hidden="true">
+                !
               </span>
-              <div className="leading-tight">
-                <p className="font-display font-bold text-green-800">Pièce disponible !</p>
-                <p className="text-xs text-green-700/80">Commandez-la dès maintenant.</p>
-              </div>
+              <p className="text-sm font-medium leading-snug text-red-800">{error}</p>
             </div>
 
             <div className="mt-3 space-y-2.5">
@@ -342,7 +369,7 @@ function VehicleFinder() {
                 <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.739-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                 </svg>
-                Commander par WhatsApp
+                Demander par WhatsApp
               </a>
               <a
                 href={`tel:${SITE.phone}`}
@@ -354,6 +381,10 @@ function VehicleFinder() {
                 Appeler
               </a>
             </div>
+            {/* Changing the plate or the part brings the main button back; this one retries as is. */}
+            <button type="submit" className="mx-auto mt-3 block text-sm font-semibold text-gray-600 underline underline-offset-4 hover:text-gray-900">
+              Réessayer
+            </button>
           </div>
         ) : (
           <button
@@ -370,7 +401,7 @@ function VehicleFinder() {
                 Recherche en cours…
               </>
             ) : (
-              'Vérifier la disponibilité'
+              'Voir prix et disponibilité'
             )}
           </button>
         )}

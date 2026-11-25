@@ -135,12 +135,15 @@ export interface Vehicle {
 export type FulfilmentMode = 'retrait' | 'coursier' | 'colis' | 'montage'
 
 export interface CartLine {
-  /** Demo product slug, or `tecdoc-<dlNr>-<artNr>` for an article of the real catalogue. */
+  /**
+   * `art-<token>` for an article of the real catalogue: the token is the opaque
+   * id from lib/shop/articleToken.server.ts, which only the server can turn
+   * back into a reference. (A demo product has its own slug.)
+   */
   slug: string
   brand: string
+  /** Always empty for a catalogue article: the customer must never see a part's reference. */
   reference: string
-  /** TecDoc manufacturer code: with the reference it identifies a catalogue article at the supplier's. */
-  dlNr?: number
   name: string
   /** May be empty for a catalogue article that has no picture. */
   image: string

@@ -131,7 +131,7 @@ export default function Page() {
               <Check>
                 Prête en {FULFILMENT.pickupReadyMinutes} min si la pièce est en stock, dès ~{FULFILMENT.supplierLeadHours} h si elle vient de notre fournisseur.
               </Check>
-              <Check>On vérifie la référence avec vous au comptoir avant que vous partiez.</Check>
+              <Check>On vérifie la pièce avec vous au comptoir avant que vous partiez.</Check>
               <Check>Vous êtes prévenu sur WhatsApp dès que c’est prêt.</Check>
             </ul>
             <div className="flex gap-3 border-t border-gray-200 pt-4">

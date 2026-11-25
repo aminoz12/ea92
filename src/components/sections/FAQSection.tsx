@@ -38,7 +38,7 @@ const FAQ_ITEMS: FAQItem[] = [
     id: 7,
     question: 'Comment être sûr que la pièce est compatible avec mon véhicule ?',
     answer:
-      "Saisissez votre plaque d'immatriculation dans la boutique : nous identifions votre véhicule et n'affichons que les pièces compatibles. En cas de doute, envoyez-nous votre carte grise sur WhatsApp et un conseiller vérifie la référence avant l'envoi.",
+      "Saisissez votre plaque d'immatriculation dans la boutique : nous identifions votre véhicule et n'affichons que les pièces compatibles. En cas de doute, envoyez-nous votre carte grise sur WhatsApp et un conseiller vérifie la compatibilité avant l'envoi.",
     links: [{ href: '/boutique', label: 'Rechercher par plaque dans la boutique' }],
   },
   {
@@ -76,7 +76,7 @@ export function FAQSection() {
         <div className="lg:sticky lg:top-32 lg:self-start">
           <h2 className="font-display text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">Une question avant de commander ?</h2>
           <p className="mt-3 text-gray-600">
-            Les réponses à ce qu’on nous demande le plus souvent au comptoir. Pour une référence précise, le plus rapide reste
+            Les réponses à ce qu’on nous demande le plus souvent au comptoir. Pour une pièce précise, le plus rapide reste
             WhatsApp : envoyez une photo de la carte grise ou de la pièce.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">

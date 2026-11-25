@@ -34,12 +34,10 @@ export default function Page() {
 
       <LegalSection title="2. Produits et compatibilité">
         <p>
-          Les pièces sont présentées avec leur marque, leur référence et leurs caractéristiques. Le site n’affiche pour un véhicule que les pièces données comme
-          compatibles par le catalogue du fabricant. Il appartient au client de saisir exactement son immatriculation ou de choisir le bon véhicule (marque, modèle,
-          motorisation). En cas de doute, contactez-nous avant de commander : nous vérifions la référence avec vous.
-        </p>
-        <p>Une recherche par référence n’indique pas la compatibilité avec un véhicule : celle-ci doit alors être vérifiée par le client ou avec notre aide.</p>
-      </LegalSection>
+          Les pièces sont présentées avec leur désignation, leur marque et leurs caractéristiques techniques. Le site n’affiche pour un véhicule que les pièces
+          données comme compatibles par le catalogue du fabricant. Il appartient au client de saisir exactement son immatriculation ou de choisir le bon véhicule
+          (marque, modèle, motorisation). En cas de doute, contactez-nous avant de commander : nous vérifions la compatibilité avec vous.
+        </p>      </LegalSection>
 
       <LegalSection title="3. Prix">
         <p>

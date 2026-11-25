@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { HelpBanner } from '@/components/home/HelpBanner'
+import { PlateSearchBar } from '@/components/shop/PlateSearchBar'
 import { VehicleSelector } from '@/components/shop/VehicleSelector'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Icon } from '@/components/ui/Icon'
@@ -10,7 +11,7 @@ import { isCatalogConfigured, listCarBrands, type CatalogBrand } from '@/lib/int
 
 export const metadata: Metadata = {
   title: 'Pièces par véhicule',
-  description: 'Choisissez la marque, le modèle et la motorisation de votre véhicule : nous affichons uniquement les pièces qui se montent dessus.',
+  description: 'Entrez votre plaque d’immatriculation, ou choisissez la marque, le modèle et la motorisation : nous affichons uniquement les pièces qui se montent sur votre véhicule.',
   alternates: { canonical: '/pieces' },
   // Supplier catalogue under test: keep these pages out of search engines for now.
   robots: { index: false, follow: false },
@@ -20,9 +21,9 @@ export const metadata: Metadata = {
 export const revalidate = 3600
 
 const STEPS = [
-  { icon: 'search', title: 'Vous choisissez votre véhicule', text: 'Marque, modèle, motorisation : trois listes, dix secondes.' },
-  { icon: 'grid', title: 'Vous parcourez les familles', text: 'Freinage, filtration, distribution, embrayage… uniquement ce qui existe pour votre véhicule.' },
-  { icon: 'seal-check', title: 'Chaque pièce affichée se monte', text: 'Compatibilité donnée par le catalogue TecDoc, avec les références d’origine.' },
+  { icon: 'search', title: 'Vous entrez votre plaque', text: 'Nous retrouvons le modèle et la motorisation exacts. Sans la plaque : marque, modèle, motorisation.' },
+  { icon: 'grid', title: 'Vous choisissez la pièce', text: 'Freinage, filtration, distribution, embrayage… uniquement ce qui existe pour votre véhicule.' },
+  { icon: 'seal-check', title: 'Chaque pièce affichée se monte', text: 'Compatibilité donnée par le catalogue TecDoc, prix et disponibilité en direct.' },
 ] as const
 
 export default async function PiecesPage() {
@@ -44,28 +45,28 @@ export default async function PiecesPage() {
             <SectionHeading
               as="h1"
               title="Les pièces qui se montent sur votre véhicule"
-              subtitle="Sélectionnez votre véhicule : le catalogue n’affiche que les pièces compatibles."
-              link={{ href: '/boutique', label: 'Toute la boutique' }}
+              subtitle="Entrez votre plaque : le catalogue n’affiche que les pièces compatibles."
             />
 
+            {/* The plate comes first; make and model are for visitors who do not have it at hand. */}
+            <PlateSearchBar />
+
             {brands.length > 0 ? (
-              <div className="overflow-hidden rounded-xl border-l-4 border-secondary-600 bg-gray-900 p-5 sm:p-7">
-                <h2 className="font-display text-2xl font-bold leading-tight text-white lg:text-3xl">
-                  Votre véhicule <span className="text-secondary-500">en 3 choix</span>
-                </h2>
-                <p className="mb-5 mt-1 text-sm text-white/70 sm:text-base">Pas besoin de la plaque : la carte grise ou le nom du modèle suffit.</p>
-                <VehicleSelector brands={brands} />
+              <div id="marque-modele" className="mt-6 scroll-mt-32 rounded-xl bg-white p-5 ring-1 ring-gray-200 sm:p-7">
+                <h2 className="font-display text-xl font-bold leading-tight text-gray-900 lg:text-2xl">Pas la plaque sous la main ? Votre véhicule en 3 choix</h2>
+                <p className="mb-5 mt-1 text-sm text-gray-600 sm:text-base">La carte grise ou le nom du modèle suffit.</p>
+                <VehicleSelector brands={brands} tone="light" />
               </div>
             ) : (
-              <div className="rounded-xl bg-white p-6 ring-1 ring-gray-200 sm:p-8">
+              <div id="marque-modele" className="mt-6 scroll-mt-32 rounded-xl bg-white p-6 ring-1 ring-gray-200 sm:p-8">
                 <h2 className="flex items-center gap-2 font-display text-2xl font-bold text-gray-900">
                   <Icon name="warning" weight="fill" className="h-6 w-6 shrink-0 text-secondary-600" />
-                  Le catalogue par véhicule est momentanément indisponible
+                  Le choix par marque et modèle est momentanément indisponible
                 </h2>
                 <p className="mt-2 max-w-2xl text-gray-600">
-                  Envoyez-nous votre carte grise sur WhatsApp : un vendeur vous répond avec la bonne référence et le prix. Vous pouvez aussi parcourir{' '}
-                  <Link href="/boutique" className="font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
-                    la boutique
+                  Envoyez-nous votre carte grise sur WhatsApp : un vendeur vous répond avec la bonne pièce et son prix. Vous pouvez aussi{' '}
+                  <Link href="/contact" className="font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
+                    nous contacter
                   </Link>
                   .
                 </p>

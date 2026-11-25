@@ -1,4 +1,5 @@
 import 'server-only'
+import { articleToken } from '../../shop/articleToken.server'
 
 // ---------------------------------------------------------------------------
 //  AutoPrécision — TecDoc catalogue API ("MegaWS"), server side only.
@@ -178,9 +179,16 @@ export interface CatalogAttribute {
   name: string
   value: string
 }
+/**
+ * An article as the pages may use it. On purpose it carries NO reference: not
+ * the part number, not the OE numbers, not the EAN. The owner does not want a
+ * customer to be able to read them (see shop/articleToken.server.ts); the only
+ * handle on the article is its opaque `token`.
+ */
 export interface CatalogArticle {
-  id: string
-  artNr: string
+  /** Opaque id; the server turns it back into the reference when it needs it. */
+  token: string
+  /** TecDoc brand code, used to filter a list by brand. Not a secret: the brand name is shown. */
   dlNr: number
   brand: string
   brandLogo?: string
@@ -193,9 +201,6 @@ export interface CatalogArticle {
   attributes: CatalogAttribute[]
   /** Fitting side, when TecDoc gives one (e.g. "Essieu avant"). */
   side?: string
-  ean?: string
-  oeRefs: string[]
-  replacedBy: string[]
 }
 
 /* ------------------------------------------------------------------ */
@@ -233,23 +238,40 @@ const attributes = (list?: RawAttribute[]) => {
   return [...key, ...rest].map(attribute).filter((a): a is CatalogAttribute => a !== null)
 }
 
+/**
+ * Attributes whose very purpose is to identify the part: its number at another
+ * brand, an original-equipment number, an industry code (WVA, FMSI), an
+ * approval mark. With one of them a customer finds the same part elsewhere.
+ * Fitment criteria such as "pour numéro OPR" or the engine code are kept.
+ */
+const IDENTIFYING_ATTRIBUTE =
+  /WVA|FMSI|num[ée]ro\s+OE|num[ée]ro\s+d.origine|num[ée]ro\s+d.article|marque de conformit|homologation|\br[ée]f[ée]rence\b|\bEAN\b|\bGTIN\b/i
+
+const compact = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '')
+
 function article(a: RawArticle): CatalogArticle {
   const side = (a.iattrs ?? []).find((x) => x.aid === SIDE_ATTRIBUTE)?.val?.[0]?.txt
+  // Everything that names this part somewhere: an attribute repeating one of them is dropped too.
+  const own = compact(a.artNr)
+  const identifiers = new Set(
+    [own, ...(a.eans ?? []).map((e) => compact(e.ean)), ...(a.oems ?? []).flatMap((o) => o.refs.map(compact)), ...(a.replby ?? []).map(compact)].filter((x) => x.length >= 5),
+  )
+  const reveals = (text: string) => {
+    const t = compact(text)
+    return t.length >= 5 && (identifiers.has(t) || (own.length >= 5 && t.includes(own)))
+  }
+  const safe = (list?: RawAttribute[]) => (list ?? []).filter((x) => !IDENTIFYING_ATTRIBUTE.test(x.name) && !(x.val ?? []).some((v) => reveals(v.txt ?? '')))
   return {
-    id: a.id,
-    artNr: a.artNr,
+    token: articleToken(a.dlNr, a.artNr),
     dlNr: a.dlNr,
     brand: a.brand?.name ?? '',
     brandLogo: picture(a.brand?.img),
     image: picture(a.docs?.[0]),
-    designation: a.description || undefined,
+    designation: a.description && !reveals(a.description) ? a.description : undefined,
     genart: a.genArts?.[0] ? { id: a.genArts[0].aid, name: a.genArts[0].name } : undefined,
-    fitment: attributes((a.iattrs ?? []).filter((x) => x.aid !== SIDE_ATTRIBUTE)),
-    attributes: attributes(a.attrs),
+    fitment: attributes(safe((a.iattrs ?? []).filter((x) => x.aid !== SIDE_ATTRIBUTE))),
+    attributes: attributes(safe(a.attrs)),
     side: side || undefined,
-    ean: a.eans?.[0]?.ean,
-    oeRefs: [...new Set((a.oems ?? []).flatMap((o) => o.refs))].slice(0, 30),
-    replacedBy: a.replby ?? [],
   }
 }
 
@@ -328,26 +350,6 @@ export async function getCarFamilies(carId: number): Promise<CatalogFamily[]> {
       })
       .filter((family) => family.genartCount > 0)
   )
-}
-
-/**
- * Articles matching a reference: a part number, an original-equipment (OE)
- * number or an EAN. Not a search by words ("plaquettes" finds nothing), and
- * limited to the brands sold on the account. Nothing says here whether an
- * article fits a given vehicle.
- */
-export async function searchArticles(query: string, limit = 24): Promise<CatalogArticle[]> {
-  const q = query.trim()
-  if (q.length < 3 || q.length > 40) return []
-  let raw: RawArticle[]
-  try {
-    raw = await call<RawArticle[]>(`/search/${encodeURIComponent(q)}`)
-  } catch (err) {
-    // The API answers 404 when nothing matches: that is an empty result, not a failure.
-    if (err instanceof CatalogError && err.status === 404) return []
-    throw err
-  }
-  return (Array.isArray(raw) ? raw : []).slice(0, limit).map(article)
 }
 
 /** Articles of one part type that fit the vehicle. The API returns the whole list at once. */

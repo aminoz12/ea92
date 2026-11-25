@@ -63,7 +63,7 @@ export function CallProductLanding({ content }: { content: LandingContent }) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="-mt-6 rounded-2xl bg-white p-4 shadow-lg ring-1 ring-gray-200 sm:p-5">
-            <p className="mb-3 font-display font-bold text-gray-900">Trouvez la bonne référence avec votre plaque</p>
+            <p className="mb-3 font-display font-bold text-gray-900">Trouvez la bonne pièce avec votre plaque</p>
             <VehiclePicker />
 
             {/* The way into the real catalogue, once the vehicle is known */}
@@ -71,7 +71,7 @@ export function CallProductLanding({ content }: { content: LandingContent }) {
               {known?.ktype ? (
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-gray-600">
-                    Les références qui se montent sur votre <span className="font-semibold text-gray-900">{known.make} {known.model}</span>, avec le prix et la disponibilité en temps réel.
+                    Les pièces qui se montent sur votre <span className="font-semibold text-gray-900">{known.make} {known.model}</span>, avec le prix et la disponibilité en temps réel.
                   </p>
                   <Link
                     href={`/pieces/${known.ktype}/${content.catalog.genart}`}

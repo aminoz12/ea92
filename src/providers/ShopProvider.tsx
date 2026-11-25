@@ -66,7 +66,9 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = readStorage()
     if (stored) {
-      setCart(Array.isArray(stored.cart) ? stored.cart : [])
+      // Lines saved by an earlier version of the site carried the part's
+      // reference ("tecdoc-…"): they can no longer be paid for and must not be shown.
+      setCart(Array.isArray(stored.cart) ? stored.cart.filter((l) => typeof l?.slug === 'string' && !l.slug.startsWith('tecdoc-')) : [])
       setVehicleState(stored.vehicle ?? null)
     }
     setHydrated(true)

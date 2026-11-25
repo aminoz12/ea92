@@ -5,7 +5,7 @@ import { GENART } from '@/lib/shop/partTypes'
 export const metadata: Metadata = {
   title: 'Ampoules de phare H1, H4, H7 — en stock à Nanterre',
   description:
-    'Ampoules de phare H1, H4, H7 Philips, Osram, Bosch en stock au magasin Espace Auto 92 à Nanterre. Trouvez la bonne référence avec votre plaque.',
+    'Ampoules de phare H1, H4, H7 Philips, Osram, Bosch en stock au magasin Espace Auto 92 à Nanterre. Trouvez la bonne ampoule avec votre plaque.',
   alternates: { canonical: '/ampoules' },
   // Switch to index when the shop opens to the public.
   robots: { index: false, follow: true },
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 const CONTENT: LandingContent = {
   pill: 'Petit prix · en stock',
   title: 'Une ampoule grillée ? Repartez éclairé en 10 minutes',
-  intro: 'H1, H4, H7 et toutes les ampoules de feux : la bonne référence pour votre véhicule, au meilleur prix, prête au comptoir.',
+  intro: 'H1, H4, H7 et toutes les ampoules de feux : la bonne ampoule pour votre véhicule, au meilleur prix, prête au comptoir.',
   bullets: [
-    'Philips, Osram, Bosch : toutes les références courantes en stock',
+    'Philips, Osram, Bosch : tous les modèles courants en stock',
     'Retrait en 30 min au magasin, ou coursier en ~1 h',
-    'On vérifie la référence avec votre plaque avant de vous la donner',
+    'On vérifie la compatibilité avec votre plaque avant de vous la donner',
   ],
   heroImage: '/images/products/ampoule.svg',
   // Headlight bulbs; the other bulbs of the vehicle are in its catalogue pages.

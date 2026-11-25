@@ -20,7 +20,7 @@ const SERVICES: { icon: IconName | 'whatsapp'; title: string; text: string; href
   {
     icon: 'whatsapp',
     title: 'Conseil sur WhatsApp',
-    text: 'Une photo de la carte grise ou de l’ancienne pièce suffit : un vendeur vous répond avec la bonne référence.',
+    text: 'Une photo de la carte grise ou de l’ancienne pièce suffit : un vendeur vous répond avec la bonne pièce et son prix.',
     href: `https://wa.me/${SITE.whatsapp}`,
     cta: 'Écrire au magasin',
     external: true,

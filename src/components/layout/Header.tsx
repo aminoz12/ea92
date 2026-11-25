@@ -95,11 +95,12 @@ export function Header() {
     return path === '/' ? pathname === '/' : pathname === path
   }
 
-  // The catalogue is searched by reference (part number, OE number or EAN).
-  // To browse by kind of part, the customer picks a vehicle instead.
-  const searchAction = '/pieces/recherche'
+  // The search takes the name of a part, never a reference (the site does not
+  // give references away). The search page then asks for the plate, unless the
+  // visitor's vehicle is already known: a part is always looked up for a vehicle.
+  const searchAction = myVehicle?.ktype ? `/pieces/${myVehicle.ktype}` : '/pieces/recherche'
   const searchName = 'q'
-  const searchPlaceholder = isPro ? 'Référence pièce ou OE (ex. GDB1677)' : 'Référence de pièce ou d’origine (ex. GDB1677)'
+  const searchPlaceholder = 'Quelle pièce cherchez-vous ? (ex. plaquettes de frein)'
 
   // The search bar is the main tool of the header: full-height field with an
   // ink border and a labelled button. Callers set the display (flex / hidden).

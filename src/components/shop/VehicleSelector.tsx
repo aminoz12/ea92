@@ -23,7 +23,17 @@ const engineLabel = (e: CatalogEngine) => [e.name, e.powerHp ? `${e.powerHp} ch`
 // Make → model → engine, from the real TecDoc catalogue. The chosen vehicle is
 // stored in the shop context with its TecDoc type, then the customer lands on
 // the parts that fit it. For visitors who do not have their plate at hand.
-export function VehicleSelector({ brands }: { brands: CatalogBrand[] }) {
+export function VehicleSelector({
+  brands,
+  tone = 'dark',
+  query = '',
+}: {
+  brands: CatalogBrand[]
+  /** Background the form sits on. */
+  tone?: 'dark' | 'light'
+  /** A part name the customer already typed: carried to the vehicle's parts, which look it up. */
+  query?: string
+}) {
   const router = useRouter()
   const { setVehicle } = useShop()
   const [brandId, setBrandId] = useState('')
@@ -73,14 +83,17 @@ export function VehicleSelector({ brands }: { brands: CatalogBrand[] }) {
       const json = (await res.json()) as { vehicle?: Vehicle; error?: string }
       if (!res.ok || !json.vehicle) throw new Error(json.error || 'Véhicule introuvable')
       setVehicle(json.vehicle)
-      router.push(`/pieces/${carId}`)
+      router.push(`/pieces/${carId}${query ? `?q=${encodeURIComponent(query)}` : ''}`)
     } catch (err) {
       fail(err instanceof Error ? err.message : 'Erreur, réessayez')
     }
   }
 
-  const field = 'h-12 w-full rounded-lg bg-white px-3 text-base font-semibold text-gray-900 ring-1 ring-white/20 outline-none focus:ring-2 focus:ring-signal-400 disabled:bg-white/60 disabled:text-gray-500'
-  const label = 'mb-1.5 block text-sm font-semibold text-white/80'
+  const dark = tone === 'dark'
+  const field = `h-12 w-full rounded-lg bg-white px-3 text-base font-semibold text-gray-900 ring-1 outline-none focus:ring-2 disabled:text-gray-500 ${
+    dark ? 'ring-white/20 focus:ring-signal-400 disabled:bg-white/60' : 'ring-gray-300 focus:ring-gray-900 disabled:bg-gray-100'
+  }`
+  const label = `mb-1.5 block text-sm font-semibold ${dark ? 'text-white/80' : 'text-gray-700'}`
 
   return (
     <form onSubmit={submit} noValidate>
@@ -177,7 +190,7 @@ export function VehicleSelector({ brands }: { brands: CatalogBrand[] }) {
           )}
         </button>
         {status === 'error' && (
-          <p role="alert" className="flex items-start gap-1.5 text-sm font-medium text-signal-400">
+          <p role="alert" className={`flex items-start gap-1.5 text-sm font-medium ${dark ? 'text-signal-400' : 'text-secondary-700'}`}>
             <Icon name="warning" weight="fill" className="mt-0.5 h-4 w-4 shrink-0" />
             {error}
           </p>
