@@ -66,7 +66,8 @@ export default function Page() {
       <LegalSection title="Destinataires">
         <p>
           Vos données sont destinées au magasin. Elles sont transmises, dans la limite de ce qui est nécessaire, à nos prestataires : Stripe (paiement), notre fournisseur
-          de données d’immatriculation et de catalogue (identification du véhicule), le transporteur ou le coursier pour une livraison, et notre hébergeur ({LEGAL.host.name}).
+          de données d’immatriculation et de catalogue (identification du véhicule), notre plateforme d’expédition (recherche des points relais proches de votre adresse),
+          le transporteur ou le coursier pour une livraison, et notre hébergeur ({LEGAL.host.name}).
           Certains de ces prestataires sont établis hors de l’Union européenne ; les transferts sont alors encadrés par les garanties prévues par la réglementation.
         </p>
         <p>Nous ne vendons ni ne louons vos données.</p>

@@ -8,7 +8,7 @@ const PER_VISITOR = [{ limit: 10, windowMs: 10 * 60_000 }]
 // The suppliers get about 6 s to answer, then Stripe is called.
 export const maxDuration = 30
 
-// POST { items, mode, pickup, parcelOption, address, contact, whatsappOptIn, vehicle, totalTTC }
+// POST { items, mode, pickup, parcelOption, relayCode, address, contact, whatsappOptIn, vehicle, totalTTC }
 //   → 200 { url, orderRef }              go to `url` to pay
 //   → 409 { message, lines, removed, quote? }  the cart changed: update it, the customer confirms the new total
 //   → 4xx/5xx { error }

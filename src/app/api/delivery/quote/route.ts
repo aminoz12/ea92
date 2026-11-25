@@ -3,7 +3,7 @@ import { quoteCourier } from '@/lib/integrations/uberDirect.server'
 import { quoteParcel } from '@/lib/integrations/boxtal.server'
 
 // POST { mode: 'coursier' | 'colis', street, postalCode, city, cartTotalTTC, weightKg, option }
-// → { quote }   (source: 'uber-direct' | 'boxtal' | 'estimate')
+// → { quote }   (source: 'uber-direct' | 'estimate' for a courier, 'grid' = the shop's price list for a parcel)
 export async function POST(req: Request) {
   let body: Record<string, unknown>
   try {

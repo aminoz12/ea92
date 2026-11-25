@@ -15,6 +15,9 @@ import { DEPOSIT_RETURN } from '@/lib/shop/deposit'
 import { normalizePhone } from '@/lib/loyalty/cartRecovery'
 import { SITE } from '@/lib/site'
 import type { CartLine, FulfilmentMode } from '@/lib/shop/types'
+import type { RelayPoint } from '@/lib/integrations/boxtal.server'
+
+const formatDistance = (m: number) => (m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1).replace('.', ',')} km`)
 
 const MODE_ICONS: Record<FulfilmentMode, IconName> = { retrait: 'store', coursier: 'bolt', colis: 'box', montage: 'wrench' }
 
@@ -49,6 +52,12 @@ export function CartView() {
   const [quote, setQuote] = useState<Quote | null>(null)
   const [quoting, setQuoting] = useState(false)
   const [quoteError, setQuoteError] = useState('')
+  // Relay delivery: the points near the address, asked with the delivery price.
+  // 'off' = the shop has no relay list to offer (no carrier account connected): no choice is asked.
+  const [relayStatus, setRelayStatus] = useState<'idle' | 'loading' | 'ready' | 'off' | 'error'>('idle')
+  const [relays, setRelays] = useState<RelayPoint[]>([])
+  const [relayCode, setRelayCode] = useState('')
+  const [relayError, setRelayError] = useState('')
   const [garageId, setGarageId] = useState(DEMO_GARAGES[0].id)
   const [contact, setContact] = useState({ name: '', phone: '' })
   const [optIn, setOptIn] = useState(false)
@@ -76,6 +85,36 @@ export function CartView() {
   const deliveryFee = needsQuote ? (quote?.available ? quote.feeTTC : null) : 0
   const totalTTC = Math.round((subtotalTTC + (deliveryFee ?? 0) + depositsTTC) * 100) / 100
 
+  const wantsRelay = mode === 'colis' && parcelOption === 'relais'
+
+  const resetRelay = () => {
+    setRelayStatus('idle')
+    setRelays([])
+    setRelayCode('')
+    setRelayError('')
+  }
+
+  const fetchRelays = async () => {
+    setRelayStatus('loading')
+    setRelayCode('')
+    setRelayError('')
+    try {
+      const res = await fetch('/api/delivery/relay-points', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(address),
+      })
+      const json = (await res.json().catch(() => ({}))) as { configured?: boolean; points?: RelayPoint[]; error?: string }
+      if (!res.ok) throw new Error(json.error || 'Les points relais sont momentanément indisponibles.')
+      setRelays(json.points ?? [])
+      setRelayStatus(json.configured === false ? 'off' : 'ready')
+    } catch (err) {
+      setRelays([])
+      setRelayStatus('error')
+      setRelayError(err instanceof Error ? err.message : 'Les points relais sont momentanément indisponibles.')
+    }
+  }
+
   const fetchQuote = async () => {
     setQuoteError('')
     if (!/^\d{5}$/.test(address.postalCode)) {
@@ -92,6 +131,7 @@ export function CartView() {
       const json = (await res.json()) as { quote?: Quote; error?: string }
       if (!res.ok || !json.quote) throw new Error(json.error || 'Tarif indisponible')
       setQuote(json.quote)
+      if (wantsRelay && json.quote.available) await fetchRelays()
     } catch (err) {
       setQuoteError(err instanceof Error ? err.message : 'Tarif indisponible')
     } finally {
@@ -103,13 +143,21 @@ export function CartView() {
     setMode(m)
     setQuote(null)
     setQuoteError('')
+    resetRelay()
   }
+
+  // A relay must be chosen whenever the shop has a list to choose from (the server checks it again).
+  const relayRequired = wantsRelay && (relayStatus === 'ready' || relayStatus === 'error' || relayStatus === 'loading')
+  const chosenRelay = relays.find((p) => p.code === relayCode)
+  // Monday-first index of today, for the "open today" line of each relay.
+  const today = (new Date().getDay() + 6) % 7
 
   // What still has to be filled in before paying — shown under the button.
   const missing: string[] = []
   if (mode === 'colis' && parcelBlocked) missing.push('un autre mode de réception (batterie)')
   if (needsQuote && address.street.trim().length <= 3) missing.push('votre adresse')
   if (needsQuote && !quote?.available) missing.push('le calcul de la livraison')
+  if (relayRequired && !chosenRelay) missing.push('le choix du point relais')
   if (contact.name.trim().length <= 1) missing.push('votre nom')
   if (contact.phone.replace(/\D/g, '').length < 9) missing.push('votre numéro de mobile')
   const canCheckout = cart.length > 0 && missing.length === 0
@@ -131,6 +179,7 @@ export function CartView() {
           mode,
           pickup,
           parcelOption,
+          relayCode: wantsRelay ? relayCode : '',
           address,
           contact: { name: contact.name, phone: phoneE164 ?? contact.phone },
           whatsappOptIn: optIn,
@@ -349,6 +398,7 @@ export function CartView() {
                               onClick={() => {
                                 setParcelOption(o)
                                 setQuote(null)
+                                resetRelay()
                               }}
                               className={`h-9 rounded-md px-4 text-sm font-semibold transition-colors ${parcelOption === o ? 'bg-gray-900 text-white' : 'text-gray-700 hover:text-gray-900'}`}
                             >
@@ -370,6 +420,7 @@ export function CartView() {
                             onChange={(e) => {
                               setAddress({ ...address, postalCode: e.target.value.replace(/\D/g, '').slice(0, 5) })
                               setQuote(null)
+                              resetRelay()
                             }}
                             inputMode="numeric"
                             autoComplete="postal-code"
@@ -395,6 +446,61 @@ export function CartView() {
                         {quote && !quote.available && <p role="alert" className="text-sm font-medium text-secondary-700">{quote.reason}</p>}
                         {quoteError && <p role="alert" className="text-sm font-medium text-secondary-700">{quoteError}</p>}
                       </div>
+
+                      {/* Relay delivery: which relay? Listed once the address is known. */}
+                      {wantsRelay && relayStatus !== 'idle' && relayStatus !== 'off' && (
+                        <div className="mt-5 border-t border-gray-200 pt-4">
+                          <p id="relay-title" className={fieldLabel}>
+                            Choisissez votre point relais
+                          </p>
+                          {relayStatus === 'loading' && (
+                            <p className="flex items-center gap-2 text-sm text-gray-600" aria-busy="true">
+                              <Icon name="refresh" className="h-4 w-4 animate-spin" /> Recherche des points relais près de chez vous…
+                            </p>
+                          )}
+                          {relayStatus === 'error' && (
+                            <p role="alert" className="flex items-start gap-1.5 text-sm font-medium text-secondary-700">
+                              <Icon name="warning" weight="fill" className="mt-0.5 h-4 w-4 shrink-0" />
+                              {relayError}
+                            </p>
+                          )}
+                          {relayStatus === 'ready' && relays.length === 0 && (
+                            <p className="text-sm text-gray-700">Aucun point relais trouvé près de cette adresse. Vérifiez le code postal, ou choisissez « À domicile ».</p>
+                          )}
+                          {relayStatus === 'ready' && relays.length > 0 && (
+                            <div role="radiogroup" aria-labelledby="relay-title" className="grid gap-2 sm:grid-cols-2">
+                              {relays.map((p) => {
+                                const open = p.hours[today]?.periods ?? []
+                                return (
+                                  <label key={p.code} className={radioCard(relayCode === p.code)}>
+                                    <input type="radio" name="relay" checked={relayCode === p.code} onChange={() => setRelayCode(p.code)} className="mt-1 h-4 w-4 shrink-0 accent-gray-900" />
+                                    <span className="min-w-0 flex-1">
+                                      <span className="flex items-baseline justify-between gap-2">
+                                        <span className="font-semibold leading-snug text-gray-900">{p.name}</span>
+                                        {p.distanceM !== undefined && <span className="shrink-0 text-sm text-gray-500">{formatDistance(p.distanceM)}</span>}
+                                      </span>
+                                      <span className="block text-sm text-gray-600">
+                                        {p.street}, {p.postalCode} {p.city}
+                                      </span>
+                                      <span className="mt-1 block text-[13px] text-gray-500">{open.length ? `Aujourd’hui : ${open.join(', ')}` : 'Fermé aujourd’hui'}</span>
+                                      {relayCode === p.code && (
+                                        <span className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 border-t border-gray-200 pt-2 text-[13px] text-gray-600">
+                                          {p.hours.map((h) => (
+                                            <span key={h.day} className="contents">
+                                              <span className="font-medium text-gray-800">{h.day}</span>
+                                              <span>{h.periods.length ? h.periods.join(', ') : 'Fermé'}</span>
+                                            </span>
+                                          ))}
+                                        </span>
+                                      )}
+                                    </span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      )}
                       <p className="mt-3 text-xs text-gray-500">
                         {mode === 'coursier'
                           ? 'Prix calculé selon la distance entre le magasin et votre adresse.'

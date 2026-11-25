@@ -89,13 +89,22 @@ export const FULFILMENT = {
     ],
   },
 
-  // Parcel shipping (Boxtal) — fallback grid used until the API is wired.
+  // Parcel shipping (Boxtal). Boxtal's API v3 gives no price (its guide says a
+  // quote is "not currently possible"), so the delivery price charged to the
+  // customer is this grid. ⚠️ Figures to be validated by the shop.
   parcel: {
     relayFromTTC: 4.9,
     homeFromTTC: 7.9,
     perExtraKgTTC: 0.8, // above 2 kg
     freeAboveTTC: 89,
     delay: '24 à 72 h ouvrées',
+    // The Boxtal offer used for relay delivery: it decides which relay network
+    // the customer chooses from. MONR-CpourToi = Mondial Relay "Points Relais".
+    // Others (Boxtal guide, "transport offer codes"): CHRP-ChronoRelais,
+    // POFR-ColissimoPickupStation, SOGP-RelaisColis, UPSE-StandardAP…
+    // ⚠️ To be validated by the shop: it must be an offer of its Boxtal account.
+    relayOfferCode: 'MONR-CpourToi',
+    relayPointsShown: 8,
   },
 } as const
 

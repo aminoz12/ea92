@@ -20,7 +20,7 @@ import { areOffersLive, priceArticles } from './offers.server'
 import type { QuoteEstimate } from './fulfilment'
 import type { CartLine, FulfilmentMode } from './types'
 import { quoteCourier } from '../integrations/uberDirect.server'
-import { quoteParcel } from '../integrations/boxtal.server'
+import { findRelayPoint, isBoxtalConfigured, quoteParcel, type RelayPoint } from '../integrations/boxtal.server'
 import {
   createCheckoutSession,
   getCheckoutSession,
@@ -65,6 +65,8 @@ interface CheckoutRequest {
   mode: FulfilmentMode
   pickup: 'comptoir' | 'casier'
   parcelOption: 'relais' | 'domicile'
+  /** The relay point the customer chose (carrier code); checked again at Boxtal before paying. */
+  relayCode: string
   address: { street: string; postalCode: string; city: string }
   contact: { name: string; phone: string }
   whatsappOptIn: boolean
@@ -153,6 +155,7 @@ export function parseCheckoutRequest(body: unknown): CheckoutRequest {
     mode,
     pickup: b.pickup === 'casier' && FULFILMENT.lockersAvailable ? 'casier' : 'comptoir',
     parcelOption: b.parcelOption === 'domicile' ? 'domicile' : 'relais',
+    relayCode: text(b.relayCode, 40),
     address,
     contact: { name, phone },
     whatsappOptIn: b.whatsappOptIn === true,
@@ -195,6 +198,21 @@ function chunked(key: string, parts: string[], out: Record<string, string>) {
 export async function startCheckout(request: CheckoutRequest, origin: string): Promise<CheckoutOutcome> {
   if (!isStripeConfigured()) throw new CheckoutError('Le paiement en ligne n’est pas encore activé. Contactez-nous pour commander.', 503)
   if (!areOffersLive()) throw new CheckoutError('Les prix fournisseurs sont momentanément indisponibles. Réessayez dans quelques minutes.', 503)
+
+  // 0. Relay delivery: the relay the customer chose is read again at Boxtal
+  //    (name and address are never taken from the browser). Only when the shop
+  //    has a Boxtal account connected; without one no relay is asked for.
+  let relay: RelayPoint | null = null
+  if (request.mode === 'colis' && request.parcelOption === 'relais' && isBoxtalConfigured()) {
+    if (!request.relayCode) throw new CheckoutError('Choisissez votre point relais.')
+    try {
+      relay = await findRelayPoint(request.relayCode, request.address)
+    } catch (err) {
+      console.error('[checkout] relay lookup failed', err)
+      throw new CheckoutError('Les points relais sont momentanément indisponibles. Réessayez dans quelques minutes, ou choisissez la livraison à domicile.', 503)
+    }
+    if (!relay) throw new CheckoutError('Ce point relais n’est plus proposé pour votre adresse. Choisissez-en un autre.')
+  }
 
   // 1. Live price and availability of every line.
   const offers = await priceArticles(request.lines.map((l) => ({ artNr: l.artNr, dlNr: l.dlNr })))
@@ -275,7 +293,11 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
       request.mode === 'retrait'
         ? request.pickup === 'casier' ? 'Retrait en casier' : 'Retrait au comptoir'
         : request.mode === 'colis'
-          ? `Colis ${request.parcelOption === 'relais' ? 'en point relais' : 'à domicile'}`
+          ? request.parcelOption === 'domicile'
+            ? 'Colis à domicile'
+            : relay
+              ? `Colis en point relais : ${relay.name}, ${relay.city}`.slice(0, 500)
+              : 'Colis en point relais'
           : MODE_LABEL[request.mode],
     customer_name: request.contact.name,
     customer_phone: request.contact.phone,
@@ -286,6 +308,8 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
     metadata.address = `${request.address.street}, ${request.address.postalCode} ${request.address.city}`.slice(0, 500)
     metadata.delivery_ttc = deliveryTTC.toFixed(2)
   }
+  // What the shop needs to make the label: the carrier's code of the relay, then its name and address.
+  if (relay) metadata.relay = `${relay.code} — ${relay.name}, ${relay.street}, ${relay.postalCode} ${relay.city}`.slice(0, 500)
   if (request.vehicle) metadata.vehicle = request.vehicle
   // What to order from the supplier: quantity × TecDoc brand code / reference @ unit price.
   // Metadata is only readable with the shop's Stripe account (dashboard, webhook, notification e-mail).
