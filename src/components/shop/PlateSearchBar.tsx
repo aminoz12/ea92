@@ -21,7 +21,8 @@ export function PlateSearchBar({ className = '' }: { className?: string }) {
 
   return (
     <div className={`overflow-hidden rounded-xl border-l-4 border-secondary-600 bg-gray-900 ${className}`}>
-      <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
+      {/* grid-cols-1: a single column that may shrink below the plate field's natural width (it overflowed the frame on phones) */}
+      <div className="grid grid-cols-1 gap-5 p-5 sm:p-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-10">
         <div>
           <p className="font-display text-2xl font-bold leading-tight text-white lg:text-3xl">
             La bonne pièce <span className="block text-secondary-500">du premier coup</span>

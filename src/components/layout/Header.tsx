@@ -100,7 +100,8 @@ export function Header() {
   // visitor's vehicle is already known: a part is always looked up for a vehicle.
   const searchAction = myVehicle?.ktype ? `/pieces/${myVehicle.ktype}` : '/pieces/recherche'
   const searchName = 'q'
-  const searchPlaceholder = 'Quelle pièce cherchez-vous ? (ex. plaquettes de frein)'
+  // Short enough to show whole on a phone.
+  const searchPlaceholder = 'Rechercher une pièce (ex. plaquettes)'
 
   // The search bar is the main tool of the header: full-height field with an
   // ink border and a labelled button. Callers set the display (flex / hidden).
