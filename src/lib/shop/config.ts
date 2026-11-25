@@ -14,13 +14,15 @@ export const VAT_RATE = 0.2
 /* ------------------------------------------------------------------ */
 // What the supplier platform (EasyOrder) really answers, excl. VAT: what the
 // part costs us, and for some suppliers the manufacturer's public price. It
-// gives NO selling price for our account, so the shop's price has to come
-// from a rule of ours. [À VALIDER with the owner before real sales]
+// gives NO selling price for our account, so the shop's price comes from the
+// rule below.
 export const CATALOG_PRICING = {
-  // The retail rule, as a mark-up on what the part costs us: 0.6 means
-  // purchase price × 1.6. The result never goes above the manufacturer's
-  // public price when one is known. null = not decided yet.
-  markupOnPurchase: null as number | null,
+  // The retail rule, as a mark-up on what the part costs us: 0.55 means
+  // purchase price excl. VAT × 1.55 = selling price excl. VAT, VAT added on
+  // top. The result never goes above the manufacturer's public price when one
+  // is known. null = no rule, see fallbackToPublicPrice.
+  // Coefficient 1.55 given by the owner on 26 Nov 2026.
+  markupOnPurchase: 0.55 as number | null,
   // No mark-up decided (or no purchase price in the answer): show the
   // manufacturer's public price when a supplier gives it.
   // false = such parts stay "sur demande".
