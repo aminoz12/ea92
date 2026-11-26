@@ -44,7 +44,12 @@ export class BoxtalError extends Error {
 
 export const isBoxtalConfigured = () => Boolean(process.env.BOXTAL_ACCESS_KEY && process.env.BOXTAL_SECRET_KEY)
 
-const baseUrl = () => (process.env.BOXTAL_API_URL || PRODUCTION_URL).replace(/\/$/, '')
+/** The server to call. A host typed without "https://" ("api.boxtal.com") is accepted. */
+const baseUrl = () => {
+  const raw = (process.env.BOXTAL_API_URL ?? '').trim().replace(/\/+$/, '')
+  if (!raw) return PRODUCTION_URL
+  return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`
+}
 
 /** Which Boxtal server the keys are for; null when Boxtal is not configured. */
 export const boxtalEnvironment = (): 'production' | 'test' | null => (!isBoxtalConfigured() ? null : baseUrl() === PRODUCTION_URL ? 'production' : 'test')
