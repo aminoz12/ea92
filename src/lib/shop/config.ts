@@ -77,8 +77,17 @@ export const FULFILMENT = {
   // shown as "bientôt disponible" in the cart and cannot be paid for.
   partnerGaragesAvailable: false,
 
-  // Courier (Uber Direct) — fallback estimate used until the API is wired.
+  // Courier (Uber Direct). With the Uber keys set, the customer pays Uber's own
+  // price for their address; this zone grid is what applies without the keys,
+  // or when Uber cannot be reached. ⚠️ Figures to be validated by the shop.
   courier: {
+    // Added to Uber's fee: 0 = the customer pays exactly what Uber quotes.
+    // Uber's documentation does not say whether its fee includes VAT: if the
+    // first invoice shows it does not, put 0.2 here. A margin goes here too.
+    uberFeeSurcharge: 0 as number,
+    // The store's position, only if Uber asks for coordinates in this region
+    // (its guide says some regions need them). null = the address alone.
+    storePosition: null as { latitude: number; longitude: number } | null,
     baseFeeTTC: 6.9,
     zones: [
       // Postal-code prefixes, extra fee and indicative ETA in minutes.
