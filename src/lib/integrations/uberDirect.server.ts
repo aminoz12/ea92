@@ -87,11 +87,16 @@ export const areCourierBookingsEnabled = () => process.env.UBER_DIRECT_DELIVERIE
 /* ------------------------------------------------------------------ */
 
 let cachedToken: { forClient: string; value: string; expiresAt: number } | null = null
+// Keys Uber has just refused are not tried again on every quote: token
+// requests are limited to 100 an hour, and each one slows the cart down.
+let refusal: { forKeys: string; until: number; error: UberDirectError } | null = null
+const REFUSAL_MEMORY_MS = 10 * 60_000
 
 async function getToken(): Promise<string> {
   const { clientId, clientSecret } = env()
   if (!clientId || !clientSecret) throw new UberDirectError('Uber Direct non configuré')
   if (cachedToken && cachedToken.forClient === clientId && cachedToken.expiresAt > Date.now()) return cachedToken.value
+  if (refusal && refusal.forKeys === `${clientId}:${clientSecret}` && refusal.until > Date.now()) throw refusal.error
 
   let res: Response
   try {
@@ -106,7 +111,13 @@ async function getToken(): Promise<string> {
     throw new UberDirectError(`Uber injoignable (${err instanceof Error ? err.message : 'erreur réseau'})`)
   }
   const json = (await res.json().catch(() => null)) as { access_token?: string; expires_in?: number; error?: string } | null
-  if (!res.ok || !json?.access_token) throw new UberDirectError(`Uber : jeton refusé (HTTP ${res.status}${json?.error ? `, ${json.error}` : ''})`, res.status, json?.error)
+  if (!res.ok || !json?.access_token) {
+    const error = new UberDirectError(`Uber : jeton refusé (HTTP ${res.status}${json?.error ? `, ${json.error}` : ''})`, res.status, json?.error)
+    // 4xx = the keys themselves (unknown pair, or an application without the deliveries scope): asking again changes nothing.
+    if (res.status >= 400 && res.status < 500) refusal = { forKeys: `${clientId}:${clientSecret}`, until: Date.now() + REFUSAL_MEMORY_MS, error }
+    throw error
+  }
+  refusal = null
   // Kept a little less than its life (30 days), never asked per request.
   cachedToken = { forClient: clientId, value: json.access_token, expiresAt: Date.now() + Math.max(60, (json.expires_in ?? 3600) - 300) * 1000 }
   return cachedToken.value
