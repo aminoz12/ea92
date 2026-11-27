@@ -20,6 +20,12 @@ import { articleWeightKg, isParcelForbidden } from '../../shop/weight'
 const CDN = 'https://cdn.autoprecision.fr'
 /** TecDoc tree for passenger cars and light vans. */
 const LIGHT_VEHICLE_TREE = 2
+/**
+ * TecDoc's classic tree for passenger cars: YQ's universal tree uses the same
+ * nodes, numbered 89,900 lower (Brake Pad 100030 = YQ 10130, checked on every
+ * node of a Fiat 500 on 28 Nov 2026). See lib/shop/preciseFit.server.ts.
+ */
+const CLASSIC_TREE = 1
 /** Catalogue data changes with TecDoc releases, not during the day. */
 const ONE_DAY = 86_400
 
@@ -379,6 +385,23 @@ export async function getCarFamilies(carId: number): Promise<CatalogFamily[]> {
       })
       .filter((family) => family.genartCount > 0)
   )
+}
+
+/**
+ * Where a part type sits in TecDoc's classic tree for this vehicle: one chain
+ * of node numbers per place (a part type can sit in several), the deepest
+ * node first, the top-level family last.
+ */
+export async function partTypePlaces(carId: number, genartId: number): Promise<number[][]> {
+  const tree = await call<{ childs?: RawTreeNode[] }>(`/genartTrees/${CLASSIC_TREE}/car/${carId}`)
+  const places: number[][] = []
+  const walk = (node: RawTreeNode, chain: number[]) => {
+    const here = [node.nodeId, ...chain]
+    if (node.genarts?.some((g) => g.aid === genartId)) places.push(here)
+    for (const child of node.childs ?? []) walk(child, here)
+  }
+  for (const top of tree.childs ?? []) walk(top, [])
+  return places
 }
 
 /** Articles of one part type that fit the vehicle. The API returns the whole list at once. */

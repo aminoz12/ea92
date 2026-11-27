@@ -28,7 +28,8 @@ import { unstable_cache } from 'next/cache'
 // ---------------------------------------------------------------------------
 
 const DEFAULT_URL = 'https://oem-api.yqservice.eu'
-const THIRTY_DAYS = 30 * 24 * 3600
+const ONE_DAY = 24 * 3600
+const THIRTY_DAYS = 30 * ONE_DAY
 
 export class YqError extends Error {
   constructor(
@@ -91,42 +92,46 @@ async function post<T>(action: string, body: unknown): Promise<T> {
   return (await res.json()) as T
 }
 
-export interface OeLookup {
+/** One vehicle in YQ's universal tree. */
+export interface YqVehicle {
   /** YQ knows this VIN. */
-  vehicle: boolean
-  /** Code of the YQ group that was found for the vehicle, if any. */
-  group: string | null
-  /** Original part numbers of that group for this exact vehicle (as YQ writes them). */
-  numbers: string[]
+  known: boolean
+  /** The groups this vehicle has: group code → token of the call that lists its parts. */
+  groups: Record<string, string>
 }
 
-/**
- * Original part numbers for one exact vehicle (by VIN) and one kind of part,
- * given as YQ group codes in order of preference (the first one the vehicle
- * has is used). Three calls to YQ.
- */
-async function lookupOeNumbers(vin: string, groupCodes: string[]): Promise<OeLookup> {
+/** Two calls: the vehicle by its VIN, then its tree of groups. */
+async function loadVehicle(vin: string): Promise<YqVehicle> {
   const found = await post<{ data?: { vehicles?: { navigationLinks?: Link[] }[] } }>('findVehicle', {
     token: '',
     formValues: [{ name: 'IdentString', value: vin }],
   })
   const vehicle = found.data?.vehicles?.find((v) => v.navigationLinks?.some((l) => l.action === 'getGroups'))
-  if (!vehicle) return { vehicle: Boolean(found.data?.vehicles?.length), group: null, numbers: [] }
+  if (!vehicle) return { known: Boolean(found.data?.vehicles?.length), groups: {} }
 
   const groupsToken = vehicle.navigationLinks!.find((l) => l.action === 'getGroups')!.token
   const tree = await post<{ data?: TreeNode }>('getGroups', { token: groupsToken, filterValues: [], currentFilterState: '' })
-  const byCode = new Map<string, TreeNode>()
+  const groups: Record<string, string> = {}
   const walk = (n: TreeNode) => {
-    if (n.code !== undefined && n.links?.some((l) => l.action === 'getGroupParts')) byCode.set(String(n.code), n)
+    const token = n.links?.find((l) => l.action === 'getGroupParts')?.token
+    if (n.code !== undefined && token) groups[String(n.code)] = token
     for (const c of n.children ?? []) walk(c)
   }
   if (tree.data) walk(tree.data)
-  const code = groupCodes.find((c) => byCode.has(c))
-  if (!code) return { vehicle: true, group: null, numbers: [] }
+  return { known: true, groups }
+}
 
-  const partsToken = byCode.get(code)!.links!.find((l) => l.action === 'getGroupParts')!.token
+/**
+ * The vehicle's groups, kept one day: browsing several part types of one car
+ * then costs one call each instead of three. (A token was still accepted 24 h
+ * later on 28 Nov 2026; a refused one is renewed, see groupNumbers.)
+ */
+export const yqVehicle = unstable_cache(loadVehicle, ['yq-vehicle-groups'], { revalidate: ONE_DAY })
+
+/** One call: the original numbers of one group, for the vehicle the token was made for. */
+async function partsOf(token: string): Promise<string[]> {
   const parts = await post<{ data?: { categories?: { units?: { partSections?: { parts?: Part[] }[] }[] }[] } }>('getGroupParts', {
-    token: partsToken,
+    token,
     filterValues: [],
     currentFilterState: '',
   })
@@ -139,8 +144,25 @@ async function lookupOeNumbers(vin: string, groupCodes: string[]): Promise<OeLoo
           // `matched` marks the parts of the group; the others are the rest of the assembly (caliper, bracket…).
           if (p.matched === true && n && !/^\*+$/.test(n)) numbers.add(n)
         }
-  return { vehicle: true, group: code, numbers: [...numbers] }
+  return [...numbers]
 }
 
-/** The original numbers of a car do not change: kept 30 days per VIN and part type. Failures are not kept. */
-export const findOeNumbers = unstable_cache(lookupOeNumbers, ['yq-oe-numbers'], { revalidate: THIRTY_DAYS })
+async function groupNumbers(vin: string, code: string): Promise<string[]> {
+  const token = (await yqVehicle(vin)).groups[code]
+  if (!token) return []
+  try {
+    return await partsOf(token)
+  } catch (err) {
+    // A token kept from yesterday may have been refused: once more with fresh ones.
+    if (!(err instanceof YqError) || !err.status || err.status >= 500) throw err
+    const fresh = (await loadVehicle(vin)).groups[code]
+    return fresh ? partsOf(fresh) : []
+  }
+}
+
+/**
+ * Original part numbers (as YQ writes them) of one YQ group for one exact
+ * vehicle. A car's original numbers do not change: kept 30 days per VIN and
+ * group. Failures are not kept.
+ */
+export const groupOeNumbers = unstable_cache(groupNumbers, ['yq-group-numbers'], { revalidate: THIRTY_DAYS })

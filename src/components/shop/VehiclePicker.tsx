@@ -27,6 +27,7 @@ export function VehiclePicker({
   autoFocus = false,
   size = 'md',
   submitLabel = 'Identifier',
+  alwaysForm = false,
 }: {
   tone?: 'light' | 'dark'
   onIdentified?: (v: Vehicle) => void
@@ -37,6 +38,8 @@ export function VehiclePicker({
   /** 'lg' = the big plate search bar (home). */
   size?: 'md' | 'lg'
   submitLabel?: string
+  /** Show the plate form even when a vehicle is already known (e.g. one picked by make and model). */
+  alwaysForm?: boolean
 }) {
   const { vehicle, setVehicle } = useShop()
   const [plate, setPlate] = useState('')
@@ -46,7 +49,7 @@ export function VehiclePicker({
   const inputRef = useRef<HTMLInputElement>(null)
 
   const valid = isValidFrenchPlate(plate)
-  const showForm = !vehicle || editing
+  const showForm = alwaysForm || !vehicle || editing
 
   useEffect(() => {
     if (showForm && (autoFocus || editing)) inputRef.current?.focus()
@@ -179,7 +182,7 @@ export function VehiclePicker({
           {error}
         </p>
       )}
-      {editing && vehicle && (
+      {editing && vehicle && !alwaysForm && (
         <button
           type="button"
           onClick={() => {

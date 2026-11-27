@@ -7,6 +7,7 @@ import { HelpBanner } from '@/components/home/HelpBanner'
 import { CatalogArticleCard } from '@/components/shop/CatalogArticleCard'
 import { CatalogOffersProvider } from '@/components/shop/CatalogOffers'
 import { CatalogVehicleBar } from '@/components/shop/CatalogVehicleBar'
+import { ExactFitPrompt } from '@/components/shop/ExactFitPrompt'
 import { Icon } from '@/components/ui/Icon'
 import { CatalogError, getCar, listCarArticles, type CatalogArticle, type CatalogCar } from '@/lib/integrations/autoprecision/catalog.server'
 import { areOffersLive } from '@/lib/shop/offers.server'
@@ -50,7 +51,7 @@ export default async function CarArticlesPage({
 
   // The customer's exact car (plate → VIN → maker's catalogue): only the parts
   // carrying its original part number. ?tout=1 shows the whole TecDoc list.
-  const fit: PreciseFit = car && articles.length ? await preciseFit(carId, genartId) : { status: 'none' }
+  const fit: PreciseFit = car && articles.length ? await preciseFit(carId, genartId) : { status: 'none', reason: 'empty' }
   const showAll = first(query.tout) === '1'
   const exactOnly = fit.status === 'exact' && !showAll
   const isExact = (a: CatalogArticle) => fit.status === 'exact' && fit.tokens.has(a.token)
@@ -118,9 +119,11 @@ export default async function CarArticlesPage({
                   <p className="mt-0.5 text-gray-700">
                     Sélectionnées d’après le numéro de série de votre véhicule et le catalogue du constructeur : elles correspondent à la pièce montée d’origine.
                   </p>
-                  <Link href={href({ tout: true, marque: null, cote: '' })} className="mt-1.5 inline-block text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
-                    Voir toutes les pièces du catalogue pour ce modèle ({articles.length})
-                  </Link>
+                  {articles.length > pool.length && (
+                    <Link href={href({ tout: true, marque: null, cote: '' })} className="mt-1.5 inline-block text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
+                      Voir toutes les pièces du catalogue pour ce modèle ({articles.length})
+                    </Link>
+                  )}
                 </div>
               </div>
             ) : (
@@ -136,6 +139,7 @@ export default async function CarArticlesPage({
                 )}
               </p>
             )}
+            {fit.status === 'none' && fit.reason === 'no-vehicle' && <ExactFitPrompt carId={carId} genartId={genartId} />}
             {fit.status === 'no-match' && (
               <p className="mt-2 flex items-start gap-2 text-sm text-gray-600">
                 <Icon name="info" weight="fill" className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />

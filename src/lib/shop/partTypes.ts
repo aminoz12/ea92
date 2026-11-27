@@ -21,8 +21,9 @@ export const GENART = {
 /**
  * TecDoc part type → the groups of YQ's universal tree that hold the same
  * parts, in order of preference (a vehicle has one or the other). Codes read
- * in YQ's tree on 27 Nov 2026; they are the same for every make. A part type
- * that is not listed here is shown as TecDoc gives it.
+ * in YQ's tree on 27 Nov 2026; they are the same for every make. Only a
+ * preference: a part type that is not listed here gets its group from
+ * TecDoc's classic tree (see yqGroupsFor in lib/shop/preciseFit.server.ts).
  */
 export const YQ_GROUPS: Record<number, string[]> = {
   [GENART.brakePads]: ['10130'], // Brake Pad Set
