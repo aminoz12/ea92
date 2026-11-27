@@ -40,7 +40,44 @@ export class YqError extends Error {
   }
 }
 
-export const isYqConfigured = () => Boolean(process.env.YQ_LOGIN && process.env.YQ_PASSWORD)
+/** A value pasted in a hosting form often keeps its quotes or a trailing space / line break: not part of the login. */
+const clean = (raw: string | undefined) => (raw ?? '').trim().replace(/^(["'])(.*)\1$/s, '$2').trim()
+const credentials = () => ({ login: clean(process.env.YQ_LOGIN), password: clean(process.env.YQ_PASSWORD) })
+const basicAuth = () => {
+  const { login, password } = credentials()
+  return `Basic ${Buffer.from(`${login}:${password}`).toString('base64')}`
+}
+
+export const isYqConfigured = () => {
+  const { login, password } = credentials()
+  return Boolean(login && password)
+}
+
+/** For the check page: what the raw values look like, never the values. */
+export function yqCredentialShape() {
+  const shape = (raw: string | undefined) => ({
+    set: Boolean(raw),
+    length: raw?.length ?? 0,
+    lengthUsed: clean(raw).length,
+    hadQuotesOrSpaces: Boolean(raw) && clean(raw) !== raw,
+  })
+  return { login: shape(process.env.YQ_LOGIN), password: shape(process.env.YQ_PASSWORD), apiHost: new URL(baseUrl()).host }
+}
+
+/** For the check page: does YQ accept the login from this server? One GET, no catalogue data. */
+export async function yqWhoAmI(): Promise<{ http: number | null; ms: number; error?: string }> {
+  const t = Date.now()
+  try {
+    const res = await fetch(`${baseUrl()}/restApi/v2/whoAreMeInfo`, {
+      headers: { Authorization: basicAuth(), Accept: 'application/json' },
+      cache: 'no-store',
+      signal: AbortSignal.timeout(12_000),
+    })
+    return { http: res.status, ms: Date.now() - t }
+  } catch (err) {
+    return { http: null, ms: Date.now() - t, error: err instanceof Error ? err.message : 'network error' }
+  }
+}
 
 const baseUrl = () => {
   const raw = (process.env.YQ_API_URL ?? '').trim().replace(/\/+$/, '')
@@ -68,15 +105,13 @@ interface Part {
 }
 
 async function post<T>(action: string, body: unknown): Promise<T> {
-  const login = process.env.YQ_LOGIN
-  const password = process.env.YQ_PASSWORD
-  if (!login || !password) throw new YqError('YQ non configuré')
+  if (!isYqConfigured()) throw new YqError('YQ non configuré')
   let res: Response
   try {
     res = await fetch(`${baseUrl()}/restApi/v2/${action}`, {
       method: 'POST',
       headers: {
-        Authorization: `Basic ${Buffer.from(`${login}:${password}`).toString('base64')}`,
+        Authorization: basicAuth(),
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
@@ -127,9 +162,11 @@ async function loadVehicle(vin: string): Promise<YqVehicle> {
  * later on 28 Nov 2026; a refused one is renewed, see groupNumbers.)
  */
 export const yqVehicle = unstable_cache(loadVehicle, ['yq-vehicle-groups'], { revalidate: ONE_DAY })
+/** Same, never from the cache (check page). */
+export const yqVehicleFresh = loadVehicle
 
 /** One call: the original numbers of one group, for the vehicle the token was made for. */
-async function partsOf(token: string): Promise<string[]> {
+export async function yqPartsOf(token: string): Promise<string[]> {
   const parts = await post<{ data?: { categories?: { units?: { partSections?: { parts?: Part[] }[] }[] }[] } }>('getGroupParts', {
     token,
     filterValues: [],
@@ -151,12 +188,12 @@ async function groupNumbers(vin: string, code: string): Promise<string[]> {
   const token = (await yqVehicle(vin)).groups[code]
   if (!token) return []
   try {
-    return await partsOf(token)
+    return await yqPartsOf(token)
   } catch (err) {
     // A token kept from yesterday may have been refused: once more with fresh ones.
     if (!(err instanceof YqError) || !err.status || err.status >= 500) throw err
     const fresh = (await loadVehicle(vin)).groups[code]
-    return fresh ? partsOf(fresh) : []
+    return fresh ? yqPartsOf(fresh) : []
   }
 }
 
