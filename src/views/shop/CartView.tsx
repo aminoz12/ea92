@@ -461,6 +461,7 @@ export function CartView() {
                           <p className="text-sm text-gray-700">
                             <span className="font-display text-xl font-bold text-gray-900">{quote.feeTTC === 0 ? 'Offerte' : formatEUR(quote.feeTTC)}</span> · {quote.etaLabel}
                             {mode === 'colis' && <> · colis de {formatKg(weightKg)}</>}
+                            {quote.zoneLabel === 'Supplément poids' && <span className="text-gray-500"> (supplément poids, livraison offerte jusqu’à {FULFILMENT.parcel.freeUpToKg} kg)</span>}
                             {quote.source === 'estimate' && <span className="text-gray-500"> (estimation)</span>}
                           </p>
                         )}
@@ -525,7 +526,7 @@ export function CartView() {
                       <p className="mt-3 text-xs text-gray-500">
                         {mode === 'coursier'
                           ? 'Prix calculé selon la distance entre le magasin et votre adresse.'
-                          : `Le transporteur le plus adapté est choisi pour vous. Livraison offerte dès ${formatEUR(FULFILMENT.parcel.freeAboveTTC)} d’achat.`}
+                          : `Prix selon le poids du colis. Livraison offerte dès ${formatEUR(FULFILMENT.parcel.freeAboveTTC)} d’achat pour un colis jusqu’à ${FULFILMENT.parcel.freeUpToKg} kg ; au-delà, seul le supplément de poids est facturé.`}
                       </p>
                     </div>
                   )}

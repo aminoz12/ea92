@@ -178,24 +178,31 @@ export default function Page() {
             icon="box"
             title="Expédition partout en France"
             price={`dès ${formatEUR(FULFILMENT.parcel.relayFromTTC)}`}
-            priceNote={`offerte dès ${formatEUR(FULFILMENT.parcel.freeAboveTTC)} d’achat`}
+            priceNote={`offerte dès ${formatEUR(FULFILMENT.parcel.freeAboveTTC)} d’achat (colis jusqu’à ${FULFILMENT.parcel.freeUpToKg} kg)`}
             aside={
               <div className={panel}>
-                <p className="font-display text-lg font-bold text-gray-900">Tarifs</p>
-                <dl className="mt-2 divide-y divide-gray-200 border-t border-gray-200">
-                  <div className={row}>
-                    <dt className="text-gray-600">Point relais</dt>
-                    <dd className="font-display text-base font-bold text-gray-900">dès {formatEUR(FULFILMENT.parcel.relayFromTTC)}</dd>
-                  </div>
-                  <div className={row}>
-                    <dt className="text-gray-600">À domicile</dt>
-                    <dd className="font-display text-base font-bold text-gray-900">dès {formatEUR(FULFILMENT.parcel.homeFromTTC)}</dd>
-                  </div>
-                  <div className={row}>
-                    <dt className="text-gray-600">Délai</dt>
-                    <dd className="font-semibold text-gray-900">{FULFILMENT.parcel.delay}</dd>
-                  </div>
-                </dl>
+                <p className="font-display text-lg font-bold text-gray-900">Tarifs selon le poids</p>
+                <table className="mt-2 w-full border-t border-gray-200 text-sm">
+                  <thead>
+                    <tr className="text-left text-gray-500">
+                      <th className="py-2 font-semibold">Colis</th>
+                      <th className="py-2 text-right font-semibold">Point relais</th>
+                      <th className="py-2 text-right font-semibold">Domicile</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {FULFILMENT.parcel.bands.map((b) => (
+                      <tr key={b.upToKg}>
+                        <td className="py-1.5 text-gray-600">jusqu’à {b.upToKg} kg</td>
+                        <td className="py-1.5 text-right font-semibold text-gray-900">{formatEUR(b.relayTTC)}</td>
+                        <td className="py-1.5 text-right font-semibold text-gray-900">{formatEUR(b.homeTTC)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="mt-3 text-sm text-gray-600">
+                  Offerte dès {formatEUR(FULFILMENT.parcel.freeAboveTTC)} d’achat jusqu’à {FULFILMENT.parcel.freeUpToKg} kg ; au-delà, seul le supplément de poids est facturé. Délai : {FULFILMENT.parcel.delay}.
+                </p>
               </div>
             }
           >

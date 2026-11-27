@@ -110,6 +110,18 @@ export const RANKING = {
 /* ------------------------------------------------------------------ */
 /*  Fulfilment                                                        */
 /* ------------------------------------------------------------------ */
+
+/** Parcel price by weight band (kg, up to and including), incl. VAT. The last band is the heaviest parcel accepted. */
+export const PARCEL_BANDS: readonly { upToKg: number; relayTTC: number; homeTTC: number }[] = [
+  { upToKg: 1, relayTTC: 4.9, homeTTC: 7.9 },
+  { upToKg: 2, relayTTC: 5.9, homeTTC: 8.9 },
+  { upToKg: 5, relayTTC: 6.9, homeTTC: 10.9 },
+  { upToKg: 10, relayTTC: 8.9, homeTTC: 13.9 },
+  { upToKg: 15, relayTTC: 11.9, homeTTC: 17.9 },
+  { upToKg: 20, relayTTC: 13.9, homeTTC: 20.9 },
+  { upToKg: 30, relayTTC: 17.9, homeTTC: 25.9 },
+]
+
 export const FULFILMENT = {
   // Store pickup
   pickupReadyMinutes: 30, // in-stock parts ready at the counter
@@ -151,15 +163,22 @@ export const FULFILMENT = {
 
   // Parcel shipping (Boxtal). Boxtal's API v3 gives no price (its guide says a
   // quote is "not currently possible"), so the delivery price charged to the
-  // customer is this grid. ⚠️ Figures to be validated by the shop.
+  // customer is this grid. Priced by weight band, as the carriers charge
+  // (parcel weight = parts + packaging, lib/shop/weight.ts). Set on 27 Nov 2026
+  // at the owner's request ("do better grid"); compare with Boxtal's invoices.
   parcel: {
-    relayFromTTC: 4.9,
-    homeFromTTC: 7.9,
-    perExtraKgTTC: 0.8, // above 2 kg
+    bands: PARCEL_BANDS,
+    relayFromTTC: PARCEL_BANDS[0].relayTTC,
+    homeFromTTC: PARCEL_BANDS[0].homeTTC,
     // Heaviest parcel the carriers take (Mondial Relay points relais and
-    // Colissimo: 30 kg). ⚠️ To confirm against the offers of the Boxtal account.
+    // Colissimo: 30 kg; confirmed by the owner on 27 Nov 2026).
     maxKg: 30,
+    // From this cart total delivery is free for a parcel up to freeUpToKg; a
+    // heavier parcel only pays the difference with that band (e.g. 18 kg to a
+    // home address: 20,90 − 13,90 = 7,00 €). Keeps heavy parts (discs, clutch
+    // kits) from being shipped at a loss, with no jump in price.
     freeAboveTTC: 89,
+    freeUpToKg: 10,
     delay: '24 à 72 h ouvrées',
     // The Boxtal offer used for relay delivery: it decides which relay network
     // the customer chooses from. MONR-CpourToi = Mondial Relay "Points Relais".

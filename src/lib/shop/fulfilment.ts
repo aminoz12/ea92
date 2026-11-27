@@ -99,21 +99,30 @@ export function estimateCourier(postalCode: string): QuoteEstimate {
   }
 }
 
+/** Grid price of a parcel of that weight (the band it falls in), before any free delivery. */
+export function parcelBandPrice(weightKg: number, option: 'relais' | 'domicile'): number {
+  const bands = FULFILMENT.parcel.bands
+  const band = bands.find((b) => weightKg <= b.upToKg) ?? bands[bands.length - 1]
+  return option === 'relais' ? band.relayTTC : band.homeTTC
+}
+
+/**
+ * Price of a parcel for the customer: the band of its weight; from
+ * freeAboveTTC it is free up to freeUpToKg, and a heavier parcel pays only the
+ * difference with that band. (The weight limit is checked by quoteParcel.)
+ */
 export function estimateParcel(
   weightKg: number,
   cartTotalTTC: number,
   option: 'relais' | 'domicile',
 ): QuoteEstimate {
-  if (cartTotalTTC >= FULFILMENT.parcel.freeAboveTTC) {
-    return { available: true, feeTTC: 0, etaLabel: FULFILMENT.parcel.delay }
+  const { freeAboveTTC, freeUpToKg, delay } = FULFILMENT.parcel
+  const full = parcelBandPrice(weightKg, option)
+  if (cartTotalTTC >= freeAboveTTC) {
+    const extra = round2(Math.max(0, full - parcelBandPrice(Math.min(weightKg, freeUpToKg), option)))
+    return { available: true, feeTTC: extra, etaLabel: delay, zoneLabel: extra > 0 ? 'Supplément poids' : undefined }
   }
-  const base = option === 'relais' ? FULFILMENT.parcel.relayFromTTC : FULFILMENT.parcel.homeFromTTC
-  const extraKg = Math.max(0, Math.ceil(weightKg - 2))
-  return {
-    available: true,
-    feeTTC: round2(base + extraKg * FULFILMENT.parcel.perExtraKgTTC),
-    etaLabel: FULFILMENT.parcel.delay,
-  }
+  return { available: true, feeTTC: full, etaLabel: delay }
 }
 
 /** Loyalty points earned on a basket (particuliers). */
