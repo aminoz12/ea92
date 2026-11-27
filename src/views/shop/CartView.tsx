@@ -16,6 +16,9 @@ import { normalizePhone } from '@/lib/loyalty/cartRecovery'
 import { SITE } from '@/lib/site'
 import type { CartLine, FulfilmentMode } from '@/lib/shop/types'
 import type { RelayPoint } from '@/lib/integrations/boxtal.server'
+import { parcelWeightKg } from '@/lib/shop/weight'
+
+const formatKg = (kg: number) => `${kg.toFixed(1).replace('.', ',')} kg`
 
 const formatDistance = (m: number) => (m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1).replace('.', ',')} km`)
 
@@ -75,8 +78,12 @@ export function CartView() {
     window.history.replaceState(null, '', '/panier')
   }, [hydrated])
 
-  const weightKg = useMemo(() => cart.reduce((w, l) => w + (l.weightKg ?? 1) * l.qty, 0), [cart])
-  const parcelBlocked = cart.some((l) => l.parcelForbidden)
+  // Parcel weight (parts + packaging), computed like the server does (lib/shop/weight.ts).
+  const weightKg = useMemo(() => parcelWeightKg(cart), [cart])
+  const parcelBattery = cart.some((l) => l.parcelForbidden)
+  const parcelTooHeavy = weightKg > FULFILMENT.parcel.maxKg
+  const parcelBlocked = parcelBattery || parcelTooHeavy
+  const courierBlocked = cart.some((l) => (l.weightKg ?? 0) > FULFILMENT.courier.maxItemKg)
   const fittingLines = cart.filter((l) => getFittingJob(l.fittingJob))
   const fittingTotal = fittingLines.reduce((s, l) => s + (getFittingJob(l.fittingJob)?.priceTTC ?? 0), 0)
   const fittingHasQuote = fittingLines.some((l) => getFittingJob(l.fittingJob)?.priceTTC === null)
@@ -154,7 +161,8 @@ export function CartView() {
 
   // What still has to be filled in before paying — shown under the button.
   const missing: string[] = []
-  if (mode === 'colis' && parcelBlocked) missing.push('un autre mode de réception (batterie)')
+  if (mode === 'colis' && parcelBlocked) missing.push(parcelBattery ? 'un autre mode de réception (batterie)' : 'un autre mode de réception (colis trop lourd)')
+  if (mode === 'coursier' && courierBlocked) missing.push('un autre mode de réception (pièce trop lourde pour un coursier)')
   if (needsQuote && address.street.trim().length <= 3) missing.push('votre adresse')
   if (needsQuote && !quote?.available) missing.push('le calcul de la livraison')
   if (relayRequired && !chosenRelay) missing.push('le choix du point relais')
@@ -336,7 +344,7 @@ export function CartView() {
                   <div className="grid gap-3 sm:grid-cols-2">
                     {FULFILMENT_MODES.map((m) => {
                       const soon = m.id === 'montage' && !FULFILMENT.partnerGaragesAvailable
-                      const disabled = (m.id === 'colis' && parcelBlocked) || soon
+                      const disabled = (m.id === 'colis' && parcelBlocked) || (m.id === 'coursier' && courierBlocked) || soon
                       const selected = mode === m.id
                       return (
                         <label key={m.id} className={radioCard(selected, disabled)}>
@@ -353,10 +361,22 @@ export function CartView() {
                     })}
                   </div>
                 </fieldset>
-                {parcelBlocked && (
+                {parcelBattery && (
                   <p className="mt-3 flex items-start gap-2 text-sm text-gray-600">
                     <Icon name="info" weight="fill" className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
                     Votre panier contient une batterie : elle ne peut pas voyager en colis (matière dangereuse). Retrait, coursier ou montage uniquement.
+                  </p>
+                )}
+                {!parcelBattery && parcelTooHeavy && (
+                  <p className="mt-3 flex items-start gap-2 text-sm text-gray-600">
+                    <Icon name="info" weight="fill" className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
+                    Votre commande pèse environ {formatKg(weightKg)} : au-delà de {FULFILMENT.parcel.maxKg} kg, elle ne peut pas partir en un seul colis. Retrait ou coursier, ou écrivez-nous pour un envoi en plusieurs colis.
+                  </p>
+                )}
+                {courierBlocked && (
+                  <p className="mt-3 flex items-start gap-2 text-sm text-gray-600">
+                    <Icon name="info" weight="fill" className="mt-0.5 h-4 w-4 shrink-0 text-gray-500" />
+                    Une pièce de votre panier dépasse {FULFILMENT.courier.maxItemKg} kg : trop lourde pour un coursier.
                   </p>
                 )}
 
@@ -440,6 +460,7 @@ export function CartView() {
                         {quote && quote.available && (
                           <p className="text-sm text-gray-700">
                             <span className="font-display text-xl font-bold text-gray-900">{quote.feeTTC === 0 ? 'Offerte' : formatEUR(quote.feeTTC)}</span> · {quote.etaLabel}
+                            {mode === 'colis' && <> · colis de {formatKg(weightKg)}</>}
                             {quote.source === 'estimate' && <span className="text-gray-500"> (estimation)</span>}
                           </p>
                         )}

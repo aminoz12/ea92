@@ -31,7 +31,8 @@ import { unstable_cache } from 'next/cache'
 // ---------------------------------------------------------------------------
 
 import { SITE } from '../site'
-import { FULFILMENT } from '../shop/config'
+import { FULFILMENT, SHIPPING_WEIGHT } from '../shop/config'
+import { courierSize } from '../shop/weight'
 import { estimateCourier, type QuoteEstimate } from '../shop/fulfilment'
 import { round2 } from '../shop/ranking'
 
@@ -270,7 +271,8 @@ export interface CourierDeliveryRequest {
   customerName: string
   /** International format, e.g. +33612345678. */
   customerPhone: string
-  items: { name: string; quantity: number }[]
+  /** `weightKg` = one article (see lib/shop/weight.ts): it sets Uber's size, hence the vehicle sent. */
+  items: { name: string; quantity: number; weightKg?: number }[]
   /** Value of the goods incl. VAT. */
   totalValueTTC?: number
   /** For the courier at the door (digicode, floor…). 280 characters at most. */
@@ -297,6 +299,7 @@ export async function createCourierDelivery(req: CourierDeliveryRequest): Promis
   if (!areCourierBookingsEnabled()) throw new UberDirectError('Courier bookings are disabled: UBER_DIRECT_DELIVERIES_ENABLED is not "true"')
   if (!/^\+[0-9]{8,15}$/.test(req.customerPhone)) throw new UberDirectError('Customer phone must be in international format (+33…)')
   if (!req.items.length) throw new UberDirectError('Nothing to deliver')
+  if (req.items.some((i) => (i.weightKg ?? 0) > FULFILMENT.courier.maxItemKg)) throw new UberDirectError(`An item weighs more than ${FULFILMENT.courier.maxItemKg} kg: too heavy for a courier`)
 
   const d = await post<{ id: string; status: string; tracking_url: string; fee?: number; live_mode?: boolean }>('/deliveries', {
     ...pickup(),
@@ -307,7 +310,11 @@ export async function createCourierDelivery(req: CourierDeliveryRequest): Promis
     dropoff_name: req.customerName,
     dropoff_phone_number: req.customerPhone,
     ...(req.notes ? { dropoff_notes: req.notes.slice(0, 280) } : {}),
-    manifest_items: req.items.map((i) => ({ name: i.name.slice(0, 120), quantity: i.quantity, size: 'small' })),
+    // Size from what the line weighs in all (small = one hand … xlarge = a car), weight of one item in grams.
+    manifest_items: req.items.map((i) => {
+      const unitKg = i.weightKg ?? SHIPPING_WEIGHT.defaultKg
+      return { name: i.name.slice(0, 120), quantity: i.quantity, size: courierSize(unitKg * i.quantity), weight: Math.round(unitKg * 1000) }
+    }),
     manifest_reference: req.orderRef,
     external_id: req.orderRef,
     // The same order booked twice by mistake gives one delivery, not two.

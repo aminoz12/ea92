@@ -16,6 +16,7 @@ import { randomBytes } from 'node:crypto'
 
 import { FULFILMENT } from './config'
 import { readArticleToken } from './articleToken.server'
+import { articleWeightKg, isParcelForbidden, parcelWeightKg } from './weight'
 import { areOffersLive, priceArticles } from './offers.server'
 import type { QuoteEstimate } from './fulfilment'
 import type { CartLine, FulfilmentMode } from './types'
@@ -51,6 +52,9 @@ interface RequestedLine {
   artNr: string
   dlNr: number
   qty: number
+  /** Shipping weight of one article and its part type, read from the token (never from the browser). */
+  weightKg: number
+  parcelForbidden: boolean
   /** Shown on the payment page; never used to compute anything. */
   name: string
   brand: string
@@ -123,6 +127,9 @@ export function parseCheckoutRequest(body: unknown): CheckoutRequest {
       artNr: article.artNr,
       dlNr: article.dlNr,
       qty,
+      // Tokens made before the weights were sealed in them get the default weight.
+      weightKg: articleWeightKg(article.weightKg, article.partType),
+      parcelForbidden: isParcelForbidden(article.partType),
       name: text(it.name, 120) || 'Pièce',
       brand: text(it.brand, 60),
       image: image.startsWith('https://') ? image : undefined,
@@ -240,17 +247,23 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
     priceTTC: l.priceTTC,
     depositTTC: l.depositTTC,
     qty: l.qty,
+    weightKg: l.weightKg,
+    parcelForbidden: l.parcelForbidden || undefined,
   }))
   const subtotalTTC = round2(kept.reduce((s, l) => s + l.priceTTC * l.qty, 0))
   const depositsTTC = round2(kept.reduce((s, l) => s + (l.depositTTC ?? 0) * l.qty, 0))
 
-  // 2. Delivery, recomputed here.
+  // 2. Delivery, recomputed here from the weights sealed in the article tokens.
+  if (request.mode === 'colis' && kept.some((l) => l.parcelForbidden)) {
+    throw new CheckoutError('Votre panier contient une batterie : elle ne peut pas voyager en colis. Choisissez le retrait ou le coursier.')
+  }
+  if (request.mode === 'coursier' && kept.some((l) => l.weightKg > FULFILMENT.courier.maxItemKg)) {
+    throw new CheckoutError(`Une pièce de votre panier dépasse ${FULFILMENT.courier.maxItemKg} kg : trop lourde pour un coursier. Choisissez le retrait ou l’expédition colis.`)
+  }
   let quote: (QuoteEstimate & { source: string }) | undefined
   if (kept.length && request.mode === 'coursier') quote = await quoteCourier(request.address)
   if (kept.length && request.mode === 'colis') {
-    // No weight in the catalogue data: one kilo per part, as the cart does.
-    const weightKg = kept.reduce((w, l) => w + l.qty, 0)
-    quote = await quoteParcel({ postalCode: request.address.postalCode, weightKg, cartTotalTTC: subtotalTTC, option: request.parcelOption })
+    quote = await quoteParcel({ postalCode: request.address.postalCode, weightKg: parcelWeightKg(kept), cartTotalTTC: subtotalTTC, option: request.parcelOption })
   }
   if (quote && !quote.available) throw new CheckoutError(quote.reason || 'Ce mode de livraison n’est pas disponible pour votre adresse.')
   const deliveryTTC = quote ? quote.feeTTC : 0
@@ -307,6 +320,8 @@ export async function startCheckout(request: CheckoutRequest, origin: string): P
   if (request.mode === 'coursier' || request.mode === 'colis') {
     metadata.address = `${request.address.street}, ${request.address.postalCode} ${request.address.city}`.slice(0, 500)
     metadata.delivery_ttc = deliveryTTC.toFixed(2)
+    // What the shop weighs out for the label or the courier (parts + packaging, estimated when the catalogue has no weight).
+    metadata.weight_kg = parcelWeightKg(kept).toFixed(1)
   }
   // What the shop needs to make the label: the carrier's code of the relay, then its name and address.
   if (relay) metadata.relay = `${relay.code} — ${relay.name}, ${relay.street}, ${relay.postalCode} ${relay.city}`.slice(0, 500)

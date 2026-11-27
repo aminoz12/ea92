@@ -73,6 +73,10 @@ export interface BuyableArticle {
   image?: string
   /** The catalogue list this article was found in: where the cart links back to. */
   listHref: string
+  /** Shipping weight of one article, kg: for the delivery estimate in the cart (the server uses the one sealed in the token). */
+  weightKg: number
+  /** May not travel as a parcel (starter battery). */
+  parcelForbidden: boolean
 }
 
 /** Bottom of an article card: price + cart when the supplier has the part, a price request otherwise. */
@@ -117,6 +121,8 @@ export function CatalogArticleBuy({ article, askHref }: { article: BuyableArticl
       href: article.listHref,
       priceTTC: offer.priceTTC,
       depositTTC: offer.depositTTC,
+      weightKg: article.weightKg,
+      parcelForbidden: article.parcelForbidden || undefined,
     })
 
   return (

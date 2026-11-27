@@ -32,7 +32,7 @@ export function orderSummary(session: CheckoutSession) {
     '',
     'Pièces à préparer (quantité x code marque TecDoc/référence @ prix unitaire TTC) :',
     ...items.map((i) => `  - ${i}`),
-    ...(m.delivery_ttc ? ['', `Livraison facturée : ${m.delivery_ttc.replace('.', ',')} €`] : []),
+    ...(m.delivery_ttc ? ['', `Livraison facturée : ${m.delivery_ttc.replace('.', ',')} €${m.weight_kg ? ` (colis estimé à ${m.weight_kg.replace('.', ',')} kg, emballage compris)` : ''}`] : []),
     '',
     `Paiement Stripe : ${session.payment_intent ?? session.id}`,
   ].join('\n')

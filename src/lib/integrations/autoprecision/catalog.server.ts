@@ -1,5 +1,6 @@
 import 'server-only'
 import { articleToken } from '../../shop/articleToken.server'
+import { articleWeightKg, isParcelForbidden } from '../../shop/weight'
 
 // ---------------------------------------------------------------------------
 //  AutoPrécision — TecDoc catalogue API ("MegaWS"), server side only.
@@ -201,6 +202,10 @@ export interface CatalogArticle {
   attributes: CatalogAttribute[]
   /** Fitting side, when TecDoc gives one (e.g. "Essieu avant"). */
   side?: string
+  /** Shipping weight of one article, kg (catalogue weight, else typical weight of the part type). */
+  weightKg: number
+  /** May not travel as a parcel (starter battery). */
+  parcelForbidden: boolean
 }
 
 /* ------------------------------------------------------------------ */
@@ -249,7 +254,29 @@ const IDENTIFYING_ATTRIBUTE =
 
 const compact = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '')
 
-function article(a: RawArticle): CatalogArticle {
+/** The article's own weight when the catalogue gives it ("Poids [kg]", "Poids net [g]"), kg. */
+function catalogueWeightKg(a: RawArticle): number | undefined {
+  for (const at of [...(a.attrs ?? []), ...(a.iattrs ?? [])]) {
+    if (!/^poids/i.test(at.name)) continue
+    const v = parseFloat(String(at.val?.[0]?.txt ?? '').replace(',', '.'))
+    if (!Number.isFinite(v) || v <= 0) continue
+    const kg = /\[g\]/i.test(at.name) || /^g$/i.test(at.unit ?? '') ? v / 1000 : v
+    if (kg < 200) return kg
+  }
+  return undefined
+}
+
+/** The part type of an article: its own, else the one of the list it was asked for. */
+const partTypeOf = (a: RawArticle, listPartType?: number) => a.genArts?.[0]?.aid ?? listPartType
+
+/** The token of an article, carrying its shipping weight and part type (see shop/articleToken.server.ts). */
+function tokenOf(a: RawArticle, listPartType?: number): string {
+  const partType = partTypeOf(a, listPartType)
+  return articleToken(a.dlNr, a.artNr, { weightKg: articleWeightKg(catalogueWeightKg(a), partType), partType })
+}
+
+function article(a: RawArticle, listPartType?: number): CatalogArticle {
+  const partType = partTypeOf(a, listPartType)
   const side = (a.iattrs ?? []).find((x) => x.aid === SIDE_ATTRIBUTE)?.val?.[0]?.txt
   // Everything that names this part somewhere: an attribute repeating one of them is dropped too.
   const own = compact(a.artNr)
@@ -262,7 +289,7 @@ function article(a: RawArticle): CatalogArticle {
   }
   const safe = (list?: RawAttribute[]) => (list ?? []).filter((x) => !IDENTIFYING_ATTRIBUTE.test(x.name) && !(x.val ?? []).some((v) => reveals(v.txt ?? '')))
   return {
-    token: articleToken(a.dlNr, a.artNr),
+    token: tokenOf(a, listPartType),
     dlNr: a.dlNr,
     brand: a.brand?.name ?? '',
     brandLogo: picture(a.brand?.img),
@@ -272,6 +299,8 @@ function article(a: RawArticle): CatalogArticle {
     fitment: attributes(safe((a.iattrs ?? []).filter((x) => x.aid !== SIDE_ATTRIBUTE))),
     attributes: attributes(safe(a.attrs)),
     side: side || undefined,
+    weightKg: articleWeightKg(catalogueWeightKg(a), partType),
+    parcelForbidden: isParcelForbidden(partType),
   }
 }
 
@@ -355,7 +384,7 @@ export async function getCarFamilies(carId: number): Promise<CatalogFamily[]> {
 /** Articles of one part type that fit the vehicle. The API returns the whole list at once. */
 export async function listCarArticles(carId: number, genartId: number): Promise<CatalogArticle[]> {
   const raw = await call<RawArticle[]>(`/v2/cars/${carId}/genart/${genartId}?PageSize=200`, {})
-  return (Array.isArray(raw) ? raw : []).map(article)
+  return (Array.isArray(raw) ? raw : []).map((a) => article(a, genartId))
 }
 
 /**
@@ -371,6 +400,6 @@ export async function articlesWithOeNumbers(carId: number, genartId: number, oeN
   return new Set(
     (Array.isArray(raw) ? raw : [])
       .filter((a) => (a.oems ?? []).some((o) => (o.refs ?? []).some((r) => wanted.has(compact(r)))))
-      .map((a) => articleToken(a.dlNr, a.artNr)),
+      .map((a) => tokenOf(a, genartId)),
   )
 }

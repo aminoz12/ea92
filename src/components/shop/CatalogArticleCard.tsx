@@ -88,7 +88,7 @@ export function CatalogArticleCard({
         )}
 
         <CatalogArticleBuy
-          article={{ id: article.token, brand: article.brand, title, image: article.image, listHref }}
+          article={{ id: article.token, brand: article.brand, title, image: article.image, listHref, weightKg: article.weightKg, parcelForbidden: article.parcelForbidden }}
           askHref={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(message)}`}
         />
       </div>

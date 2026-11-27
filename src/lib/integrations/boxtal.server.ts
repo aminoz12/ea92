@@ -177,7 +177,19 @@ export interface ParcelQuote extends QuoteEstimate {
   source: 'grid'
 }
 
-/** Price of a parcel for the customer. Boxtal's API v3 gives no price: the shop's grid applies. */
+/**
+ * Price of a parcel for the customer. Boxtal's API v3 gives no price: the
+ * shop's grid applies, by weight (parts + packaging, see lib/shop/weight.ts).
+ */
 export async function quoteParcel(params: { postalCode: string; weightKg: number; cartTotalTTC: number; option: 'relais' | 'domicile' }): Promise<ParcelQuote> {
+  if (params.weightKg > FULFILMENT.parcel.maxKg) {
+    return {
+      available: false,
+      feeTTC: 0,
+      etaLabel: '',
+      reason: `Commande trop lourde pour un seul colis (${params.weightKg.toFixed(1).replace('.', ',')} kg, maximum ${FULFILMENT.parcel.maxKg} kg) : choisissez le retrait ou le coursier, ou écrivez-nous.`,
+      source: 'grid',
+    }
+  }
   return { ...estimateParcel(params.weightKg, params.cartTotalTTC, params.option), source: 'grid' }
 }

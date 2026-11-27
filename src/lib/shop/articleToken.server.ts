@@ -33,10 +33,26 @@ function keys(): { enc: Buffer; nonce: Buffer } {
 const NONCE = 12
 const TAG = 16
 
+/**
+ * What the server needs to know about an article later, without asking the
+ * catalogue again: its shipping weight and its part type (a battery may not
+ * travel as a parcel). Sealed in the token, so the browser can neither read
+ * nor change them.
+ */
+export interface ArticleFacts {
+  /** Shipping weight of one article, kg. */
+  weightKg?: number
+  /** TecDoc part type. */
+  partType?: number
+}
+
 /** The opaque id of an article, safe to send to the browser. */
-export function articleToken(dlNr: number, artNr: string): string {
+export function articleToken(dlNr: number, artNr: string, facts: ArticleFacts = {}): string {
   const k = keys()
-  const plain = Buffer.from(`${dlNr}|${artNr}`, 'utf8')
+  // "v2|brand code|grams|part type|reference" (the reference last: it may contain "|").
+  // Tokens made before had "brand code|reference" only; readArticleToken reads both.
+  const grams = facts.weightKg !== undefined ? Math.max(1, Math.round(facts.weightKg * 1000)) : ''
+  const plain = Buffer.from(facts.weightKg !== undefined || facts.partType !== undefined ? `v2|${dlNr}|${grams}|${facts.partType ?? ''}|${artNr}` : `${dlNr}|${artNr}`, 'utf8')
   // Derived from the content instead of random: same article, same token. Two
   // different articles get different nonces, which is all AES-GCM needs.
   const nonce = createHmac('sha256', k.nonce).update(plain).digest().subarray(0, NONCE)
@@ -46,7 +62,7 @@ export function articleToken(dlNr: number, artNr: string): string {
 }
 
 /** The article behind a token, or null when the token is not one of ours (forged, cut, made with another key). */
-export function readArticleToken(token: string): { dlNr: number; artNr: string } | null {
+export function readArticleToken(token: string): ({ dlNr: number; artNr: string } & ArticleFacts) | null {
   if (typeof token !== 'string' || token.length < 40 || token.length > 200 || !/^[A-Za-z0-9_-]+$/.test(token)) return null
   try {
     const raw = Buffer.from(token, 'base64url')
@@ -54,6 +70,12 @@ export function readArticleToken(token: string): { dlNr: number; artNr: string }
     const decipher = createDecipheriv('aes-256-gcm', keys().enc, raw.subarray(0, NONCE))
     decipher.setAuthTag(raw.subarray(raw.length - TAG))
     const plain = Buffer.concat([decipher.update(raw.subarray(NONCE, raw.length - TAG)), decipher.final()]).toString('utf8')
+    const v2 = plain.match(/^v2\|(\d+)\|(\d*)\|(\d*)\|(.+)$/s)
+    if (v2) {
+      const dlNr = Number(v2[1])
+      if (!Number.isInteger(dlNr) || dlNr <= 0) return null
+      return { dlNr, artNr: v2[4], weightKg: v2[2] ? Number(v2[2]) / 1000 : undefined, partType: v2[3] ? Number(v2[3]) : undefined }
+    }
     const at = plain.indexOf('|')
     const dlNr = Number(plain.slice(0, at))
     const artNr = plain.slice(at + 1)

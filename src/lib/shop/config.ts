@@ -51,6 +51,37 @@ export const PLATE_LOOKUP = {
 } as const
 
 /* ------------------------------------------------------------------ */
+/*  Shipping weight of the parts                                       */
+/* ------------------------------------------------------------------ */
+// The catalogue gives a weight ("Poids [kg]", "Poids net [g]") for about one
+// article in four; the suppliers give none. Otherwise the typical weight of
+// the part type applies: rounded up from the weights TecDoc gives for a
+// Peugeot 208 II and a Fiat 500 (survey of 27 Nov 2026), then the default.
+export const SHIPPING_WEIGHT = {
+  defaultKg: 1,
+  /** TecDoc part type → typical weight of one article, kg. */
+  byPartType: {
+    402: 1.7, // brake pad set
+    82: 9, // brake disc (one)
+    7: 0.35, // oil filter
+    8: 0.45, // air filter
+    424: 0.25, // cabin filter
+    298: 0.3, // wiper blade
+    1: 18, // battery
+    854: 4.6, // shock absorber
+    107: 0.1, // headlight bulb
+    479: 6, // clutch kit
+    686: 0.1, // spark plug
+    307: 1.4, // timing belt kit
+  } as Record<number, number>,
+  /** Box, wrapping and filling, added once per parcel. */
+  packagingKg: 0.3,
+} as const
+
+/** Part types that may not travel as a parcel (starter batteries: dangerous goods). Pickup or courier only. */
+export const PARCEL_FORBIDDEN_PART_TYPES: readonly number[] = [1]
+
+/* ------------------------------------------------------------------ */
 /*  Exact parts for the customer's car (YQ, by VIN)                    */
 /* ------------------------------------------------------------------ */
 // Each new lookup is three calls to YQ (vehicle, part tree, parts). The answer
@@ -101,6 +132,13 @@ export const FULFILMENT = {
     // The store's position, only if Uber asks for coordinates in this region
     // (its guide says some regions need them). null = the address alone.
     storePosition: null as { latitude: number; longitude: number } | null,
+    // Heaviest single article a courier takes. Uber's help pages (Australia,
+    // New Zealand) say 20 kg per item. ⚠️ To confirm for France with Uber.
+    maxItemKg: 20,
+    // Uber's item sizes, from how the courier carries them: small = one hand,
+    // medium = a tote bag, large = two hands, xlarge = several trips (a car or
+    // larger is sent). The weight of each cart line decides it (kg, at most).
+    sizeByWeightKg: { small: 2, medium: 6, large: 20 },
     baseFeeTTC: 6.9,
     zones: [
       // Postal-code prefixes, extra fee and indicative ETA in minutes.
@@ -118,6 +156,9 @@ export const FULFILMENT = {
     relayFromTTC: 4.9,
     homeFromTTC: 7.9,
     perExtraKgTTC: 0.8, // above 2 kg
+    // Heaviest parcel the carriers take (Mondial Relay points relais and
+    // Colissimo: 30 kg). ⚠️ To confirm against the offers of the Boxtal account.
+    maxKg: 30,
     freeAboveTTC: 89,
     delay: '24 à 72 h ouvrées',
     // The Boxtal offer used for relay delivery: it decides which relay network
