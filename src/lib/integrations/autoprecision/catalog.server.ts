@@ -357,3 +357,20 @@ export async function listCarArticles(carId: number, genartId: number): Promise<
   const raw = await call<RawArticle[]>(`/v2/cars/${carId}/genart/${genartId}?PageSize=200`, {})
   return (Array.isArray(raw) ? raw : []).map(article)
 }
+
+/**
+ * Tokens of the articles of that list that carry one of these original
+ * (manufacturer) part numbers. Same request as listCarArticles, so it is
+ * answered from Next's cache. The numbers are compared without spaces, dots
+ * or dashes ("7 736 530 6" = "77365306") and never leave the server.
+ */
+export async function articlesWithOeNumbers(carId: number, genartId: number, oeNumbers: string[]): Promise<Set<string>> {
+  const wanted = new Set(oeNumbers.map(compact).filter((n) => n.length >= 5))
+  if (!wanted.size) return new Set()
+  const raw = await call<RawArticle[]>(`/v2/cars/${carId}/genart/${genartId}?PageSize=200`, {})
+  return new Set(
+    (Array.isArray(raw) ? raw : [])
+      .filter((a) => (a.oems ?? []).some((o) => (o.refs ?? []).some((r) => wanted.has(compact(r)))))
+      .map((a) => articleToken(a.dlNr, a.artNr)),
+  )
+}

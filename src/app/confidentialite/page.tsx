@@ -66,7 +66,8 @@ export default function Page() {
       <LegalSection title="Destinataires">
         <p>
           Vos données sont destinées au magasin. Elles sont transmises, dans la limite de ce qui est nécessaire, à nos prestataires : Stripe (paiement), notre fournisseur
-          de données d’immatriculation et de catalogue (identification du véhicule), notre plateforme d’expédition et notre service de coursier (votre adresse sert à calculer le prix de la livraison et à rechercher les points relais proches),
+          de données d’immatriculation et de catalogue (identification du véhicule), YQ Service, éditeur des catalogues constructeurs (le numéro de série
+          de votre véhicule, obtenu avec la plaque, sert à afficher les pièces d’origine exactes ; il est conservé dans un cookie technique chiffré), notre plateforme d’expédition et notre service de coursier (votre adresse sert à calculer le prix de la livraison et à rechercher les points relais proches),
           le transporteur ou le coursier pour la livraison elle-même, et notre hébergeur ({LEGAL.host.name}).
           Certains de ces prestataires sont établis hors de l’Union européenne ; les transferts sont alors encadrés par les garanties prévues par la réglementation.
         </p>

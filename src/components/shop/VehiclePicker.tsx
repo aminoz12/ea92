@@ -111,6 +111,8 @@ export function VehiclePicker({
             onClick={() => {
               setVehicle(null)
               setEditing(false)
+              // the server forgets the car's VIN too (exact-part filter)
+              fetch('/api/vehicle/identify', { method: 'DELETE' }).catch(() => {})
             }}
             className={dark ? 'text-white/70 hover:text-white' : 'text-gray-500 hover:text-secondary-600'}
           >

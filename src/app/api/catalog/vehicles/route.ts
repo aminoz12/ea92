@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { CatalogError, listBrandModels, listCarBrands } from '@/lib/integrations/autoprecision/catalog.server'
 import { identifyVehicleByKtype } from '@/lib/integrations/vehicle.server'
+import { VEHICLE_COOKIE } from '@/lib/shop/vehicleCookie.server'
 
 // Vehicle selector, step by step. The catalogue key stays on the server.
 //   GET /api/catalog/vehicles            → { brands }
@@ -17,7 +18,10 @@ export async function GET(req: Request) {
     if (car !== null) {
       const carId = id(car)
       if (carId === null) return NextResponse.json({ error: 'Véhicule invalide' }, { status: 400 })
-      return NextResponse.json({ vehicle: await identifyVehicleByKtype(carId) })
+      const res = NextResponse.json({ vehicle: await identifyVehicleByKtype(carId) })
+      // A vehicle chosen by make and model has no VIN: forget the one of a plate searched before.
+      res.cookies.delete(VEHICLE_COOKIE)
+      return res
     }
     if (brand !== null) {
       const brandId = id(brand)

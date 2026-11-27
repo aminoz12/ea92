@@ -10,6 +10,7 @@ import { CatalogVehicleBar } from '@/components/shop/CatalogVehicleBar'
 import { Icon } from '@/components/ui/Icon'
 import { CatalogError, getCar, listCarArticles, type CatalogArticle, type CatalogCar } from '@/lib/integrations/autoprecision/catalog.server'
 import { areOffersLive } from '@/lib/shop/offers.server'
+import { preciseFit, type PreciseFit } from '@/lib/shop/preciseFit.server'
 
 export const metadata: Metadata = {
   title: 'Pièces compatibles',
@@ -47,22 +48,31 @@ export default async function CarArticlesPage({
     console.error('[pieces/articles] catalogue unavailable', err)
   }
 
+  // The customer's exact car (plate → VIN → maker's catalogue): only the parts
+  // carrying its original part number. ?tout=1 shows the whole TecDoc list.
+  const fit: PreciseFit = car && articles.length ? await preciseFit(carId, genartId) : { status: 'none' }
+  const showAll = first(query.tout) === '1'
+  const exactOnly = fit.status === 'exact' && !showAll
+  const isExact = (a: CatalogArticle) => fit.status === 'exact' && fit.tokens.has(a.token)
+  const pool = exactOnly ? articles.filter(isExact) : articles
+
   const back = `/pieces/${carId}`
   const base = `${back}/${genartId}`
   /** Link to this list with some filters changed; a filter change goes back to page 1. */
-  const href = (changes: { cote?: string; marque?: number | null; page?: number }) => {
-    const next = { cote: sideFilter, marque: brandFilter, page: 1, ...changes }
+  const href = (changes: { cote?: string; marque?: number | null; page?: number; tout?: boolean }) => {
+    const next = { cote: sideFilter, marque: brandFilter, page: 1, tout: showAll, ...changes }
     const qs = new URLSearchParams()
     if (next.cote) qs.set('cote', next.cote)
     if (next.marque) qs.set('marque', String(next.marque))
     if (next.page > 1) qs.set('page', String(next.page))
+    if (next.tout) qs.set('tout', '1')
     const s = qs.toString()
     return s ? `${base}?${s}` : base
   }
 
   const title = articles[0]?.genart?.name ?? 'Pièces compatibles'
-  const sides = [...new Set(articles.map((a) => a.side).filter((s): s is string => Boolean(s)))].sort((a, b) => a.localeCompare(b, 'fr'))
-  const bySide = sideFilter ? articles.filter((a) => a.side === sideFilter) : articles
+  const sides = [...new Set(pool.map((a) => a.side).filter((s): s is string => Boolean(s)))].sort((a, b) => a.localeCompare(b, 'fr'))
+  const bySide = sideFilter ? pool.filter((a) => a.side === sideFilter) : pool
   const brands = [...bySide.reduce((map, a) => map.set(a.dlNr, { dlNr: a.dlNr, name: a.brand, count: (map.get(a.dlNr)?.count ?? 0) + 1 }), new Map<number, { dlNr: number; name: string; count: number }>()).values()].sort(
     (a, b) => a.name.localeCompare(b.name, 'fr'),
   )
@@ -98,9 +108,40 @@ export default async function CarArticlesPage({
             <CatalogVehicleBar car={car} backTo={{ href: back, label: 'Toutes les familles' }} />
 
             <h1 className="mt-8 font-display text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">{title}</h1>
-            <p className="mt-1 text-gray-600">
-              {filtered.length} pièce{filtered.length > 1 ? 's' : ''} compatible{filtered.length > 1 ? 's' : ''} avec votre {car.make} {car.model} {car.version}.
-            </p>
+            {exactOnly ? (
+              <div className="mt-3 flex items-start gap-3 rounded-xl bg-emerald-50 p-4 ring-1 ring-emerald-200">
+                <Icon name="seal-check" weight="fill" className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" />
+                <div className="text-[15px] leading-snug text-gray-800">
+                  <p className="font-semibold text-gray-900">
+                    {filtered.length} pièce{filtered.length > 1 ? 's' : ''} exacte{filtered.length > 1 ? 's' : ''} pour votre {car.make} {car.model}
+                  </p>
+                  <p className="mt-0.5 text-gray-700">
+                    Sélectionnées d’après le numéro de série de votre véhicule et le catalogue du constructeur : elles correspondent à la pièce montée d’origine.
+                  </p>
+                  <Link href={href({ tout: true, marque: null, cote: '' })} className="mt-1.5 inline-block text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
+                    Voir toutes les pièces du catalogue pour ce modèle ({articles.length})
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-1 text-gray-600">
+                {filtered.length} pièce{filtered.length > 1 ? 's' : ''} compatible{filtered.length > 1 ? 's' : ''} avec votre {car.make} {car.model} {car.version}.
+                {fit.status === 'exact' && (
+                  <>
+                    {' '}
+                    <Link href={href({ tout: false, marque: null, cote: '' })} className="font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
+                      Afficher seulement les {fit.tokens.size} pièces exactes pour votre véhicule
+                    </Link>
+                  </>
+                )}
+              </p>
+            )}
+            {fit.status === 'no-match' && (
+              <p className="mt-2 flex items-start gap-2 text-sm text-gray-600">
+                <Icon name="info" weight="fill" className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
+                Nous n’avons pas pu confirmer la pièce d’origine de votre véhicule parmi celles-ci : en cas de doute, écrivez-nous avant de commander.
+              </p>
+            )}
 
             {sides.length > 1 && (
               <div className="-mx-4 mt-5 overflow-x-auto border-b border-gray-200 px-4 sm:mx-0 sm:px-0">
@@ -140,7 +181,7 @@ export default async function CarArticlesPage({
               <CatalogOffersProvider live={areOffersLive()} articles={shown.map((a) => a.token)}>
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                   {shown.map((a) => (
-                    <CatalogArticleCard key={a.token} article={a} vehicleName={vehicleName} listHref={href({ page: current })} />
+                    <CatalogArticleCard key={a.token} article={a} vehicleName={vehicleName} listHref={href({ page: current })} exact={isExact(a)} />
                   ))}
                 </div>
               </CatalogOffersProvider>

@@ -12,7 +12,18 @@ import { CatalogArticleBuy } from './CatalogOffers'
 // customer finds the right part here and buys it elsewhere. The article does
 // not even carry it (see CatalogArticle); what tells two parts apart is the
 // brand, the fitting side and the technical criteria.
-export function CatalogArticleCard({ article, vehicleName, listHref }: { article: CatalogArticle; vehicleName: string; listHref: string }) {
+export function CatalogArticleCard({
+  article,
+  vehicleName,
+  listHref,
+  exact = false,
+}: {
+  article: CatalogArticle
+  vehicleName: string
+  listHref: string
+  /** Carries the original part number of the customer's exact car (see lib/shop/preciseFit.server.ts). */
+  exact?: boolean
+}) {
   const title = article.genart?.name ?? article.designation ?? 'Pièce'
   // What tells two similar parts apart: fitting details first, then the part's own specs.
   const facts = [...article.fitment, ...article.attributes].slice(0, 4)
@@ -64,10 +75,17 @@ export function CatalogArticleCard({ article, vehicleName, listHref }: { article
           </ul>
         )}
 
-        <p className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-gray-700">
-          <Icon name="check-circle" weight="fill" className="h-4 w-4 shrink-0 text-emerald-600" />
-          Compatible avec votre véhicule
-        </p>
+        {exact ? (
+          <p className="mt-2 flex items-center gap-1.5 text-[13px] font-semibold text-emerald-700">
+            <Icon name="seal-check" weight="fill" className="h-4 w-4 shrink-0 text-emerald-600" />
+            Exacte pour votre véhicule
+          </p>
+        ) : (
+          <p className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-gray-700">
+            <Icon name="check-circle" weight="fill" className="h-4 w-4 shrink-0 text-emerald-600" />
+            Compatible avec votre véhicule
+          </p>
+        )}
 
         <CatalogArticleBuy
           article={{ id: article.token, brand: article.brand, title, image: article.image, listHref }}

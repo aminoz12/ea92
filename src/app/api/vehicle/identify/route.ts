@@ -3,6 +3,8 @@ import { isValidFrenchPlate } from '@/lib/integrations/vehicle'
 import { identifyVehicle, VehicleLookupError } from '@/lib/integrations/vehicle.server'
 import { clientAddress, takeHit, type RateRule } from '@/lib/rateLimit.server'
 import { PLATE_LOOKUP } from '@/lib/shop/config'
+import { isVin } from '@/lib/integrations/yq.server'
+import { sealVehicle, VEHICLE_COOKIE, vehicleCookieOptions } from '@/lib/shop/vehicleCookie.server'
 
 const rules = (list: readonly { limit: number; windowMinutes: number }[]): RateRule[] =>
   list.map((r) => ({ limit: r.limit, windowMs: r.windowMinutes * 60_000 }))
@@ -11,6 +13,13 @@ const EVERYONE = rules(PLATE_LOOKUP.everyone)
 
 const tooMany = (error: string, retryAfterSec: number) =>
   NextResponse.json({ error }, { status: 429, headers: { 'Retry-After': String(retryAfterSec) } })
+
+// DELETE → forgets the visitor's exact vehicle (the "Retirer" button).
+export function DELETE() {
+  const res = NextResponse.json({ ok: true })
+  res.cookies.delete(VEHICLE_COOKIE)
+  return res
+}
 
 // POST { plate: "AA-123-BB" } → { vehicle }
 // A lookup costs a credit: the route only serves this site's own pages, and
@@ -44,7 +53,12 @@ export async function POST(req: Request) {
 
   try {
     const vehicle = await identifyVehicle(plate)
-    return NextResponse.json({ vehicle })
+    const res = NextResponse.json({ vehicle })
+    // The VIN lets the catalogue pages show the parts of this exact car (see lib/shop/preciseFit.server.ts).
+    const vin = vehicle.vin?.trim().toUpperCase() ?? ''
+    if (vehicle.ktype && isVin(vin)) res.cookies.set(VEHICLE_COOKIE, sealVehicle({ ktype: vehicle.ktype, vin }), vehicleCookieOptions())
+    else res.cookies.delete(VEHICLE_COOKIE)
+    return res
   } catch (err) {
     if (err instanceof VehicleLookupError) {
       return NextResponse.json({ error: err.message }, { status: 400 })

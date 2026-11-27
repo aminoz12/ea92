@@ -51,6 +51,19 @@ export const PLATE_LOOKUP = {
 } as const
 
 /* ------------------------------------------------------------------ */
+/*  Exact parts for the customer's car (YQ, by VIN)                    */
+/* ------------------------------------------------------------------ */
+// Each new lookup is three calls to YQ (vehicle, part tree, parts). The answer
+// is then kept 30 days per VIN and part type, so these limits only count new
+// part types. ⚠️ YQ's prices and quotas are not known yet: tighten if needed.
+export const PRECISE_FIT = {
+  perVisitor: [
+    { limit: 20, windowMinutes: 10 },
+    { limit: 100, windowMinutes: 24 * 60 },
+  ],
+} as const
+
+/* ------------------------------------------------------------------ */
 /*  Brand ranking ("Meilleur choix")                                  */
 /* ------------------------------------------------------------------ */
 // Among equivalent offers (same part, several brands), the shop pushes the
