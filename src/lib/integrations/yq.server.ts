@@ -101,7 +101,16 @@ interface TreeNode {
 }
 interface Part {
   partNumber?: string
+  partName?: string
   matched?: boolean | null
+}
+
+/** One original part of the exact car. Server side only (the owner's rule: numbers never reach a customer). */
+export interface OePart {
+  /** As YQ writes it. */
+  number: string
+  /** What the maker's catalogue calls it, most precise first: part, unit, category. Says front/rear, left/right. */
+  where: string[]
 }
 
 async function post<T>(action: string, body: unknown): Promise<T> {
@@ -165,26 +174,30 @@ export const yqVehicle = unstable_cache(loadVehicle, ['yq-vehicle-groups'], { re
 /** Same, never from the cache (check page). */
 export const yqVehicleFresh = loadVehicle
 
-/** One call: the original numbers of one group, for the vehicle the token was made for. */
-export async function yqPartsOf(token: string): Promise<string[]> {
-  const parts = await post<{ data?: { categories?: { units?: { partSections?: { parts?: Part[] }[] }[] }[] } }>('getGroupParts', {
+/** One call: the original parts of one group, for the vehicle the token was made for. */
+export async function yqPartsOf(token: string): Promise<OePart[]> {
+  const parts = await post<{
+    data?: { categories?: { category?: { name?: string }; units?: { unit?: { name?: string }; partSections?: { parts?: Part[] }[] }[] }[] }
+  }>('getGroupParts', {
     token,
     filterValues: [],
     currentFilterState: '',
   })
-  const numbers = new Set<string>()
+  const found = new Map<string, OePart>()
   for (const c of parts.data?.categories ?? [])
     for (const u of c.units ?? [])
       for (const s of u.partSections ?? [])
         for (const p of s.parts ?? []) {
-          const n = (p.partNumber ?? '').trim()
+          const number = (p.partNumber ?? '').trim()
           // `matched` marks the parts of the group; the others are the rest of the assembly (caliper, bracket…).
-          if (p.matched === true && n && !/^\*+$/.test(n)) numbers.add(n)
+          if (p.matched !== true || !number || /^\*+$/.test(number)) continue
+          const where = [p.partName, u.unit?.name, c.category?.name].map((t) => (t ?? '').trim())
+          found.set(`${number}|${where.join('|')}`, { number, where })
         }
-  return [...numbers]
+  return [...found.values()]
 }
 
-async function groupNumbers(vin: string, code: string): Promise<string[]> {
+async function groupParts(vin: string, code: string): Promise<OePart[]> {
   const token = (await yqVehicle(vin)).groups[code]
   if (!token) return []
   try {
@@ -198,8 +211,8 @@ async function groupNumbers(vin: string, code: string): Promise<string[]> {
 }
 
 /**
- * Original part numbers (as YQ writes them) of one YQ group for one exact
- * vehicle. A car's original numbers do not change: kept 30 days per VIN and
- * group. Failures are not kept.
+ * Original parts of one YQ group for one exact vehicle. A car's original parts
+ * do not change: kept 30 days per VIN and group. Failures are not kept.
+ * (Key "v2": the answers kept before 28 Nov 2026 were plain numbers.)
  */
-export const groupOeNumbers = unstable_cache(groupNumbers, ['yq-group-numbers'], { revalidate: THIRTY_DAYS })
+export const groupOeParts = unstable_cache(groupParts, ['yq-group-parts-v2'], { revalidate: THIRTY_DAYS })

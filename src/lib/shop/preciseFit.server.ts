@@ -20,10 +20,11 @@ import { cookies, headers } from 'next/headers'
 //  their plate). It never blocks a sale.
 // ---------------------------------------------------------------------------
 
-import { articlesWithOeNumbers, partTypePlaces } from '../integrations/autoprecision/catalog.server'
-import { groupOeNumbers, isVin, isYqConfigured, yqVehicle } from '../integrations/yq.server'
+import { articlesWithOeNumbers, compact, partTypePlaces } from '../integrations/autoprecision/catalog.server'
+import { groupOeParts, isVin, isYqConfigured, yqVehicle, type OePart } from '../integrations/yq.server'
 import { takeHit } from '../rateLimit.server'
 import { PRECISE_FIT } from './config'
+import { agreed, positionFromLevels, type Position } from './position'
 import { YQ_GROUPS } from './partTypes'
 import { openVehicle, VEHICLE_COOKIE } from './vehicleCookie.server'
 
@@ -49,8 +50,11 @@ export type NoFitReason =
   | 'empty'
 
 export type PreciseFit =
-  /** The exact articles (tokens) among the list. */
-  | { status: 'exact'; tokens: Set<string> }
+  /**
+   * The exact articles (tokens) among the list, each with the position the
+   * maker's catalogue gives its original part (front/rear, left/right), when it does.
+   */
+  | { status: 'exact'; tokens: Set<string>; positions: Map<string, Position> }
   /** YQ answered, but none of the articles of the list carries the original number. */
   | { status: 'no-match' }
   /** No precise answer: show the list as it is. */
@@ -74,7 +78,7 @@ export function yqGroupsFor(genartId: number, places: number[][], available: Rec
 
 // Answers already given in this server instance: browsing filters and pages of
 // one list must not count as new lookups for the visitor.
-const recent = new Map<string, { at: number; numbers: string[]; reason?: NoFitReason }>()
+const recent = new Map<string, { at: number; parts: OePart[]; reason?: NoFitReason }>()
 const RECENT_MS = 15 * 60_000
 let warnedNotConfigured = false
 
@@ -96,9 +100,9 @@ export async function preciseFit(carId: number, genartId: number): Promise<Preci
 
   const key = `${vehicle.vin}|${genartId}`
   const seen = recent.get(key)
-  let numbers = seen && Date.now() - seen.at < RECENT_MS ? seen.numbers : null
-  if (seen && numbers && seen.reason) return none(seen.reason, carId, genartId)
-  if (!numbers) {
+  let parts = seen && Date.now() - seen.at < RECENT_MS ? seen.parts : null
+  if (seen && parts && seen.reason) return none(seen.reason, carId, genartId)
+  if (!parts) {
     const h = await headers()
     const visitor = h.get('x-forwarded-for')?.split(',')[0]?.trim() || h.get('x-real-ip')?.trim() || 'unknown'
     const rules = PRECISE_FIT.perVisitor.map((r) => ({ limit: r.limit, windowMs: r.windowMinutes * 60_000 }))
@@ -109,21 +113,29 @@ export async function preciseFit(carId: number, genartId: number): Promise<Preci
       const codes = yq.known ? yqGroupsFor(genartId, places, yq.groups) : []
       if (!yq.known) reason = 'vehicle-unknown'
       else if (!codes.length) reason = 'unmapped'
-      const lists = await Promise.all(codes.map((code) => groupOeNumbers(vehicle.vin, code)))
-      numbers = [...new Set(lists.flat())]
+      parts = (await Promise.all(codes.map((code) => groupOeParts(vehicle.vin, code)))).flat()
     } catch (err) {
       console.error('[precise-fit] YQ lookup failed', err instanceof Error ? err.message : err)
       return none('unavailable', carId, genartId)
     }
-    recent.set(key, { at: Date.now(), numbers, reason })
+    recent.set(key, { at: Date.now(), parts, reason })
     if (recent.size > 2000) for (const [k, v] of recent) if (Date.now() - v.at >= RECENT_MS) recent.delete(k)
     if (reason) return none(reason, carId, genartId)
   }
-  if (!numbers.length) return none('no-numbers', carId, genartId)
+  if (!parts.length) return none('no-numbers', carId, genartId)
 
   try {
-    const tokens = await articlesWithOeNumbers(carId, genartId, numbers)
-    return tokens.size ? { status: 'exact', tokens } : { status: 'no-match' }
+    const carried = await articlesWithOeNumbers(carId, genartId, [...new Set(parts.map((p) => p.number))])
+    if (!carried.size) return { status: 'no-match' }
+    // Where each original number goes on this car, from the names the maker's catalogue gives it.
+    const whereOf = new Map<string, Position[]>()
+    for (const p of parts) {
+      const n = compact(p.number)
+      whereOf.set(n, [...(whereOf.get(n) ?? []), positionFromLevels(p.where)])
+    }
+    const positions = new Map<string, Position>()
+    for (const [token, numbers] of carried) positions.set(token, agreed(numbers.flatMap((n) => whereOf.get(n) ?? [])))
+    return { status: 'exact', tokens: new Set(carried.keys()), positions }
   } catch (err) {
     console.error('[precise-fit] catalogue unavailable', err)
     return none('unavailable', carId, genartId)

@@ -8,10 +8,12 @@ import { CatalogArticleCard } from '@/components/shop/CatalogArticleCard'
 import { CatalogOffersProvider } from '@/components/shop/CatalogOffers'
 import { CatalogVehicleBar } from '@/components/shop/CatalogVehicleBar'
 import { ExactFitPrompt } from '@/components/shop/ExactFitPrompt'
+import { ExactPartGroup } from '@/components/shop/ExactPartGroup'
 import { Icon } from '@/components/ui/Icon'
 import { CatalogError, getCar, listCarArticles, type CatalogArticle, type CatalogCar } from '@/lib/integrations/autoprecision/catalog.server'
 import { areOffersLive } from '@/lib/shop/offers.server'
 import { preciseFit, type PreciseFit } from '@/lib/shop/preciseFit.server'
+import { comparePositions, mergePosition, parsePosition, positionLabel, type Position } from '@/lib/shop/position'
 
 export const metadata: Metadata = {
   title: 'Pièces compatibles',
@@ -22,6 +24,21 @@ const PER_PAGE = 24
 
 const parseId = (value: string) => (/^\d{1,9}$/.test(value) ? Number(value) : null)
 const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value)
+/** One request to the suppliers per position: the same cap as /api/catalog/offers. */
+const MAX_PRICED = 30
+
+/** The exact parts, one group per position on the car (front before rear, left before right). */
+function byPosition(list: CatalogArticle[], maker: Map<string, Position>) {
+  const groups = new Map<string, { label: string; position: Position; articles: CatalogArticle[] }>()
+  for (const a of list) {
+    const position = mergePosition(maker.get(a.token) ?? {}, parsePosition(a.side))
+    const label = positionLabel(position)
+    const group = groups.get(label) ?? { label, position, articles: [] }
+    group.articles.push(a)
+    groups.set(label, group)
+  }
+  return [...groups.values()].sort((x, y) => comparePositions(x.position, y.position))
+}
 
 export default async function CarArticlesPage({
   params,
@@ -56,6 +73,8 @@ export default async function CarArticlesPage({
   const exactOnly = fit.status === 'exact' && !showAll
   const isExact = (a: CatalogArticle) => fit.status === 'exact' && fit.tokens.has(a.token)
   const pool = exactOnly ? articles.filter(isExact) : articles
+  // Exact parts: per position, one part put forward and the other brands behind a link (no filters, no pages).
+  const groups = exactOnly && fit.status === 'exact' ? byPosition(pool, fit.positions) : []
 
   const back = `/pieces/${carId}`
   const base = `${back}/${genartId}`
@@ -114,10 +133,11 @@ export default async function CarArticlesPage({
                 <Icon name="seal-check" weight="fill" className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" />
                 <div className="text-[15px] leading-snug text-gray-800">
                   <p className="font-semibold text-gray-900">
-                    {filtered.length} pièce{filtered.length > 1 ? 's' : ''} exacte{filtered.length > 1 ? 's' : ''} pour votre {car.make} {car.model}
+                    {groups.length > 1 ? 'Les pièces exactes' : 'La pièce exacte'} pour votre {car.make} {car.model}
                   </p>
                   <p className="mt-0.5 text-gray-700">
-                    Sélectionnées d’après le numéro de série de votre véhicule et le catalogue du constructeur : elles correspondent à la pièce montée d’origine.
+                    Choisie{groups.length > 1 ? 's' : ''} d’après le numéro de série de votre véhicule et le catalogue du constructeur : la pièce montée d’origine, au meilleur prix
+                    {groups.length > 1 ? ' pour chaque position' : ''}. Les autres marques restent disponibles.
                   </p>
                   {articles.length > pool.length && (
                     <Link href={href({ tout: true, marque: null, cote: '' })} className="mt-1.5 inline-block text-sm font-semibold text-gray-900 underline underline-offset-4 hover:text-secondary-600">
@@ -147,7 +167,17 @@ export default async function CarArticlesPage({
               </p>
             )}
 
-            {sides.length > 1 && (
+            {exactOnly &&
+              groups.map((g) => (
+                <CatalogOffersProvider key={g.label} live={areOffersLive()} articles={g.articles.slice(0, MAX_PRICED).map((a) => a.token)} pick>
+                  <ExactPartGroup
+                    label={g.label}
+                    items={g.articles.map((a) => ({ token: a.token, card: <CatalogArticleCard article={a} vehicleName={vehicleName} listHref={base} exact /> }))}
+                  />
+                </CatalogOffersProvider>
+              ))}
+
+            {!exactOnly && sides.length > 1 && (
               <div className="-mx-4 mt-5 overflow-x-auto border-b border-gray-200 px-4 sm:mx-0 sm:px-0">
                 <nav aria-label="Côté de montage" className="flex w-max gap-6">
                   <Link href={href({ cote: '' })} className={tab(!sideFilter)} aria-current={!sideFilter ? 'page' : undefined}>
@@ -162,7 +192,7 @@ export default async function CarArticlesPage({
               </div>
             )}
 
-            {brands.length > 1 && (
+            {!exactOnly && brands.length > 1 && (
               <nav aria-label="Marques" className="mt-4 flex flex-wrap items-baseline gap-x-4 gap-y-1.5 text-sm">
                 <span className="font-semibold text-gray-900">Marque :</span>
                 <Link href={href({ marque: null })} className={!brandFilter ? 'font-bold text-secondary-600' : 'text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-4'}>
@@ -181,7 +211,7 @@ export default async function CarArticlesPage({
               </nav>
             )}
 
-            {shown.length > 0 ? (
+            {exactOnly ? null : shown.length > 0 ? (
               <CatalogOffersProvider live={areOffersLive()} articles={shown.map((a) => a.token)}>
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                   {shown.map((a) => (
@@ -199,7 +229,7 @@ export default async function CarArticlesPage({
               </p>
             )}
 
-            {pages > 1 && (
+            {!exactOnly && pages > 1 && (
               <nav aria-label="Pages" className="mt-8 flex items-center justify-center gap-4 font-display text-sm font-bold">
                 {current > 1 ? (
                   <Link href={href({ page: current - 1 })} className="flex h-11 items-center gap-2 rounded-lg border-2 border-gray-900 px-4 text-gray-900 hover:bg-gray-900 hover:text-white">

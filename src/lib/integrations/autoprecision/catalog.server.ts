@@ -258,7 +258,8 @@ const attributes = (list?: RawAttribute[]) => {
 const IDENTIFYING_ATTRIBUTE =
   /WVA|FMSI|num[ée]ro\s+OE|num[ée]ro\s+d.origine|num[ée]ro\s+d.article|marque de conformit|homologation|\br[ée]f[ée]rence\b|\bEAN\b|\bGTIN\b/i
 
-const compact = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '')
+/** A part number compared without spaces, dots or dashes. */
+export const compact = (s: string) => s.toUpperCase().replace(/[^A-Z0-9]/g, '')
 
 /** The article's own weight when the catalogue gives it ("Poids [kg]", "Poids net [g]"), kg. */
 function catalogueWeightKg(a: RawArticle): number | undefined {
@@ -411,18 +412,20 @@ export async function listCarArticles(carId: number, genartId: number): Promise<
 }
 
 /**
- * Tokens of the articles of that list that carry one of these original
- * (manufacturer) part numbers. Same request as listCarArticles, so it is
- * answered from Next's cache. The numbers are compared without spaces, dots
- * or dashes ("7 736 530 6" = "77365306") and never leave the server.
+ * The articles of that list that carry one of these original (manufacturer)
+ * part numbers: article token → the numbers it carries (compacted). Same
+ * request as listCarArticles, so it is answered from Next's cache. The numbers
+ * are compared without spaces, dots or dashes ("7 736 530 6" = "77365306") and
+ * never leave the server.
  */
-export async function articlesWithOeNumbers(carId: number, genartId: number, oeNumbers: string[]): Promise<Set<string>> {
+export async function articlesWithOeNumbers(carId: number, genartId: number, oeNumbers: string[]): Promise<Map<string, string[]>> {
   const wanted = new Set(oeNumbers.map(compact).filter((n) => n.length >= 5))
-  if (!wanted.size) return new Set()
+  const found = new Map<string, string[]>()
+  if (!wanted.size) return found
   const raw = await call<RawArticle[]>(`/v2/cars/${carId}/genart/${genartId}?PageSize=200`, {})
-  return new Set(
-    (Array.isArray(raw) ? raw : [])
-      .filter((a) => (a.oems ?? []).some((o) => (o.refs ?? []).some((r) => wanted.has(compact(r)))))
-      .map((a) => tokenOf(a, genartId)),
-  )
+  for (const a of Array.isArray(raw) ? raw : []) {
+    const carried = [...new Set((a.oems ?? []).flatMap((o) => (o.refs ?? []).map(compact)).filter((n) => wanted.has(n)))]
+    if (carried.length) found.set(tokenOf(a, genartId), carried)
+  }
+  return found
 }

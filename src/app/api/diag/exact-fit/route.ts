@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { getCar, articlesWithOeNumbers, partTypePlaces } from '@/lib/integrations/autoprecision/catalog.server'
+import { getCar, articlesWithOeNumbers, compact, partTypePlaces } from '@/lib/integrations/autoprecision/catalog.server'
+import { agreed, positionFromLevels, positionLabel, type Position } from '@/lib/shop/position'
 import { isVin, isYqConfigured, yqCredentialShape, yqPartsOf, yqVehicle, yqVehicleFresh, yqWhoAmI } from '@/lib/integrations/yq.server'
 import { clientAddress, takeHit } from '@/lib/rateLimit.server'
 import { yqGroupsFor } from '@/lib/shop/preciseFit.server'
@@ -84,9 +85,20 @@ export async function GET(req: Request) {
     const [car, places] = await Promise.all([getCar(vehicle.ktype), partTypePlaces(vehicle.ktype, genart)])
     const codes = yqGroupsFor(genart, places, groups)
     const numbers = new Set<string>()
-    for (const code of codes) for (const n of await yqPartsOf(groups[code])) numbers.add(n)
-    const exact = numbers.size ? await articlesWithOeNumbers(vehicle.ktype, genart, [...numbers]) : new Set()
-    report.partType = { genart, car: `${car.make} ${car.model}`, placesInTecDocTree: places.length, yqGroups: codes, originalNumbers: numbers.size, exactArticles: exact.size }
+    const where = new Map<string, Position[]>()
+    for (const code of codes)
+      for (const p of await yqPartsOf(groups[code])) {
+        numbers.add(p.number)
+        where.set(compact(p.number), [...(where.get(compact(p.number)) ?? []), positionFromLevels(p.where)])
+      }
+    const exact = numbers.size ? await articlesWithOeNumbers(vehicle.ktype, genart, [...numbers]) : new Map<string, string[]>()
+    // How the exact parts split by position (what the page groups them by, before TecDoc's own side).
+    const byPosition: Record<string, number> = {}
+    for (const carried of exact.values()) {
+      const label = positionLabel(agreed(carried.flatMap((n) => where.get(n) ?? []))) || '(no position from YQ)'
+      byPosition[label] = (byPosition[label] ?? 0) + 1
+    }
+    report.partType = { genart, car: `${car.make} ${car.model}`, placesInTecDocTree: places.length, yqGroups: codes, originalNumbers: numbers.size, exactArticles: exact.size, byPosition }
   } catch (err) {
     report.partType = { genart, error: failure(err) }
   }

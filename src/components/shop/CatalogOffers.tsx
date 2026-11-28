@@ -19,48 +19,58 @@ interface OffersState {
   /** 'off' = no live supplier connection: nothing to wait for. */
   status: 'off' | 'loading' | 'ready'
   offers: Map<string, ArticleOffer>
+  /** With `pick`: the article the server puts forward (null: none can be sold online). */
+  pick: string | null
 }
 
-const OffersContext = createContext<OffersState>({ status: 'off', offers: new Map() })
+const OffersContext = createContext<OffersState>({ status: 'off', offers: new Map(), pick: null })
+
+/** Offers of the surrounding provider (for components that arrange the cards). */
+export const useCatalogOffers = () => useContext(OffersContext)
 
 export function CatalogOffersProvider({
   live,
   articles,
+  pick = false,
   children,
 }: {
   /** Decided on the server: is a supplier platform connected? */
   live: boolean
   /** Tokens of the articles on the page. */
   articles: string[]
+  /** The articles are one part in several brands: ask the server which one to put forward. */
+  pick?: boolean
   children: React.ReactNode
 }) {
-  const [state, setState] = useState<OffersState>({ status: live ? 'loading' : 'off', offers: new Map() })
+  const [state, setState] = useState<OffersState>({ status: live ? 'loading' : 'off', offers: new Map(), pick: null })
   // The list is a new array on every server render: compare by content.
   const signature = articles.join(',')
 
   useEffect(() => {
     if (!live || !signature) {
-      setState({ status: 'off', offers: new Map() })
+      setState({ status: 'off', offers: new Map(), pick: null })
       return
     }
     const ctrl = new AbortController()
-    setState({ status: 'loading', offers: new Map() })
+    setState({ status: 'loading', offers: new Map(), pick: null })
     fetch('/api/catalog/offers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ articles }),
+      body: JSON.stringify(pick ? { articles, pick: true } : { articles }),
       signal: ctrl.signal,
     })
       .then((res) => res.json())
-      .then((json: { offers?: ArticleOffer[] }) => setState({ status: 'ready', offers: new Map((json.offers ?? []).map((o) => [o.id, o])) }))
+      .then((json: { offers?: ArticleOffer[]; pick?: string | null }) =>
+        setState({ status: 'ready', offers: new Map((json.offers ?? []).map((o) => [o.id, o])), pick: json.pick ?? null }),
+      )
       .catch((err: unknown) => {
         // No answer: every card falls back to "sur demande".
-        if (!(err instanceof DOMException && err.name === 'AbortError')) setState({ status: 'ready', offers: new Map() })
+        if (!(err instanceof DOMException && err.name === 'AbortError')) setState({ status: 'ready', offers: new Map(), pick: null })
       })
     return () => ctrl.abort()
     // `articles` is covered by `signature`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [live, signature])
+  }, [live, signature, pick])
 
   return <OffersContext.Provider value={state}>{children}</OffersContext.Provider>
 }

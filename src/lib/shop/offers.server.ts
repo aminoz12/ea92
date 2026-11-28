@@ -20,6 +20,7 @@ import 'server-only'
 
 import { CATALOG_PRICING, VAT_RATE } from './config'
 import { readArticleToken } from './articleToken.server'
+import { AVAILABILITY_RANK, rankOffers } from './ranking'
 import { getSupplierGateway, isSupplierGatewayLive, type SupplierAvailability } from '../integrations/suppliers.server'
 import type { Availability } from './types'
 
@@ -80,8 +81,21 @@ function publicPriceHT(a: SupplierAvailability): number | null {
   return price
 }
 
+/** Server side, inside this file only: what the part costs us, to choose between brands. */
+type CostedArticle = PricedArticle & { purchaseHT?: number }
+
 /** Prices for the given references, in the same order; null where the part cannot be sold online right now. */
 export async function priceArticles(refs: ArticleRef[]): Promise<(PricedArticle | null)[]> {
+  // The cost is dropped here: what leaves this file never carries it.
+  return (await costArticles(refs)).map((p) => {
+    if (!p) return null
+    const { purchaseHT: _cost, ...priced } = p
+    void _cost
+    return priced
+  })
+}
+
+async function costArticles(refs: ArticleRef[]): Promise<(CostedArticle | null)[]> {
   if (!refs.length || !isSupplierGatewayLive()) return refs.map(() => null)
   const answers = await getSupplierGateway().checkAvailability(refs.map((r) => ({ brand: '', reference: r.artNr, dlNr: r.dlNr })))
   return refs.map((ref, i) => {
@@ -96,6 +110,7 @@ export async function priceArticles(refs: ArticleRef[]): Promise<(PricedArticle 
       availability: a.availability,
       quantity: a.quantity,
       depositTTC: a.depositHT ? withVat(a.depositHT) : undefined,
+      purchaseHT: a.purchaseHT,
     }
   })
 }
@@ -105,13 +120,49 @@ export async function priceArticles(refs: ArticleRef[]): Promise<(PricedArticle 
  * online right now, each under its token. Tokens that are not ours are ignored.
  */
 export async function getArticleOffers(tokens: string[]): Promise<ArticleOffer[]> {
+  return (await offersWithPick(tokens, false)).offers
+}
+
+/**
+ * Same, plus the one article to put forward among them (the same part in
+ * several brands): the soonest available first, then the shop's brand rule
+ * (lib/shop/ranking.ts: within the cheapest prices, the best net margin).
+ * Only the token of the choice leaves the server, never why.
+ */
+export async function getArticleOffersAndPick(tokens: string[]): Promise<{ offers: ArticleOffer[]; pick: string | null }> {
+  return offersWithPick(tokens, true)
+}
+
+async function offersWithPick(tokens: string[], withPick: boolean): Promise<{ offers: ArticleOffer[]; pick: string | null }> {
   const known = tokens.flatMap((token) => {
     const ref = readArticleToken(token)
     return ref ? [{ token, ref }] : []
   })
-  const priced = await priceArticles(known.map((k) => k.ref))
-  return known.flatMap((k, i) => {
-    const p = priced[i]
-    return p ? [{ id: k.token, priceTTC: p.priceTTC, availability: p.availability, quantity: p.quantity, depositTTC: p.depositTTC }] : []
+  const costed = await costArticles(known.map((k) => k.ref))
+  const sellable = known.flatMap((k, i) => {
+    const p = costed[i]
+    return p ? [{ token: k.token, p }] : []
   })
+  const offers = sellable.map(({ token, p }) => ({ id: token, priceTTC: p.priceTTC, availability: p.availability, quantity: p.quantity, depositTTC: p.depositTTC }))
+  return { offers, pick: withPick ? pickOne(sellable) : null }
+}
+
+function pickOne(sellable: { token: string; p: CostedArticle }[]): string | null {
+  if (!sellable.length) return null
+  const soonest = Math.min(...sellable.map((s) => AVAILABILITY_RANK[s.p.availability]))
+  const pool = sellable.filter((s) => AVAILABILITY_RANK[s.p.availability] === soonest)
+  const ranked = rankOffers(
+    pool.map((s) => ({
+      // `reference` carries the token here: rankOffers only needs a key to give back.
+      brand: '',
+      reference: s.token,
+      priceTTC: s.p.priceTTC,
+      // Unknown cost: counted as no margin rather than guessed.
+      purchaseHT: s.p.purchaseHT ?? s.p.priceTTC / (1 + VAT_RATE),
+      // The suppliers' year-end rebates per brand are not known yet (none in the platform's answers).
+      rfaRate: 0,
+      availability: s.p.availability,
+    })),
+  )
+  return ranked.offers[0]?.reference ?? null
 }
